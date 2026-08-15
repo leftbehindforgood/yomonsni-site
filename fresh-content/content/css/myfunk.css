@@ -303,10 +303,6 @@
 body {
   font-family: 'Nunito';
   letter-spacing: 0.0625em;
-  background: linear-gradient(rgba(47, 23, 15, 0.35)), url("../img/yo-IMG_20209-5DSR-raw16-rawtherapee-shaped.jpg");
-  background-attachment: fixed;
-  background-position: center;
-  background-size: cover;
 }
 
 a {
