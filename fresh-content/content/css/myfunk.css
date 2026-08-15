@@ -303,6 +303,10 @@
 body {
   font-family: 'Nunito';
   letter-spacing: 0.0625em;
+  background-color: #161616;
+  background-attachment: fixed;
+  background-position: center;
+  background-size: cover;
 }
 
 a {
