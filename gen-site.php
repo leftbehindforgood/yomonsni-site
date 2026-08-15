@@ -169,20 +169,20 @@ $footer = <<<EOD
   <footer class="small text-center text-white-50">
     <div class="container">
       <div class="row">
-	<div class="col">
+	<div class="col-6 col-sm">
 	  <p class="mb-0"><a href="./terms.html">Terms and Conditions</a></p>
 	</div>
-	<div class="col">
+	<div class="col-6 col-sm">
 	  <p class="mb-0"><a href="./ethical-code.html">Ethical Code</a></p>
 	</div>
-	<div class="col">
+	<div class="col-6 col-sm">
 	  <p class="mb-0"><a href="./testimonials.html">Testimonials</a></p>
 	</div>
-	<div class="col">
+	<div class="col-6 col-sm">
 	  <p class="mb-0"><a href="./booking.html">Bookings and appointments</a></p>
       <p class="mb-0">For massage and development</p>
 	</div>
-	<div class="col">
+	<div class="col-6 col-sm">
 	  <p class="mb-0"><a href="https://docs.google.com/forms/d/e/1FAIpQLSdPldPYSniomHgKaVKatOjVljJG9sM9OhZq5k0tYwusMFuUCA/viewform?usp=sf_link">General Contact</a></p>
 	</div>
       </div row>
@@ -225,20 +225,20 @@ $subfooter = <<<EOD
   <footer class="small text-center text-white-50">
     <div class="container">
       <div class="row">
-	<div class="col">
+	<div class="col-6 col-sm">
 	  <p class="mb-0"><a href="../terms.html">Terms and Conditions</a></p>
 	</div>
-	<div class="col">
+	<div class="col-6 col-sm">
 	  <p class="mb-0"><a href="../ethical-code.html">Ethical Code</a></p>
 	</div>
-	<div class="col">
+	<div class="col-6 col-sm">
 	  <p class="mb-0"><a href="../testimonials.html">Testimonials</a></p>
 	</div>
-	<div class="col">
+	<div class="col-6 col-sm">
 	  <p class="mb-0"><a href="../booking.html">Bookings and appointments</a></p>
       <p class="mb-0">For massage and development</p>
 	</div>
-	<div class="col">
+	<div class="col-6 col-sm">
 	  <p class="mb-0"><a href="../"></a></p>
 	</div>
       </div row>

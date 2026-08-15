@@ -2,7 +2,7 @@ TITLE=Yomonsni - Development - Body
 BGIMAGE=yo-IMG_24664-5DII-raw32-rawtherapee-shaped.jpg
 SUBHEAD=Body development
 
-      <div class="col-10">
+      <div class="col-12 col-md-10">
 	<div class="row">
 	  <div class="col-sm-2">
             <h2 class="section-heading mb-0 bg-faded2 p-3 rounded">

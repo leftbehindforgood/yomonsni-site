@@ -388,3 +388,14 @@ footer {
 .bg-faded2 {
   background-color: rgba(10, 0, 0, 0.3);
 }
+
+/* background-attachment: fixed is unreliable on mobile browsers (notably
+   iOS Safari, where it can render blank or glitch on scroll), so fall back
+   to a normal scrolling background below the tablet breakpoint. */
+@media (max-width: 767px) {
+  body,
+  .masthead,
+  .mastblank {
+    background-attachment: scroll;
+  }
+}

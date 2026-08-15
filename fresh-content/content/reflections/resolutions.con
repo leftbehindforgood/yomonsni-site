@@ -3,7 +3,7 @@ BGIMAGE=yo-IMG_02498-5D3-raw16-rawtherapee-shaped.jpg
 SUBHEAD=Reflecting on resolutions
 SUBDEAH=Posted 2019-12-31
 
-      <div class="col-10">
+      <div class="col-12 col-md-10">
 	<div class="row">
 	  <div class="row p-3 tw"></div>
 	  <div class="container p-3 tw">
