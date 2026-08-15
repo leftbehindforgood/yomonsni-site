@@ -3,7 +3,7 @@ BGIMAGE=yo-IMG_00053-5DSR-raw16-shaped-flattened-kaleidoscope.jpg
 SUBHEAD=Words from those who have experienced
 
 
-      <div class="col-10">
+      <div class="col-12 col-md-10">
 	<div class="row">
 	  <div class="col-sm-3">
             <h2 class="section-heading mb-0 bg-faded2 p-3 rounded">

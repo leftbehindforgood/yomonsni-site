@@ -7,7 +7,7 @@ SUBHEAD=The Why of Yomonsni
 
 
 
-      <div class="col-10">
+      <div class="col-12 col-md-10">
 	<div class="row p-2 tw">
 	  <div class="col-sm-2">
             <h2 class="section-heading mb-0 bg-faded2 p-3 rounded">
