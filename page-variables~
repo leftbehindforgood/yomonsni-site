@@ -1,0 +1,7 @@
+
+
+TOPMENU   --  this is the collection of directories. Might as well hardcode.
+
+BGIMAGE  -- this is background image for the page
+
+SIDENAV  -- this is the side menu - because I care about order and format in it I'll likely have to hardcode code this in as well, but at least a central place to code it in. 

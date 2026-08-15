@@ -1,0 +1,61 @@
+TITLE=Yomonsni - Reflections - Reflecting on resolutions
+BGIMAGE=yo-IMG_02498-5D3-raw16-rawtherapee-shaped.jpg
+SUBHEAD=Reflecting on resolutions
+SUBDEAH=Posted 2019-12-31
+
+      <div class="col-10">
+	<div class="row">
+	  <div class="row p-3 tw"></div>
+	  <div class="container p-3 tw">
+	    <div class="row">
+	      <div class="col-2"></div>
+	      <div class="col-7 bg-faded2 p-3 rounded">
+		<p class="mb-0">I like to tell myself it was at the end of 1999 that I made the first New Years resolution I would ever keep. It may have been a bit before that, but it sounds good. The resolution itself was pretty simple, but the reasons behind it were a bit deeper. </p>
+		<p class="mb-0">&nbsp</p>
+		<p class="mb-0">New Years resolutions are always popular and we are encouraged by many around us as well as the media to make them. A new year, a chance to start new habits, to take on goals. The idea certainly has a lot of power and captures the imagination. Most resolutions however, fail. Not only that, most of them don't even make it a month before they are released back into the realm of 'if only', 'wouldn't it be nice', and the ever popular 'I'll try again next year'. </p>
+		<p class="mb-0">&nbsp</p>
+		<p class="mb-0">So why is it that most New Years resolutions fail, and fail so quickly? We can look at a few elements in ourselves for some common answers. The resolution will often be made without an understanding of how to accomplish it, which leads to early floundering and a quick end. An example is to get to the gym 3 times a week, but where one hasn't really examined how to fit that schedule into other life commitments. Often resolutions are something we feel we should, but because this isn't really an internal desire that we want to prioritize, it too gets put aside rather easily, though sometimes with a bit of guilt. Examples here might include the gym above, or eating better... things we know we should be doing anyhow, but if they weren't powerful enough for us to want to on our own before the New Years resolution, they aren't going to be meaningful enough to carry through on. The reasons and understanding can be stretched out into many other areas of human psychology, and mostly that is an exercise for you.</p>
+		<p class="mb-0">&nbsp</p>
+		<p class="mb-0">My favorite bit of thinking on the subject though, which led to the resolution that I keep to this day, has to do with timing. If you want to make a change in your life, there is no better time than 'now'. If the motivation, desire and understanding are there within you, trying to wait until New Years to get started is counter productive. It's like saying you're going to start eating right, just as soon as this package of cookies is done, or that you're going to stop drinking, as soon as this bottle is done. If you want to get started, you do - and those changes put into immediate practice. When you do this, you are giving yourself some really powerful reinforcement, because this new resolution, this change, is important enough to get started on right now. </p>
+		<p class="mb-0">&nbsp</p>
+		<p class="mb-0">So, the lesson, if you want to make a change in your life, do it. There is no need wait for an external event like New Years, and often much better results if you don't.  </p>
+		<p class="mb-0">&nbsp</p>
+		<p class="mb-0">If you've made it this far, the New Years resolution that I'm succeeding with, "Don't make any more New Years resolutions." The extra layer of humor to that for me, if I can't keep a resolution as simple and meaningful as that, I wouldn't have any hope of keeping any other resolution either.</p>
+		<p class="mb-0">&nbsp</p>
+		<p class="mb-0"></p>
+		<p class="mb-0">&nbsp</p>
+		<p class="mb-0"></p>
+		<p class="mb-0">&nbsp</p>
+	      </div>
+	      <div class="col-2"></div>
+	    </div>
+    
+
+	    
+	    <div class="container p-3 tw"></div>
+	    <div class="container p-3 tw"></div>
+	  </div>
+	</div>
+      </div>
+    </div>
+  </div content>
+  
+  <footer class="small text-center text-white-50">
+    <div class="container">
+      Copyright &copy; Yomonsni 2019
+    </div>
+  </footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="../vendor/jquery/jquery.min.js"></script>
+  <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Plugin JavaScript -->
+  <script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
+
+  <!-- Custom scripts for this template -->
+  <script src="../js/grayscale.min.js"></script>
+
+</body>
+
+</html>

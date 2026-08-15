@@ -1,0 +1,17 @@
+
+
+TOPMENU   --  this is the collection of directories. Might as well hardcode. However need to . vs .. based on level
+
+TITLE  -- page title, but let's change it up, so that we get nested titles
+
+LINK  -- The name for the page in the SUBNAV  (not needed because subnav is hard coded) 
+
+BGIMAGE  -- this is background image for the page
+
+SUBNAV  -- this is the side menu - because I care about order and format in it I'll likely have to hardcode code this in as well, but at least a central place to code it in so it hits all pages
+
+STUFFING  -- this is the real content of the page
+
+FOOTER  -- much like TOPMENU, but has all the closing stuffs. 
+
+HEAD -- all the tops stuffs for the page

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Yomonsni - Development</title>
+
+  <!-- Bootstrap core CSS -->
+  <link href="../vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- Custom fonts for this template -->
+  <link href="../vendor/fontawesome-free/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+  <!-- Custom styles for this template -->
+  <link href="../css/myfunk.css" rel="stylesheet">
+
+</head>
+
+<body background="../img/yo-IMG_08581-5DSR-raw16-rawtherapee-shaped.jpg">
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="../about/index.html">Discover Yomonsni</a>
+      <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        Menu
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="../massage/index.html">Massage</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="../sanctuary/index.html">Sanctuary</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="../development/index.html">Development</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="../lifestyle/index.html">Lifestyle</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="../reflections/index.html">Reflections</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+
+  <!-- Header -->
+  <header class="mastblank">
+    <div class="container d-flex h-100 align-items-center">
+      <div class="mx-auto text-center">
+        <h1 class="mx-auto my-0 text-uppercase">&nbsp</h1>
+        <h1 class="mx-auto my-0 text-uppercase">Yomonsni</h1>
+        <h2 class="text-white-50 mx-auto mt-2 mb-5">Development and growth</h2>
+      </div>
+    </div>
+  </header>
+
+  <!-- content -->
+  <div class="container-fluid p-3 tw">
+    <div class="row">
+      <div class="col-2 bg-faded">
+	<!-- sub-nav -->
+	<p class="mb-0">Development</p>
+	<p class="mb-0"><a href="./index.html">Overview</a></p>
+	<p class="mb-0"><a href="./patterns.html">Patterns</a></p>
+	<p class="mb-0"><a href="./principles.html">Principles</a></p>
+	<p class="mb-0"><a href="./pairing.html">Pairing</a></p>
+	<p class="mb-0">&nbsp</p>
+	<p class="mb-0">Loci</p>
+	<p class="mb-0">&nbsp</p>
+	<p class="mb-0"><a href="./body.html">Body / Yom</a></p>
+	<p class="mb-0"><a href="./mind.html">Mind / Ons</a></p>
+	<p class="mb-0"><a href="./self.html">Self / Sni</a></p>
+	<p class="mb-0">&nbsp</p>
+      </div subnav>
+
+
+      
+      <div class="col-10">
+	<div class="row">
+	  <div class="col-sm-2">
+            <h2 class="section-heading mb-0 bg-faded2 p-3 rounded">
+              <span class="section-heading-upper tw">Foundations</span>
+            </h2>
+	  </div>
+	  <div class="col-sm-1"></div>
+	  <div class="col-sm-7 bg-faded2 p-3 rounded">
+            <p class="mb-0">When we consider what makes up a person, we think about many things - their body, their personality, their experiences, their knowledge, their likes and dislikes, even what they do. Within Yomonsni, we think of this in three overlapping layers: self, mind, and body. </p>
+            <p class="mb-0">&nbsp</p>
+            <p class="mb-0">Mind (Ons), self (Sni) and body (Yom) all work together. Your emotional well being, or stress levels can impact your health, and your health impacts your thoughts, etc. So as you work on developing as a person, it is important to work on all layers in a harmonious approach, growing all of you rather than allowing yourself to unbalance. </p>
+            <p class="mb-0">&nbsp</p>
+            <p class="mb-0"></p>
+            <p class="mb-0">&nbsp</p>
+            <p class="mb-0"></p>
+            <p class="mb-0">&nbsp</p>
+	  </div>
+	</div inner-row>
+	<div class="row p-3 tw"></div>
+	<div class="row p-3 tw"></div>
+
+
+
+	<div class="row">
+	  <div class="col-sm-2">
+            <h2 class="section-heading mb-0 bg-faded2 p-3 rounded">
+              <span class="section-heading-upper tw">Approach</span>
+            </h2>
+	  </div>
+	  <div class="col-sm-1"></div>
+	  <div class="col-sm-7 bg-faded2 p-3 rounded">
+            <p class="mb-0">The approach to long term development is to get you paired with someone for the long term. They will first work with you to uncover what goals you have and to help identify steps along the way. They will challenge you and hold you accountable to making measurable progress, while adapting to changing priorities that events in your life may be causing. More about this in <a href="./pairing.html">Pairing</a>.</p>
+            <p class="mb-0">&nbsp</p>
+            <p class="mb-0"></p>
+            <p class="mb-0">&nbsp</p>
+	  </div>
+	</div inner-row>
+	<div class="row p-3 tw"></div>
+	<div class="row p-3 tw"></div>
+
+	
+      </div col-10>
+    </div great-row>
+  </div page container>
+  
+  
+
+
+
+  FOOTER
+
+  

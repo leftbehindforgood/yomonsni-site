@@ -1,0 +1,57 @@
+TITLE=Yomonsni - Reflections - The Power of Words
+BGIMAGE=yo-IMG_46831-5DII-raw16-rawtherapee-shaped.jpg
+SUBHEAD=The Power of Words
+SUBDEAH=Posted 2019-06-18
+
+      <div class="col-10">
+	<div class="row">
+	  <div class="row p-3 tw"></div>
+	  <div class="container p-3 tw">
+	    <div class="row">
+	      <div class="col-2"></div>
+	      <div class="col-7 bg-faded2 p-3 rounded">
+		<p class="mb-0">Words are symbols of meaning, they represent ideas and concepts outside of the mark on the page or the screen or the sound in our ears. However, this representation is not nearly a static thing, for language evolves. The meaning of a word is colored by culture, history, by our own personal experiences and insights. Often times words, especially in the English language, end up with many accepted meanings, and each of us may default to a different one, which can certainly cause confusion.</p>
+		<p class="mb-0">&nbsp</p>
+		<p class="mb-0">Think about the word "orange" for a moment. Was the first concept that you formed around it the color or the fruit? Try it again with the word "master"... and did you conceptualize an expert in their trade, the process of refining as skill, an individual in control of others, or something else entirely? Often the meaning we intend to communicate with can be obtained from context, but sometimes context isn't enough.</p>
+		<p class="mb-0">&nbsp</p>
+		<p class="mb-0">Years ago I was reading a book on hypnotic language, and the author brought up the idea that words can work against us because of conditioning around them. Think about someone who is trying to "quit" smoking, or someone who is trying to "lose" weight. In each case the stated intention is fantastic, and the meaning seems to be clear, but when we examine the words and the context, a part of the difficulty appears. We have a strong cultural bias against being a "quitter", we want to see things through, so if one is trying to "quit" smoking, they face the extra layer of difficulty in breaking this extra level of conditioning. It's even worse for our other example, as we only ever "lose" something of value, that we want to keep, and so when we "lose" it, we go looking for it, hoping to find it again. There is a story even of a woman, who as a child fell down a well and was trapped for hours. As an adult, she was in a therapy session for something, and while deep in rapport, her therapist suggested that she would "get well". This innocuous word choice caused her to have a bit of a panic reaction, as her personal experience gave an extra meaning to the word that her subconscious reacted to.</p>
+		<p class="mb-0">&nbsp</p>
+		<p class="mb-0">With all of this baggage, with all of these layers, it is very important to consider the words we use, and the hidden meanings that are contained within. Communication is much more effective when care is put into the meaning that you are conveying. Even when describing your own motivations and actions, consider the words you choose as they may influence the effort required to attain the outcomes you wish.</p>
+		<p class="mb-0">&nbsp</p>
+		<p class="mb-0">Considering all of this, where words may have layered context, Yomonsni will avoid using certain words. Sometimes Yomonsni will create a new word, to, for a while at least, be more precise with the meaning. As you venture through this site, as you experience massage, and development and growth, when you encounter words that you don't know, accept that they have been created in order to avoid existing words with baggage. </p>
+		<p class="mb-0">&nbsp</p>
+		<p class="mb-0"></p>
+		<p class="mb-0">&nbsp</p>
+	      </div>
+	      <div class="col-2"></div>
+	    </div>
+    
+
+	    
+	    <div class="container p-3 tw"></div>
+	    <div class="container p-3 tw"></div>
+	  </div>
+	</div>
+      </div>
+    </div>
+  </div content>
+  
+  <footer class="small text-center text-white-50">
+    <div class="container">
+      Copyright &copy; Yomonsni 2019
+    </div>
+  </footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="../vendor/jquery/jquery.min.js"></script>
+  <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Plugin JavaScript -->
+  <script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
+
+  <!-- Custom scripts for this template -->
+  <script src="../js/grayscale.min.js"></script>
+
+</body>
+
+</html>

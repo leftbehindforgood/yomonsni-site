@@ -1,0 +1,155 @@
+TITLE=Yomonsni - About - Goals and Intentions
+BGIMAGE=yo-IMG_20216-5DSR-raw16-rawtherapee-natural.jpg
+SUBHEAD=Goals and Intentions
+
+
+
+
+
+
+      <div class="col-10">
+	<div class="row p-2 tw">
+	  <div class="col-sm-2">
+            <h2 class="section-heading mb-0 bg-faded2 p-3 rounded">
+              <span class="section-heading-upper tw">Goals</span>
+            </h2>
+	  </div>
+	  <div class="col-sm-1"></div>
+	  <div class="col-sm-7 bg-faded2 p-3 rounded">
+            <p class="mb-0">Goals are broken into periods. Currently as something new, the focus is on the early stages.</p>
+            <p class="mb-0">&nbsp</p>
+            <p class="mb-0"></p>
+            <p class="mb-0">&nbsp</p>
+            <p class="mb-0"></p>
+	  </div>
+	</div innerrow>
+	<div class="row p-3 tw"></div>
+	<div class="row p-3 tw"></div>
+
+
+	<div class="row p-2 tw">
+	  <div class="col-sm-2">
+            <h2 class="section-heading mb-0 bg-faded2 p-3 rounded">
+              <span class="section-heading-upper tw">Early</span>
+            </h2>
+	  </div>
+	  <div class="col-sm-1"></div>
+	  <div class="col-sm-7 bg-faded2 p-3 rounded">
+            <p class="mb-0">Exploration and experimentation - At this very early stage, the entirety of Yomonsni is being created. Techniques and practices are being explored and ideas are being formulated, experiemented with and evaluated.</p>
+            <p class="mb-0">&nbsp</p>
+            <p class="mb-0">Build successes - In the limited practice so far, there has already been some success stories. More need to be accumulated, and testimonials written.</p>
+            <p class="mb-0">&nbsp</p>
+            <p class="mb-0"></p>
+            <p class="mb-0">&nbsp</p>
+            <p class="mb-0"></p>
+            <p class="mb-0">&nbsp</p>
+	  </div>
+	</div innerrow>
+	<div class="row p-3 tw"></div>
+	<div class="row p-3 tw"></div>
+
+
+	<div class="row">
+	  <div class="col-sm-2">
+            <h2 class="section-heading mb-0 bg-faded2 p-3 rounded">
+              <span class="section-heading-upper tw">Medium</span>
+            </h2>
+	  </div>
+	  <div class="col-sm-1"></div>
+	  <div class="col-sm-7 bg-faded2 p-3 rounded">
+            <p class="mb-0">Facilities - There are some plans underway to start development of the facilities for the first true <a href="../sanctuary/index.html">sanctuary</a>.</p>
+            <p class="mb-0">&nbsp</p>
+            <p class="mb-0">Development - In the medium term adding another practitioner will be a very significant tipping point in Yomonsni - sharing the thoughts and enabling a more robust ability to develop and grow the philosophy.</p>
+            <p class="mb-0">&nbsp</p>
+            <p class="mb-0"></p>
+            <p class="mb-0">&nbsp</p>
+	  </div>
+	</div inner-row>
+	<div class="row p-3 tw"></div>
+	<div class="row p-3 tw"></div>
+	
+
+	<div class="row p-2 tw">
+	  <div class="col-sm-2">
+            <h2 class="section-heading mb-0 bg-faded2 p-3 rounded">
+              <span class="section-heading-upper tw"></span>
+            </h2>
+	  </div>
+	  <div class="col-sm-1"></div>
+	  <div class="col-sm-7 bg-faded2 p-3 rounded">
+            <p class="mb-0"></p>
+            <p class="mb-0">&nbsp</p>
+            <p class="mb-0"></p>
+            <p class="mb-0">&nbsp</p>
+            <p class="mb-0"></p>
+            <p class="mb-0">&nbsp</p>
+            <p class="mb-0"></p>
+            <p class="mb-0">&nbsp</p>
+	  </div>
+	</div innerrow>
+	<div class="row p-3 tw"></div>
+	<div class="row p-3 tw"></div>
+
+
+	<div class="row p-2 tw">
+	  <div class="col-sm-2">
+            <h2 class="section-heading mb-0 bg-faded2 p-3 rounded">
+              <span class="section-heading-upper tw"></span>
+            </h2>
+	  </div>
+	  <div class="col-sm-1"></div>
+	  <div class="col-sm-7 bg-faded2 p-3 rounded">
+            <p class="mb-0"></p>
+            <p class="mb-0">&nbsp</p>
+            <p class="mb-0"></p>
+            <p class="mb-0">&nbsp</p>
+            <p class="mb-0"></p>
+            <p class="mb-0">&nbsp</p>
+            <p class="mb-0"></p>
+            <p class="mb-0">&nbsp</p>
+	  </div>
+	</div innerrow>
+	<div class="row p-3 tw"></div>
+	<div class="row p-3 tw"></div>
+
+
+
+
+	
+
+      </div col-11>
+    </div great-row>
+  </div page container>
+  
+  
+
+
+
+
+
+
+
+
+  
+
+      
+  
+  <footer class="small text-center text-white-50">
+    <div class="container">
+      Copyright &copy; Yomonsni 2019
+    </div>
+  </footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script src="../vendor/jquery/jquery.min.js"></script>
+  <script src="../vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Plugin JavaScript -->
+  <script src="../vendor/jquery-easing/jquery.easing.min.js"></script>
+
+  <!-- Custom scripts for this template -->
+  <script src="../js/grayscale.min.js"></script>
+
+</body>
+
+</html>
