@@ -1,0 +1,11 @@
+title = "Gitleaks Configuration"
+
+# Seriously, how can i be the only person to have tripped over this for ibm infosec.
+# cmon guys.. thats pretty slack, bootstrap is pretty fucking common.
+
+[allowlist]
+description = "Ignore Bootstrap third-party vendor documentation assets"
+paths = [
+  '''toolset/bootstrap-4\.3\.1-source/site/docs/4\.3/assets/js/src/search\.js''',
+  '''toolset/bootstrap-4\.3\.1-source/site/docs/4\.3/assets/js/docs\.min\.js'''
+]
