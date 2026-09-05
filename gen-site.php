@@ -72,6 +72,11 @@ $dirs["lifestyle"]=new stdClass();
 $dirs["massage"]=new stdClass();
 $dirs["reflections"]=new stdClass();
 $dirs["sanctuary"]=new stdClass();
+$dirs["performance"]=new stdClass();
+$dirs["leadership"]=new stdClass();
+$dirs["change"]=new stdClass();
+$dirs["fantasy"]=new stdClass();
+$dirs["performance"]=new stdClass();
 
 
 $dirs["."]->level = 0;
@@ -342,8 +347,8 @@ EOD;
 // so, want to walk the directory structure and read in skeleton pages
 // there will be an index.skel and a page.skel at each actual dir level
 
-$readprefix="fresh-content/content/";
-$writeprefix="fresh-content/working/";
+$readprefix="content/";
+$writeprefix="working/";
 
 // clean up the destination, so nothing is left over
 system ("rm -rf $writeprefix/*");
@@ -521,14 +526,6 @@ foreach ($directories as $which) {
 }
 
 
-foreach ($noworkdir as $which) {
-    //    system ("rsync -av --delete $readprefix$which $writeprefix",$ret);
-
-}
-
-
-
-
 // to build push ready copy lots of things
 foreach ($noworkdir as $which) {
         print "rsync -av --delete $readprefix$which $writeprefix\n";
@@ -548,7 +545,7 @@ system ("rsync -a $writeprefix \/tmp\/foo",$ret);
 // aws s3 rm s3://yomonsni.com/about --recursive
 // aws s3 sync . s3://yomonsni.com --acl public-read
 
-// aws s3 sync fresh-content/working/ s3://yomonsni.com --acl public-read
+// aws s3 sync working/ s3://yomonsni.com --acl public-read
 
 
 

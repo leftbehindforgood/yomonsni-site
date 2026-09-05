@@ -34,12 +34,14 @@ BGIMAGE=om
     <div class="container d-flex h-100 align-items-center">
       <div class="mx-auto text-center">
         <h1 class="mx-auto my-0 text-uppercase">Yomonsni</h1>
-        <h2 class="text-white-50 mx-auto mt-2 mb-5">An integrated approach to <a href="./massage/index.html">massage</a>, personal <a href="./development/index.html">development</a>, and <a href="./lifestyle/index.html">lifestyle</a>, that delves deeply into self, mind, and body.</h2>
-        <a href="#about" class="btn btn-primary js-scroll-trigger">Explore Yomonsni</a>
+        <h2 class="text-white-50 mx-auto mt-2 mb-5">Coaching and catalyzing</h2>
+        <h2 class="text-white-50 mx-auto mt-2 mb-5">Authenticity, Discovery, Performance, Creativity</h2>
 	<p class="mb-0">&nbsp</p>
         <p class="mb-0"></p>
+        <h2 class="text-white-50 mx-auto mt-2 mb-5"></h2>
+        <a href="#about" class="btn btn-primary js-scroll-trigger">Explore Yomonsni</a>
         <p class="mb-0">&nbsp</p>
-        <p class="mb-0 tw">Please note, site is under heavy construction, some links don't work as they are placeholders for future content. Keep checking back, content is flowing and filling in, revising and explaining things more clearly.</p>
+        <p class="mb-0 tw">Please note, site is under heavy re-construction, some links don't work as they are placeholders for future content. Keep checking back, content is flowing and filling in, revising and explaining things more clearly.</p>
         <p class="mb-0">&nbsp</p>
       </div>
     </div>

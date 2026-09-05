@@ -84,6 +84,16 @@ templates, and `myfunk.css`; nothing is implemented yet.
   `sanctuary/goldcoasthinterland.con`) have `alt=""`. Fine if decorative,
   but several are the primary visual content of the section and should
   describe the image for screen readers.
+- **All internal links must be relative, never absolute.** Every link
+  between pages on this site (nav, footer, subnav, in-content links) should
+  use a relative path (`./foo.html`, `../about/index.html`, etc.) following
+  the existing `$dirs[$which]->level` convention — root-level pages link
+  with `./`, subdirectory pages with `../` — never a full
+  `https://yomonsni.com/...` URL or a root-relative `/foo.html` path.
+  Absolute internal links break local/staging previews (files opened
+  straight from `fresh-content/working/`) and silently point at production
+  even when testing a different environment. External links (to other
+  domains) are exempt, obviously.
 
 ## 3. Mobile/responsive follow-ups
 
