@@ -51,10 +51,19 @@ marked superseded rather than treated as an active punch list.
       `sitemap.xml`. Verified both the generated sitemap (0 coach URLs,
       everything else present) and the guard (fires on a deliberately bad
       fixture) before committing.
-- [ ] Content-authoring guide for coaches (§8) — not started.
-- [ ] `page-variables` rewrite / `CLAUDE.md` architecture rewrite for the
-      new engine (§8) — not started; `CLAUDE.md` still describes the old
-      engine except for the Phase 1 path corrections.
+- [x] `CLAUDE.md` architecture rewrite for the new engine (§8) — done
+      (separate commit, ahead of the sitemap.xml work).
+- [x] Content-authoring guide + `page-variables` rewrite (§8): merged into
+      one document rather than kept separate — `CONTENT-GUIDE.md` at the
+      repo root replaces `page-variables` (deleted) and covers both the
+      field-by-field reference the old file was and the example-driven
+      walkthrough coaches need, on the reasoning that the old file's
+      original intent was already "document the engine's fields for
+      whoever's writing content," which is one audience, not two. Explicit
+      trade-off accepted: one document to keep in sync with the schema
+      instead of two, at the cost of it being more work to maintain than a
+      terse reference alone would be. `CLAUDE.md` points to it from the
+      content-model section.
 - [ ] Visual design/tone pass (§1) — deliberately deferred.
 
 ## 1. Mission and scope change
@@ -326,22 +335,14 @@ Done, on branch `coaching-rebuild`:
   *current* `.con`/`.skel` engine as-is, since that engine hasn't changed
   yet — only the parts invalidated by moving files.
 
-Still to do:
-
-- New top-level `templates/` directory for the engine-owned page-shape
-  templates and partials from §5–6 — kept **out of** `content/` so the
-  human-authored/engine-owned split is a real directory boundary, not just
-  a convention (today's `.skel` files sitting inside the same directories
-  as `.con` content files undercuts the separation this whole rebuild is
-  trying to achieve). Created once the template rewrite (§6) starts.
-- Rewrite `page-variables` (or fold its content into `CLAUDE.md`) to
-  document the new template/front-matter model — its current content
-  (documenting `TOPMENU`/`LINK`/`SUBNAV`/`HEAD` tokens that were never
-  implemented) has no bearing on the new engine.
-- `CLAUDE.md` needs a further, larger rewrite once the engine itself
-  changes — nearly every path, and the entire architecture section,
-  currently describes the old single-author flat `.con`/`.skel` system
-  being replaced here.
+Everything originally listed here as "still to do" is now done, in later
+commits than this section's own text: the `templates/` directory exists
+(§5–6 landed in the Phase 2 commit), `page-variables` was deleted and its
+intent folded into `CONTENT-GUIDE.md` alongside the content-authoring guide
+rather than into `CLAUDE.md`, and `CLAUDE.md` got its full architecture
+rewrite in its own commit. See the progress checklist at the top of this
+document for the up-to-date state — this subsection is left as a record of
+the original plan, not a current task list.
 
 ## 9. Site validation and the local dry-run
 

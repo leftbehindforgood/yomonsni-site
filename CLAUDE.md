@@ -43,6 +43,12 @@ ship something broken.
 
 ## Content model: `+++`-fenced front matter, one shape for everything
 
+For the friendly, example-driven version of everything in this section and
+the next (aimed at someone writing content, not maintaining the engine),
+see `CONTENT-GUIDE.md` — it replaced the old `page-variables` file and is
+the place field names get documented for real; keep it in sync with any
+change here.
+
 Every human-authored content file under `content/` (a `.entry` file) has the
 same two-part shape, parsed by `lib/entry.php`:
 
@@ -208,6 +214,10 @@ development (see the Phase 2 commit) — they're not just written, they fire.
 
 ## Repository layout
 
+- `CONTENT-GUIDE.md` — the content-authoring reference (field-by-field, with
+  copy-pasteable templates), for anyone writing a coach card, testimonial,
+  whisper, or event listing. Replaced `page-variables`, which documented
+  the old engine's tokens and no longer applied to anything.
 - `content/` — the live source of truth: the six domains' own directories,
   the five collection directories, `legal/`, and the sitewide
   `index.entry`/`footer.entry`, plus the non-templated asset directories
@@ -257,12 +267,6 @@ engine, now fully replaced). Current state:
 
 ## Known gaps / open decisions
 
-- `page-variables` still documents the old, now-nonexistent `.con`/`.skel`
-  token model and hasn't been rewritten or removed yet.
-- No content-authoring guide exists yet for coaches contributing their own
-  bios/whispers (Markdown + front-matter fields, no HTML knowledge
-  needed) — `startediting.sh`, the old single-operator emacs-launch
-  script, was retired for exactly this reason but nothing has replaced it.
 - Visual design/tone (the site is meant to read as "seductive and
   inviting," more so to women than men, without ever stating that) is
   deliberately deferred — current templates reuse the old theme's
