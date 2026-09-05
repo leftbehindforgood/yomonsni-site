@@ -90,8 +90,8 @@
   position: relative;
   width: 100%;
   height: auto;
-  min-height: 35rem;
-  padding: 15rem 0;
+  min-height: 16rem;
+  padding: 4rem 0;
   background: -webkit-gradient(linear, left top, left bottom, from(rgba(22, 22, 22, 0.3)), color-stop(75%, rgba(22, 22, 22, 0.7)), to(#161616)), url("../img/bg-masthead.jpg");
   background: linear-gradient(to bottom, rgba(22, 22, 22, 0.3) 0%, rgba(22, 22, 22, 0.7) 75%, #161616 100%), url("../img/yo-IMG_56547-5DII-raw16-rawtherapee-shaped.jpg");
   background-position: center;
@@ -403,6 +403,7 @@ footer {
 .card-glass {
   background-color: rgba(30, 30, 30, 0.55);
   border-color: rgba(255, 255, 255, 0.15);
+  border-radius: 1rem;
 }
 
 .card-glass .card-title,
@@ -416,6 +417,7 @@ footer {
 .btn-explore {
   background-color: #1c2b4a;
   border-color: #1c2b4a;
+  border-radius: 2rem;
 }
 
 .btn-explore:hover,

@@ -167,7 +167,10 @@ shell.php` wraps every page (doctype/head/nav/footer); each shape below
 supplies just its own inner content.
 
 1. **`templates/hub.php`** — root landing page. One-off; links to all six
-   domains with a short blurb pulled from each domain's own `index.entry`.
+   domains via a card carrying no label/title, just a `hook` field pulled
+   from each domain's own `index.entry` — a "mom test" style question
+   (simple, personal, no jargon) meant to pull a visitor in by resonance
+   rather than by describing the service.
 2. **`templates/domain-overview.php`** — a domain's front door. Composite:
    renders its own intro copy, then teaser sections pulled live from the
    coaches/resources/whispers/workshops/retreats collections filtered to

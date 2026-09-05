@@ -1,7 +1,10 @@
 <?php
 // Page shape 1: the root landing page. One-off — nothing else uses this
 // shape. Expects: $entry (content/index.entry), $domains (slug => title),
-// $domain_entries (slug => that domain's own index.entry, for its blurb).
+// $domain_entries (slug => that domain's own index.entry, for its hook).
+// The domain cards deliberately have no title/label — just a "mom test"
+// style question (simple, personal, no jargon) meant to pull a visitor
+// toward that domain by resonance rather than by describing the service.
 ?>
   <!-- No background of its own at all, deliberately: the hero photo lives
        on <body> only (see gen-site.php's write_page call for this page),
@@ -24,13 +27,12 @@
     <div class="row">
 <?php foreach ($domains as $slug => $title):
         $d = $domain_entries[$slug];
-        $blurb = field($d, 'blurb');
+        $hook = field($d, 'hook');
 ?>
       <div class="col-sm mb-4">
         <div class="card card-glass h-100">
           <div class="card-body text-center">
-            <h5 class="card-title"><?php echo htmlspecialchars($title); ?></h5>
-            <p class="card-text"><?php echo htmlspecialchars($blurb); ?></p>
+            <p class="card-text"><?php echo htmlspecialchars($hook); ?></p>
             <a class="btn btn-primary btn-explore" href="<?php echo asset_url($prefix, "$slug/index.html"); ?>">Explore</a>
           </div>
         </div>

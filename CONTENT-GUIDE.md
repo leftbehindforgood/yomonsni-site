@@ -162,11 +162,16 @@ individual coaches, but documented here for completeness:
 ```
 +++
 title: Leadership
-blurb: One sentence shown on the homepage's domain card.
+hook: A "mom test" style question shown on the homepage's domain card.
 +++
 
 The domain's own intro/outline copy.
 ```
+
+`hook` is deliberately a question, not a description — something simple
+and personal enough that a visitor recognizes themselves in it (think "does
+this sound like you?", not "we offer X and Y"). The homepage card shows
+only this question, with no title or domain name on it at all.
 
 ### A domain's resources page — `content/<domain>/resources.entry`
 
