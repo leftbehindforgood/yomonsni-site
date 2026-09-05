@@ -8,9 +8,32 @@
 // $text_align ('left'/'right'/null — a per-domain layout choice, see
 // gen-site.php's $domain_design), $card_class (extra class appended to
 // this domain's cards, e.g. for a fully-transparent variant).
+//
+// When $text_align is set, the intro text and the coaches/resources/
+// whispers/workshops/retreats stack sit side by side in one row (~2/3 +
+// ~1/3) instead of the stack running full-width below the whole intro —
+// the point is getting a visitor to "Coaches" (deliberately first in the
+// stack, ahead of resources/whispers) without scrolling past a long
+// intro first. order-md-first/last keeps the intro first in the actual
+// markup (so it's still read/found first) while controlling which side
+// it lands on visually. With no $text_align, both columns are col-12,
+// which just stacks them full-width in document order — today's
+// no-side-chosen-yet default for every domain except this one.
 $intro_col = 'col-12';
-if ($text_align === 'left') $intro_col = 'col-12 col-md-8';
-if ($text_align === 'right') $intro_col = 'col-12 col-md-8 offset-md-4';
+$aside_col = 'col-12';
+$intro_order = '';
+$aside_order = '';
+if ($text_align === 'left') {
+    $intro_col = 'col-12 col-md-8';
+    $aside_col = 'col-12 col-md-4';
+    $intro_order = 'order-md-first';
+    $aside_order = 'order-md-last';
+} elseif ($text_align === 'right') {
+    $intro_col = 'col-12 col-md-8';
+    $aside_col = 'col-12 col-md-4';
+    $intro_order = 'order-md-last';
+    $aside_order = 'order-md-first';
+}
 ?>
   <header class="mastblank" style="background: none;">
     <div class="container d-flex h-100 align-items-center">
@@ -22,53 +45,51 @@ if ($text_align === 'right') $intro_col = 'col-12 col-md-8 offset-md-4';
 
   <div class="container-fluid p-3 tw">
     <div class="row">
-      <div class="<?php echo $intro_col; ?>">
+      <div class="<?php echo $intro_col . ' ' . $intro_order; ?>">
         <?php echo entry_html($entry); ?>
       </div>
-    </div>
 
+      <div class="<?php echo $aside_col . ' ' . $aside_order; ?>">
 <?php if (!empty($coaches)): ?>
-    <div class="row">
-      <div class="col-12"><h2>Coaches</h2></div>
+        <h2>Coaches</h2>
+        <div class="row">
 <?php foreach ($coaches as $c): ?>
 <?php echo render_template(__DIR__ . '/partials/coach-card.php', array('entry' => $c, 'prefix' => $prefix, 'card_class' => $card_class)); ?>
 <?php endforeach; ?>
-    </div>
+        </div>
 <?php endif; ?>
 
-    <div class="row">
-      <div class="col-12">
         <h2>Resources</h2>
         <p><?php echo htmlspecialchars(field($resources_entry, 'teaser')); ?></p>
         <a class="btn btn-primary" href="resources.html">Explore resources</a>
-      </div>
-    </div>
 
 <?php if (!empty($whispers)): ?>
-    <div class="row">
-      <div class="col-12"><h2>Whispers</h2></div>
+        <h2>Whispers</h2>
+        <div class="row">
 <?php foreach (array_slice($whispers, 0, 3) as $w): ?>
 <?php echo render_template(__DIR__ . '/partials/whisper-teaser-card.php', array('entry' => $w, 'coaches' => $coaches, 'domain_slug' => $domain_slug, 'card_class' => $card_class)); ?>
 <?php endforeach; ?>
-      <div class="col-12"><a href="whispers.html">All whispers &rarr;</a></div>
-    </div>
+        </div>
+        <a href="whispers.html">All whispers &rarr;</a>
 <?php endif; ?>
 
 <?php if (!empty($workshops)): ?>
-    <div class="row">
-      <div class="col-12"><h2>Workshops</h2></div>
+        <h2>Workshops</h2>
+        <div class="row">
 <?php foreach ($workshops as $w): ?>
 <?php echo render_template(__DIR__ . '/partials/event-card.php', array('entry' => $w, 'card_class' => $card_class)); ?>
 <?php endforeach; ?>
-    </div>
+        </div>
 <?php endif; ?>
 
 <?php if (!empty($retreats)): ?>
-    <div class="row">
-      <div class="col-12"><h2>Retreats</h2></div>
+        <h2>Retreats</h2>
+        <div class="row">
 <?php foreach ($retreats as $r): ?>
 <?php echo render_template(__DIR__ . '/partials/event-card.php', array('entry' => $r, 'card_class' => $card_class)); ?>
 <?php endforeach; ?>
-    </div>
+        </div>
 <?php endif; ?>
+      </div>
+    </div>
   </div>
