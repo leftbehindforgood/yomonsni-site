@@ -75,7 +75,7 @@ if ($text_align === 'left') {
 <?php echo render_template(__DIR__ . '/partials/whisper-teaser-card.php', array('entry' => $w, 'coaches' => $coaches, 'domain_slug' => $domain_slug, 'card_class' => $card_class, 'button_class' => $button_class)); ?>
 <?php endforeach; ?>
         </div>
-        <a href="whispers.html">All whispers &rarr;</a>
+        <a href="whispers.html" class="d-block mb-5">All whispers &rarr;</a>
 <?php endif; ?>
 
 <?php if (!empty($workshops)): ?>

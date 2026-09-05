@@ -500,31 +500,55 @@ footer {
    gen-site.php's $domain_design "button_class"), same pattern as the
    hub's .btn-explore navy. */
 .btn-creativity {
-  /* Three shades darker than the original #234d34, then another 15%
-     darker on top of that. */
-  background-color: #13291a;
-  border-color: #13291a;
+  /* Three shades darker than the original #234d34, then 15% darker,
+     then another 20% darker on top of that. Applied uniformly to every
+     real button on this page (coach Book/Full profile, More resources,
+     Read more, Register) via gen-site.php's per-domain button_class. */
+  background-color: #0f2115;
+  border-color: #0f2115;
 }
 
 .btn-creativity:hover,
 .btn-creativity:focus {
-  background-color: #0e1e14;
-  border-color: #0e1e14;
+  background-color: #0b1810;
+  border-color: #0b1810;
 }
 
 .btn-creativity:active {
-  background-color: #09140d !important;
+  background-color: #07100a !important;
 }
 
 /* Non-interactive stand-in for a Book button when a coach has no
    booking_link set — same size/shape as a real button so the layout
-   doesn't shift, but visibly not clickable. */
+   doesn't shift, but visibly not clickable, and every interaction state
+   (hover/focus/active) is pinned to the same resting appearance since
+   there's nothing to actually interact with. The diagonal (top-right to
+   bottom-left, via ::after) reinforces that visually too. */
 .btn-unavailable {
+  position: relative;
+  overflow: hidden;
   background-color: transparent;
   border: 1px solid rgba(245, 245, 245, 0.35);
   color: rgba(245, 245, 245, 0.6);
   cursor: default;
   box-shadow: none !important;
+}
+
+.btn-unavailable:hover,
+.btn-unavailable:focus,
+.btn-unavailable:active {
+  background-color: transparent !important;
+  border-color: rgba(245, 245, 245, 0.35) !important;
+  color: rgba(245, 245, 245, 0.6) !important;
+}
+
+.btn-unavailable::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(to bottom right, transparent calc(50% - 1px), rgba(245, 245, 245, 0.45) 50%, transparent calc(50% + 1px));
+  pointer-events: none;
 }
 
 /* Generic expandable-content block, revealed by a .toggle-more chevron
@@ -559,6 +583,14 @@ footer {
 
 .toggle-more.is-open i {
   transform: rotate(90deg);
+}
+
+/* Sits directly under a preceding list/paragraph it belongs to (the
+   resources card's pointers), rather than floating with no clear
+   attachment to either what's above or the button below it. */
+.toggle-more-tight {
+  display: block;
+  margin-top: 0.1rem;
 }
 
 /* background-attachment: fixed is unreliable on mobile browsers (notably

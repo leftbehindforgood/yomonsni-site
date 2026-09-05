@@ -15,19 +15,19 @@ $button_extra = (isset($button_class) && $button_class !== '') ? " $button_class
     <div class="card card-glass<?php echo $card_extra; ?>">
       <div class="card-body">
 <?php if (!empty($pointers)): ?>
-        <ul class="resource-pointers">
+        <ul class="resource-pointers mb-0">
 <?php foreach ($pointers as $p): ?>
           <li><?php echo htmlspecialchars($p); ?></li>
 <?php endforeach; ?>
         </ul>
 <?php endif; ?>
 <?php if ($teaser !== ''): ?>
-        <button type="button" class="toggle-more" data-target="resources-more" aria-expanded="false" aria-controls="resources-more" aria-label="More about resources"><i class="fas fa-chevron-right"></i></button>
+        <button type="button" class="toggle-more toggle-more-tight" data-target="resources-more" aria-expanded="false" aria-controls="resources-more" aria-label="More about resources"><i class="fas fa-chevron-right"></i></button>
         <div id="resources-more" class="expand-content" hidden>
           <p><?php echo htmlspecialchars($teaser); ?></p>
         </div>
 <?php endif; ?>
-        <a class="btn btn-primary<?php echo $button_extra; ?> mt-3" href="resources.html">Explore resources</a>
+        <a class="btn btn-primary<?php echo $button_extra; ?> mt-4" href="resources.html">More resources</a>
       </div>
     </div>
   </div>
