@@ -3,11 +3,13 @@
 // Composite — it renders its own intro copy, then teaser sections pulled
 // from other collections filtered to this domain (restructure plan §5.2).
 // Expects: $entry, $domain_slug, $domain_title, $prefix, $coaches (already
-// filtered to this domain), $resources_entry, $whispers (filtered, sorted
-// newest-first), $workshops, $retreats (each filtered to this domain),
-// $text_align ('left'/'right'/null — a per-domain layout choice, see
-// gen-site.php's $domain_design), $card_class (extra class appended to
-// this domain's cards, e.g. for a fully-transparent variant).
+// filtered to this domain), $all_coaches (the *global*, unfiltered
+// collection — needed for whisper byline resolution; see the comment
+// below), $resources_entry, $whispers (filtered, sorted newest-first),
+// $workshops, $retreats (each filtered to this domain), $text_align
+// ('left'/'right'/null — a per-domain layout choice, see gen-site.php's
+// $domain_design), $card_class (extra class appended to this domain's
+// cards, e.g. for a fully-transparent variant).
 //
 // When $text_align is set, the intro text and the coaches/resources/
 // whispers/workshops/retreats stack sit side by side in one row (~2/3 +
@@ -72,7 +74,9 @@ if ($text_align === 'left') {
         <h2 class="text-center">Whispers</h2>
         <div class="row">
 <?php foreach (array_slice($whispers, 0, 3) as $w): ?>
-<?php echo render_template(__DIR__ . '/partials/whisper-teaser-card.php', array('entry' => $w, 'coaches' => $coaches, 'domain_slug' => $domain_slug, 'card_class' => $card_class, 'button_class' => $button_class)); ?>
+<?php // 'coaches' here is $all_coaches (global), not the domain-filtered
+     // $coaches — see this file's header comment. ?>
+<?php echo render_template(__DIR__ . '/partials/whisper-teaser-card.php', array('entry' => $w, 'coaches' => $all_coaches, 'domain_slug' => $domain_slug, 'card_class' => $card_class, 'button_class' => $button_class)); ?>
 <?php endforeach; ?>
         </div>
         <a href="whispers.html" class="d-block mb-5">All whispers &rarr;</a>

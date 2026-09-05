@@ -43,7 +43,27 @@ $domain_design = array(
         'bg'           => 'yo-IMG_42290-5D3-raw-shaped-flattened.jpg',
         'text_align'   => 'left', // matches the shared default; explicit for clarity
         'card_class'   => 'card-glass-transparent',
-        'button_class' => 'btn-creativity', // dark green, this domain only
+        'button_class' => 'btn-creativity', // dark green
+    ),
+    "leadership" => array(
+        'bg'           => 'yo-IMG_00053-5DSR-raw16-shaped-flattened-kaleidoscope.jpg',
+        'button_class' => 'btn-leadership', // dark slate blue-grey
+    ),
+    "change" => array(
+        'bg'           => 'yo-IMG_08577-5DSR-raw16-rawtherapee-shaped.jpg',
+        'button_class' => 'btn-change', // dark amber/bronze
+    ),
+    "performance" => array(
+        'bg'           => 'yo-IMG_22696-5D-raw32-rawtherapee.jpg',
+        'button_class' => 'btn-performance', // dark crimson/burgundy
+    ),
+    "intimate" => array(
+        'bg'           => 'yo-IMG_43079-5D-raw16-rawtherapee-shaped-flattened.jpg',
+        'button_class' => 'btn-intimate', // dark plum/wine
+    ),
+    "discovery" => array(
+        'bg'           => 'yo-IMG_73894-5D3-raw32-rawtherapee-shaped.jpg',
+        'button_class' => 'btn-discovery', // dark teal
     ),
 );
 
@@ -200,7 +220,7 @@ foreach ($domain_slugs as $slug) {
         'title' => $title, 'bgimage' => $bgimage,
         'content_template' => 'domain-overview.php',
         'entry' => $domain_entries[$slug], 'domain_slug' => $slug, 'domain_title' => $title,
-        'coaches' => $d_coaches, 'resources_entry' => $resources_entry,
+        'coaches' => $d_coaches, 'all_coaches' => $coaches, 'resources_entry' => $resources_entry,
         'whispers' => $d_whispers, 'workshops' => $d_workshops, 'retreats' => $d_retreats,
         'text_align' => $text_align, 'card_class' => $card_class, 'button_class' => $button_class,
     ), $templates);
@@ -236,13 +256,21 @@ foreach ($domain_slugs as $slug) {
     // -- whispers.html (teasers) + one page per whisper --
     $whisper_cards = array();
     foreach ($d_whispers as $w) {
+        // 'coaches' here is deliberately the *global*, un-filtered
+        // collection, not $d_coaches — resolve_coach_name() needs to see
+        // a coach's cards in domains other than this one to fall back
+        // correctly when a whisper is tagged into a domain its author
+        // has no card in at all (a real case: whispers can span domains
+        // a coach doesn't formally coach in). Passing the domain-filtered
+        // list here silently broke that fallback (rendered the bare
+        // coach_id instead of a real name) until this was traced.
         $whisper_cards[] = render_template($templates . 'partials/whisper-teaser-card.php', array(
-            'entry' => $w, 'coaches' => $d_coaches, 'domain_slug' => $slug, 'card_class' => $card_class, 'button_class' => $button_class,
+            'entry' => $w, 'coaches' => $coaches, 'domain_slug' => $slug, 'card_class' => $card_class, 'button_class' => $button_class,
         ));
         write_page("{$writeprefix}{$slug}/whisper-{$w['slug']}.html", $common + array(
             'title' => field($w, 'title'), 'bgimage' => $bgimage,
             'content_template' => 'whisper-article.php', 'entry' => $w,
-            'coaches' => $d_coaches, 'domain_slug' => $slug,
+            'coaches' => $coaches, 'domain_slug' => $slug,
         ), $templates);
     }
     write_page("{$writeprefix}{$slug}/whispers.html", $common + array(
