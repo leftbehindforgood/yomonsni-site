@@ -42,8 +42,15 @@ marked superseded rather than treated as an active punch list.
       whispers, and a sample workshop/retreat) — enough to exercise every
       page shape and guardrail, not real content. Real bios, testimonials,
       and copy still need to replace the placeholders before launch.
-- [ ] `sitemap.xml` decision (§7/§10) — still open, nothing generated
-      either way.
+- [x] `sitemap.xml` decision (§7/§10): resolved as option 2 — generate one,
+      but exclude individual coach-profile pages. Implemented in
+      `gen-site.php` (`write_page()`'s `$in_sitemap` flag, defaulting true,
+      passed `false` only for coach-profile pages) and enforced as a
+      regression guard in `lib/validate.php`'s `validate_sitemap()`, which
+      fails the build if a `coach-*.html` URL ever ends up in
+      `sitemap.xml`. Verified both the generated sitemap (0 coach URLs,
+      everything else present) and the guard (fires on a deliberately bad
+      fixture) before committing.
 - [ ] Content-authoring guide for coaches (§8) — not started.
 - [ ] `page-variables` rewrite / `CLAUDE.md` architecture rewrite for the
       new engine (§8) — not started; `CLAUDE.md` still describes the old
@@ -269,14 +276,25 @@ rather than relying on nobody ever making a mistake:
   to a real coach card, every whisper's `domains` values are real domain
   slugs. Today a typo silently drops content with no error; this should
   fail loudly instead.
-- **Open decision, not yet resolved**: whether to generate a `sitemap.xml`
-  at all. Even with zero on-site links between a coach's domain profiles,
-  a flat sitemap listing `leadership/coach-jane.html` and
-  `intimate/coach-jane.html` side by side hands over the same connection a
-  human wouldn't get from browsing. This may be an acceptable, out-of-scope
-  risk (same category as someone Googling the coach's name), but it should
-  be a deliberate choice, not something that shows up unnoticed via an SEO
-  checklist later.
+- **Resolved: generate `sitemap.xml`, excluding coach-profile pages.**
+  Even with zero on-site links between a coach's domain profiles, a flat
+  sitemap listing `leadership/coach-jane.html` and
+  `intimate/coach-jane.html` side by side would hand over the same
+  connection browsing wouldn't — no clicking required, just opening
+  `/sitemap.xml`. That's a meaningfully lower bar than "someone Googling
+  the coach's name" (which requires already knowing to look), so unlike
+  that risk it doesn't get accepted as out-of-scope. Whisper pages are
+  *not* excluded despite also being able to span domains — a whisper's
+  identical content across its tagged domains is already a deliberately
+  accepted exposure (§4.2 allows cross-tagging into `intimate`
+  specifically), visible via ordinary browsing with or without a sitemap,
+  so excluding it from the sitemap wouldn't close a gap that isn't already
+  open. Coach profiles are different specifically *because* they're
+  differentiated per domain (different photo, different bio) — the
+  sitemap is the one thing that would make that pairing easy to spot,
+  since normal browsing of two different-looking profiles doesn't.
+  Enforced by `lib/validate.php`'s `validate_sitemap()`, which fails the
+  build if a coach URL ever reappears in `sitemap.xml`.
 
 ## 8. Repository layout changes
 
@@ -384,7 +402,7 @@ pushing doesn't ship something broken.
 
 1. `.entry` as the file extension for all content records — placeholder,
    easy to change.
-2. Whether to generate a `sitemap.xml` (see §7).
+2. ~~Whether to generate a `sitemap.xml`~~ — resolved, see §7.
 3. Exact per-domain display names/branding shown to visitors (the slugs in
    §2 are technical/URL identifiers; the human-facing heading for, say,
    `change` could read as something else entirely) — this is a content-

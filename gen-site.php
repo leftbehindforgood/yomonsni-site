@@ -63,12 +63,27 @@ function footer_html_for($prefix, $footer_entry, $templates) {
     ));
 }
 
-function write_page($path, $shell_vars, $templates) {
+// $in_sitemap defaults to true; coach-profile pages pass false. See
+// "the sitemap.xml decision" (plan §7/§10): a coach keeps the same
+// identifier across every domain they work in, so a sitemap listing (say)
+// leadership/coach-jane.html next to intimate/coach-jane.html would hand
+// over the exact connection on-site browsing was built to avoid — no
+// clicking around required, just opening /sitemap.xml. Every other page
+// type doesn't have that problem (a whisper spanning domains is already a
+// deliberately-accepted exposure, not a new one — see the plan), so only
+// coach profiles are excluded.
+function write_page($path, $shell_vars, $templates, $in_sitemap = true) {
+    global $writeprefix, $sitemap_urls;
     $shell_vars['content_html'] = render_template($templates . $shell_vars['content_template'], $shell_vars);
     $html = render_template($templates . 'partials/shell.php', $shell_vars);
     @mkdir(dirname($path), 0755, true);
     file_put_contents($path, $html);
+    if ($in_sitemap) {
+        $sitemap_urls[] = ltrim(substr($path, strlen($writeprefix)), '/');
+    }
 }
+
+$sitemap_urls = array();
 
 // ---------------------------------------------------------------------
 // 3. The hub (root landing page).
@@ -151,7 +166,7 @@ foreach ($domain_slugs as $slug) {
         write_page("{$writeprefix}{$slug}/coach-{$coach_id}.html", $common + array(
             'title' => field($coach, 'name', $coach_id) . " — $title", 'bgimage' => '',
             'content_template' => 'coach-profile.php', 'entry' => $coach, 'testimonials' => $coach_testimonials,
-        ), $templates);
+        ), $templates, false); // excluded from sitemap.xml — see write_page()
     }
 
     // -- testimonials.html --
@@ -203,21 +218,34 @@ foreach ($domain_slugs as $slug) {
 }
 
 // ---------------------------------------------------------------------
-// 6. Non-templated asset directories, copied verbatim.
+// 6. sitemap.xml — everything write_page() registered except coach
+// profiles (see the comment on write_page() above).
+// ---------------------------------------------------------------------
+$sitemap = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+$sitemap .= "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n";
+foreach ($sitemap_urls as $rel) {
+    $sitemap .= "  <url><loc>https://{$site_domain}/{$rel}</loc></url>\n";
+}
+$sitemap .= "</urlset>\n";
+file_put_contents("{$writeprefix}sitemap.xml", $sitemap);
+
+// ---------------------------------------------------------------------
+// 7. Non-templated asset directories, copied verbatim.
 // ---------------------------------------------------------------------
 foreach ($noworkdir as $which) {
     system("rsync -a --delete {$readprefix}{$which} {$writeprefix}");
 }
 
 // ---------------------------------------------------------------------
-// 7. Validate the generated output (dead/absolute/cross-domain links,
-//    missing images, external link liveness — plan §9).
+// 8. Validate the generated output (dead/absolute/cross-domain links,
+//    missing images, external link liveness, sitemap exclusions — §9).
 // ---------------------------------------------------------------------
 $output_problems = validate_output($writeprefix, $domain_slugs, $site_domain);
+$output_problems = array_merge($output_problems, validate_sitemap($writeprefix));
 $hard_errors = print_problems($output_problems);
 
 // ---------------------------------------------------------------------
-// 8. Mirror to /tmp/foo — the local dry-run/preview step. Not debugging
+// 9. Mirror to /tmp/foo — the local dry-run/preview step. Not debugging
 //    leftovers; this is what gets browsed before push-site.php ever runs.
 // ---------------------------------------------------------------------
 system("rsync -a $writeprefix /tmp/foo");

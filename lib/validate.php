@@ -193,6 +193,29 @@ function url_is_reachable($url) {
     return $err === 0 && $code > 0 && $code < 400;
 }
 
+// Regression guard for "the sitemap.xml decision" (plan §7/§10): a coach
+// profile URL must never appear in sitemap.xml, since the same coach_id
+// shows up across their domain cards by design, and a sitemap listing two
+// of a coach's domain profiles side by side hands over exactly the
+// connection on-site browsing was built to avoid. This exists so a future
+// change to gen-site.php that starts including coach pages in the sitemap
+// again fails loudly instead of silently reintroducing the leak.
+function validate_sitemap($writeprefix) {
+    $problems = array();
+    $path = rtrim($writeprefix, '/') . '/sitemap.xml';
+    if (!file_exists($path)) return $problems;
+
+    if (preg_match_all('#<loc>([^<]*)</loc>#', file_get_contents($path), $m)) {
+        foreach ($m[1] as $url) {
+            if (preg_match('#/coach-[^/]+\.html$#', $url)) {
+                $problems[] = array('level' => 'error', 'message' =>
+                    "sitemap.xml includes a coach-profile URL, which must be excluded: $url");
+            }
+        }
+    }
+    return $problems;
+}
+
 function print_problems($problems) {
     $errors = array_filter($problems, function ($p) { return $p['level'] === 'error'; });
     $warnings = array_filter($problems, function ($p) { return $p['level'] === 'warning'; });

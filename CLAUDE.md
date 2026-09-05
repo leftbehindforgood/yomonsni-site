@@ -130,11 +130,27 @@ across domains. This is enforced architecturally, not just by convention:
   link back to the root hub — never to a sibling domain. `templates/
   partials/hub-nav.php` (root only) is the one place all six domains are
   listed together.
-- `lib/validate.php` enforces two pieces of this automatically:
+- `lib/validate.php` enforces three pieces of this automatically:
   `validate_content_references()` flags a coach's photo being reused
-  across more than one of their domain cards, and `validate_output()`
-  scans every generated page for a link crossing from one domain's
-  directory into another's (other than the sanctioned home link).
+  across more than one of their domain cards, `validate_output()` scans
+  every generated page for a link crossing from one domain's directory
+  into another's (other than the sanctioned home link), and
+  `validate_sitemap()` fails the build if a coach-profile URL ever ends up
+  in `sitemap.xml` — see the next section for why that file is a separate
+  case from on-site navigation.
+- **`sitemap.xml` is generated, but deliberately excludes coach-profile
+  pages.** `gen-site.php`'s `write_page()` registers every page it writes
+  into the sitemap except ones passed `$in_sitemap = false` (only the
+  coach-profile loop does this). The reason this needs separate handling
+  from the nav rule above: a sitemap is a flat manifest, not something a
+  visitor navigates — even with zero on-site links between
+  `leadership/coach-jane.html` and `intimate/coach-jane.html`, having both
+  listed a few lines apart in one file hands over the connection to
+  anyone who opens `/sitemap.xml`, no browsing required. Whisper pages are
+  *not* excluded despite also spanning domains — a whisper's identical
+  content across its tagged domains is already a deliberately accepted
+  exposure (see "Collections vs. one-off pages" above), not a new one a
+  sitemap would introduce.
 
 ## The six page shapes (`templates/`)
 
@@ -241,12 +257,6 @@ engine, now fully replaced). Current state:
 
 ## Known gaps / open decisions
 
-- Whether to generate a `sitemap.xml` at all — undecided. Even with zero
-  on-site links between a coach's domain profiles, a flat sitemap listing
-  `leadership/coach-jane.html` and `intimate/coach-jane.html` side by side
-  hands over the same connection browsing wouldn't. May be an acceptable,
-  out-of-scope risk (same category as someone Googling the coach's name),
-  but should be a deliberate choice.
 - `page-variables` still documents the old, now-nonexistent `.con`/`.skel`
   token model and hasn't been rewritten or removed yet.
 - No content-authoring guide exists yet for coaches contributing their own
