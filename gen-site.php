@@ -99,11 +99,12 @@ $hub_nav_html = render_template($templates . 'partials/hub-nav.php', array('pref
 write_page("{$writeprefix}index.html", array(
     'prefix'          => './',
     'title'           => field($hub_entry, 'title', 'Yomonsni'),
-    // Body itself carries no image — content/css/myfunk.css's .masthead
-    // rule already supplies the real hero photo for that one element
-    // (see templates/hub.php), matching how the pre-rebuild site actually
-    // rendered this page rather than duplicating the photo site-wide.
-    'bgimage'         => '',
+    // The hero photo lives on the body (fixed/cover, from myfunk.css's
+    // body{} rule), not the masthead — so it renders behind the whole
+    // page, not just the header. templates/hub.php's masthead keeps only
+    // its own gradient (no image) so the body's photo shows through there
+    // too, continuously, instead of the masthead hiding it in that area.
+    'bgimage'         => 'yo-IMG_56547-5DII-raw16-rawtherapee-shaped.jpg',
     'nav_html'        => $hub_nav_html,
     'footer_html'     => footer_html_for('./', $footer_entry, $templates),
     'content_template' => 'hub.php',
