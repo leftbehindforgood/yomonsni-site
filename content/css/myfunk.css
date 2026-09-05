@@ -91,7 +91,11 @@
   width: 100%;
   height: auto;
   min-height: 16rem;
-  padding: 4rem 0;
+  /* Asymmetric on purpose: ~1cm (2.5rem) more room above the heading than
+     below it, not a symmetric padding bump — the earlier fix compacted
+     both equally, and this brings a little of the top space back without
+     redoing that. */
+  padding: 6.5rem 0 4rem;
   background: -webkit-gradient(linear, left top, left bottom, from(rgba(22, 22, 22, 0.3)), color-stop(75%, rgba(22, 22, 22, 0.7)), to(#161616)), url("../img/bg-masthead.jpg");
   background: linear-gradient(to bottom, rgba(22, 22, 22, 0.3) 0%, rgba(22, 22, 22, 0.7) 75%, #161616 100%), url("../img/yo-IMG_56547-5DII-raw16-rawtherapee-shaped.jpg");
   background-position: center;
@@ -162,7 +166,8 @@
        width, so it was overriding the base .masthead rule's much smaller
        padding/min-height on every viewport actually tested against). */
     min-height: 18rem;
-    padding: 3rem 0;
+    /* Same ~1cm (2.5rem) asymmetric top padding as the base rule above. */
+    padding: 5.5rem 0 3rem;
   }
   .masthead h1 {
     font-size: 6.5rem;
