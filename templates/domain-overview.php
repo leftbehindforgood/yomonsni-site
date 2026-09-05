@@ -6,7 +6,7 @@
 // filtered to this domain), $resources_entry, $whispers (filtered, sorted
 // newest-first), $workshops, $retreats (each filtered to this domain).
 ?>
-  <header class="mastblank" style="background-image: linear-gradient(to bottom, rgba(22, 22, 22, 0.3) 0%, rgba(22, 22, 22, 0.7) 75%, #161616 100%), url('<?php echo asset_url($prefix, "img/{$domain_slug}-bg.jpg"); ?>');">
+  <header class="mastblank" style="background: none;">
     <div class="container d-flex h-100 align-items-center">
       <div class="mx-auto text-center">
         <h1 class="mx-auto my-0 text-uppercase"><?php echo htmlspecialchars($domain_title); ?></h1>

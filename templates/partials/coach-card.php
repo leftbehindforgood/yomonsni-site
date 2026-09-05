@@ -9,9 +9,9 @@ $name     = field($entry, 'name');
 $photo    = field($entry, 'photo');
 ?>
   <div class="col-sm mb-4">
-    <div class="card h-100">
+    <div class="card card-glass h-100">
 <?php if ($photo !== ''): ?>
-      <img class="card-img-top" src="<?php echo asset_url($prefix, "img/$photo"); ?>" alt="<?php echo htmlspecialchars($name); ?>">
+      <img class="coach-photo rounded mx-auto mt-3" src="<?php echo asset_url($prefix, "img/$photo"); ?>" alt="<?php echo htmlspecialchars($name); ?>">
 <?php endif; ?>
       <div class="card-body text-center">
         <h5 class="card-title"><?php echo htmlspecialchars($name); ?></h5>

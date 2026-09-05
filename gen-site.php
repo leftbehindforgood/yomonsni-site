@@ -28,6 +28,13 @@ $domain_titles = array(
 );
 $domain_slugs = array_keys($domain_titles);
 
+// Each domain's real background photo, once chosen. Defaults to the
+// placeholder "<slug>-bg.jpg" color block for any domain not listed here —
+// fill these in one at a time as each domain gets its own visual pass.
+$domain_bg = array(
+    "creativity" => "yo-IMG_42290-5D3-raw-shaped-flattened.jpg",
+);
+
 // ---------------------------------------------------------------------
 // 1. Clean the output directory and stray editor backups in content.
 // ---------------------------------------------------------------------
@@ -164,8 +171,9 @@ foreach ($domain_slugs as $slug) {
 
     // -- overview / index.html --
     $resources_entry = parse_entry_file("{$readprefix}{$slug}/resources.entry");
+    $bgimage = isset($domain_bg[$slug]) ? $domain_bg[$slug] : "{$slug}-bg.jpg";
     write_page("{$writeprefix}{$slug}/index.html", $common + array(
-        'title' => $title, 'bgimage' => "{$slug}-bg.jpg",
+        'title' => $title, 'bgimage' => $bgimage,
         'content_template' => 'domain-overview.php',
         'entry' => $domain_entries[$slug], 'domain_slug' => $slug, 'domain_title' => $title,
         'coaches' => $d_coaches, 'resources_entry' => $resources_entry,

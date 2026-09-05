@@ -142,9 +142,10 @@
   font-size: 3.5rem;
   line-height: 3.5rem;
   letter-spacing: 0.8rem;
-  background: -webkit-linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0));
-  -webkit-text-fill-color: transparent;
-  -webkit-background-clip: text;
+  /* Same fix as .masthead h1: flat color instead of the webkit-only
+     gradient-text-fill trick, which had no plain-color fallback and
+     rendered invisible on non-webkit browsers. */
+  color: #fbf3f4;
 }
 
 .mastblank h2 {
@@ -420,11 +421,15 @@ footer {
   background-color: rgba(30, 30, 30, 0.25);
   border-color: rgba(255, 255, 255, 0.15);
   border-radius: 1rem;
+  /* Set here (inherited by every descendant) rather than listed out by
+     child selector — new card content (whisper teasers, event listings,
+     coach cards) shouldn't need a matching selector added by hand every
+     time just to not render Bootstrap's default dark card text. */
+  color: #f5f5f5;
 }
 
-.card-glass .card-title,
-.card-glass .card-text {
-  color: #f5f5f5;
+.card-glass .text-muted {
+  color: rgba(245, 245, 245, 0.65) !important;
 }
 
 /* The second, deeper hook question on each domain card — visually a
@@ -433,6 +438,14 @@ footer {
   color: rgba(245, 245, 245, 0.7);
   font-size: 0.9rem;
   margin-top: -0.5rem;
+}
+
+/* Coach headshot on a domain page's coach-card teaser: capped at 120x120,
+   cropped to fill that box rather than stretched (object-fit: cover). */
+.coach-photo {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
 }
 
 /* Dark blue, for the hub's domain-card "Explore" buttons specifically —
