@@ -26,7 +26,7 @@
         $blurb = field($d, 'blurb');
 ?>
       <div class="col-sm mb-4">
-        <div class="card h-100">
+        <div class="card card-glass h-100">
           <div class="card-body text-center">
             <h5 class="card-title"><?php echo htmlspecialchars($title); ?></h5>
             <p class="card-text"><?php echo htmlspecialchars($blurb); ?></p>

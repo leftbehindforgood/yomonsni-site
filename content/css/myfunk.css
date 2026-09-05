@@ -117,9 +117,15 @@
   font-size: 2.5rem;
   line-height: 2.5rem;
   letter-spacing: 0.8rem;
-  background: -webkit-linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0));
-  -webkit-text-fill-color: transparent;
-  -webkit-background-clip: text;
+  /* Nearly white with a very subtle rose warmth, not pure white — also
+     replaces the old webkit-only gradient-text-fill trick (no plain
+     `color` fallback existed, so this heading rendered as invisible dark-
+     on-dark text outside Safari/Chrome; a flat color fixes both). */
+  color: #fbf3f4;
+}
+
+.masthead p {
+  color: #fbf3f4;
 }
 
 .masthead h2 {
@@ -387,6 +393,21 @@ footer {
 
 .bg-faded2 {
   background-color: rgba(10, 0, 0, 0.3);
+}
+
+/* Translucent dark-grey cards, for content sitting directly over the
+   fixed page-background photo (the hub's domain grid, for now) — replaces
+   Bootstrap's opaque white .card default, which reads jarring against a
+   full-page dark photo. Text/link colors are overridden too: Bootstrap's
+   default dark card text (#212529) is illegible on a dark card. */
+.card-glass {
+  background-color: rgba(60, 60, 60, 0.55);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.card-glass .card-title,
+.card-glass .card-text {
+  color: #f5f5f5;
 }
 
 /* background-attachment: fixed is unreliable on mobile browsers (notably

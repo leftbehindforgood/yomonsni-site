@@ -114,10 +114,10 @@ write_page("{$writeprefix}index.html", array(
 ), $templates);
 
 // ---------------------------------------------------------------------
-// 4. Sitewide pages: About (mission + what coaching is) and legal
-// (also root-level, sharing the hub's nav/footer).
+// 4. Sitewide pages: mission, what-coaching-is, and legal (also
+// root-level, sharing the hub's nav/footer).
 // ---------------------------------------------------------------------
-foreach (array('about', 'legal/terms', 'legal/privacy') as $path) {
+foreach (array('mission', 'coaching', 'legal/terms', 'legal/privacy') as $path) {
     $slug = basename($path);
     $entry = parse_entry_file("{$readprefix}{$path}.entry");
     write_page("{$writeprefix}{$slug}.html", array(
