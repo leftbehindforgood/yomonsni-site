@@ -75,7 +75,8 @@ Parsedown supports.
   executes as part of the generator, as opposed to the front-end assets
   under `content/vendor/`, which are copied verbatim and never run.
 - `entry_html($entry)` renders an entry's body; `field($entry, 'key',
-  $default)` reads a front-matter field.
+  $default)` reads a front-matter field; `field_bool($entry, 'key')` reads
+  a yes/no field (`yes`/`true`/`1`, any case, are true).
 
 ## Collections vs. one-off pages
 
@@ -88,9 +89,14 @@ are self-contained via a `domain` field.
 - `content/coaches/` — one file per (coach × domain), e.g.
   `jane--leadership.entry` and `jane--intimate.entry` are the *same real
   person*, two independent cards. Fields: `name`, `coach_id` (the stable
-  join key — never rendered), `domain`, `photo`, `booking_link`; body =
-  that domain's bio. **See "The coach-privacy design" below before adding
-  or editing one of these.**
+  join key — never rendered), `domain`, `photo`, `booking_link`,
+  `fully_booked` (yes/no — shows a "Fully Booked" notice without clearing
+  `booking_link`, unlike leaving that field blank), `order` (optional
+  number controlling display order on that domain's page, lowest first —
+  see `sort_by_order()`), `summary` (a sentence or two for the domain
+  page's card; falls back to the bio's first sentence if omitted); body =
+  that domain's full bio. **See "The coach-privacy design" below before
+  adding or editing one of these.**
 - `content/testimonials/` — `client` (first name only), `date`, `domain`,
   `coach` (a `coach_id`); body = the testimonial. Always exactly one domain
   and one coach — `filter_by_domain($testimonials, $slug, 'domain')` gets a
@@ -110,13 +116,20 @@ are self-contained via a `domain` field.
   separate on/off flag anywhere.
 
 Per-domain static content (not a collection): `content/<domain>/index.entry`
-(the domain's own overview/outline copy) and `content/<domain>/resources.entry`
-(full resources page; its `teaser` field is a *plain-text* short hook shown
-on the domain overview page — not Markdown, unlike everything else here,
-which is a known inconsistency worth resolving). Sitewide:
-`content/index.entry` (hub copy), `content/footer.entry` (the generic
-ethical code/mission statement shown in the footer on every page),
-`content/legal/terms.entry`, `content/legal/privacy.entry`.
+(the domain's own overview/outline copy, plus `hook`/`hook2` — two "mom
+test" style questions shown on that domain's card on the hub page, the
+second smaller/quieter as a deeper follow-up, no title/label on the card at
+all) and `content/<domain>/resources.entry` (full resources page; its
+`pointers` field is a `|`-separated list of short always-visible bullets on
+the domain page's resources card, and its `teaser` field — *plain text*,
+not Markdown, the one exception — is revealed by that card's toggle rather
+than being "the one thing shown" the way it used to work). Sitewide:
+`content/index.entry` (hub copy), `content/mission.entry`/`coaching.entry`
+(the hub nav's two destinations — their own `title` field is reused as
+both the nav label and the page's own heading, so the two can't drift
+apart), `content/footer.entry` (the generic ethical code/mission statement
+shown in the footer on every page), `content/legal/terms.entry`,
+`content/legal/privacy.entry`.
 
 ## The coach-privacy design (read this before touching coach content)
 
@@ -127,7 +140,9 @@ across domains. This is enforced architecturally, not just by convention:
 
 - Every coach card is domain-scoped: a distinct **photo** and a distinct,
   domain-relevant **bio** per domain, never a shared paragraph reused
-  verbatim.
+  verbatim. Availability is domain-scoped the same way — a coach can be
+  `fully_booked` in one domain and completely bookable in another, since
+  each domain's card is its own independent file.
 - **No page anywhere lists coaches across domains** — no "meet the team,"
   no sitewide staff directory. This is the one rule that must never be
   broken.
@@ -135,15 +150,17 @@ across domains. This is enforced architecturally, not just by convention:
   domain-nav.php` only links within its own domain plus a single "← Home"
   link back to the root hub — never to a sibling domain. `templates/
   partials/hub-nav.php` (root only) is the one place all six domains are
-  listed together.
+  listed together (as a card grid on the hub page's body — the hub *nav*
+  itself doesn't list them at all, just a Mission/Coaching link pair; see
+  "Visual design" below).
 - `lib/validate.php` enforces three pieces of this automatically:
   `validate_content_references()` flags a coach's photo being reused
   across more than one of their domain cards, `validate_output()` scans
   every generated page for a link crossing from one domain's directory
   into another's (other than the sanctioned home link), and
   `validate_sitemap()` fails the build if a coach-profile URL ever ends up
-  in `sitemap.xml` — see the next section for why that file is a separate
-  case from on-site navigation.
+  in `sitemap.xml` — see "Guardrails and the validator" for why that file
+  is a separate case from on-site navigation.
 - **`sitemap.xml` is generated, but deliberately excludes coach-profile
   pages.** `gen-site.php`'s `write_page()` registers every page it writes
   into the sitemap except ones passed `$in_sitemap = false` (only the
@@ -155,10 +172,14 @@ across domains. This is enforced architecturally, not just by convention:
   anyone who opens `/sitemap.xml`, no browsing required. Whisper pages are
   *not* excluded despite also spanning domains — a whisper's identical
   content across its tagged domains is already a deliberately accepted
-  exposure (see "Collections vs. one-off pages" above), not a new one a
-  sitemap would introduce.
+  exposure (§4.2 of the restructure plan allows cross-tagging into
+  `intimate`), not a new one a sitemap would introduce.
 
-## Visual design rules (read before touching CSS/templates)
+## Visual design (read before touching CSS/templates)
+
+The visual language lives almost entirely in `content/css/myfunk.css`
+(one file, no preprocessor) plus a handful of PHP templates. A few rules
+apply everywhere, not just wherever they were first introduced:
 
 - **Never blur a background image, anywhere on the site — no
   `backdrop-filter`, no `filter: blur()`, no blurred duplicate/thumbnail
@@ -167,45 +188,111 @@ across domains. This is enforced architecturally, not just by convention:
   texture; it must always render sharp, including where it shows through
   a translucent element (a card, a panel, an overlay). If something needs
   to look translucent, the only lever is opacity/color on the element
-  itself — never touch the sharpness of what's behind it. (This rule
-  exists because a translucent-card treatment used `backdrop-filter: blur`
-  and was explicitly rejected for exactly this reason — see git history
-  around the hub page's `.card-glass` styling.)
+  itself — never touch the sharpness of what's behind it.
+- **One continuous background photo per page, on `<body>`, nothing else.**
+  `templates/partials/shell.php` sets it (fixed attachment, `cover` sized)
+  when a page has a `bgimage`; the masthead/mastblank header on that same
+  page carries `style="background: none;"` so its own CSS background
+  (a leftover gradient+image rule from the pre-rebuild theme) doesn't
+  paint a second, differently-scaled copy over part of the page. Don't
+  reintroduce a masthead-level background image or gradient — both were
+  tried and explicitly removed for exactly this reason (see git history
+  around the hub page's masthead).
+- **Buttons are rounded/pill-shaped everywhere** (`border-radius: 2rem` on
+  the shared `.btn` rule, not a one-off per button style) and use
+  `.card-glass` for translucency (opacity only, per the no-blur rule
+  above) — this is the site's default look, not something to redo per
+  page.
+- **Per-domain visual tuning is deliberately narrow.** `gen-site.php`'s
+  `$domain_design` array is the only place a domain's look is allowed to
+  diverge, and only along four axes: `bg` (background photo filename,
+  defaults to a placeholder `<slug>-bg.jpg`), `text_align` (`'left'`
+  default, `'right'` also supported — which side the intro column lands
+  on), `card_class` (extra class on that domain's cards, e.g.
+  `card-glass-transparent`), `button_class` (extra class on that domain's
+  buttons, e.g. `btn-creativity`). The domain-overview *layout itself*
+  (intro beside a Coaches/Resources/Whispers/Workshops stack, centered
+  section headings, the coach card design) is **not** part of this
+  config — it's the same for every domain by default; only creativity
+  currently overrides `card_class`/`button_class`/`bg`, and every domain
+  gets the two-column layout whether or not it has an entry in
+  `$domain_design` at all (confirmed by generating leadership, which has
+  none). `domain_design($domain_design, $slug, $key, $default)` is the
+  lookup helper; `$button_class`/`$card_class` get threaded through
+  *every* page a domain has (overview, resources, testimonials, coach
+  profiles, whispers, workshops/retreats) via `write_page()` calls and the
+  card partials' own optional `$card_class`/`$button_class` params — if
+  you add a new per-domain-styled element, thread it through all of these
+  call sites, not just the overview page's; that gap (styling only
+  reaching the overview page) has already caused a visible inconsistency
+  bug once.
+- **The site's only JavaScript** is `content/js/toggle-expand.js` — a
+  small, dependency-free expand/collapse: any element with class
+  `toggle-more` and a `data-target` pointing at another element's `id`
+  shows/hides that element and rotates a chevron icon inside the button.
+  Used by a coach card's "read more" (reveals the full bio) and the
+  resources card's toggle (reveals its `teaser`). No jQuery, no Bootstrap
+  JS bundle — deliberately, since one interaction didn't justify pulling
+  either in.
 
 ## The six page shapes (`templates/`)
 
 Templates are plain PHP files, included with a set of variables in scope
 (`lib/render.php`'s `render_template()`) — this is the entire templating
 mechanism, not a placeholder-substitution language. `templates/partials/
-shell.php` wraps every page (doctype/head/nav/footer); each shape below
-supplies just its own inner content.
+shell.php` wraps every page (doctype/head/nav/footer, plus the
+`toggle-expand.js` include); each shape below supplies just its own inner
+content.
 
 1. **`templates/hub.php`** — root landing page. One-off; links to all six
    domains via a card carrying no label/title, just `hook`/`hook2` fields
    pulled from each domain's own `index.entry` — two "mom test" style
    questions (simple, personal, no jargon), the second smaller and quieter
    as a deeper follow-up, meant to pull a visitor in by resonance rather
-   than by describing the service.
-2. **`templates/domain-overview.php`** — a domain's front door. Composite:
-   renders its own intro copy, then teaser sections pulled live from the
-   coaches/resources/whispers/workshops/retreats collections filtered to
-   that domain.
+   than by describing the service. `templates/partials/hub-nav.php` (used
+   here and on the root-level mission/coaching/terms/privacy pages) does
+   *not* list the domains — just a Mission/Coaching link pair, sourced
+   from those two pages' own `title` fields so the nav label and the
+   page's own heading can't drift apart.
+2. **`templates/domain-overview.php`** — a domain's front door. Composite,
+   two-column by default: intro copy on its `text_align` side (~2/3
+   width), a `Coaches → Resources → Whispers → Workshops → Retreats` stack
+   on the other (~1/3) — Coaches deliberately first, so a visitor reaches
+   a coach's profile/booking link without scrolling past the whole intro.
+   `order-md-first`/`order-md-last` keeps the intro first in the actual
+   markup regardless of which side it lands on visually. Resources renders
+   via `templates/partials/resources-card.php` (pointers + toggle + link
+   through to the full resources page), matching the look of the
+   coach/whisper/event cards next to it.
 3. **`templates/coach-profile.php`** — one per coach card. Same layout for
    every domain; only the entry's own data and that domain's testimonials
-   for that coach differ.
+   for that coach differ. Shares the Book-or-Fully-Booked logic with the
+   card teaser (`templates/partials/coach-card.php`): a booking link
+   renders a Book button unless `fully_booked` is set, in which case (or
+   with no `booking_link` at all) a non-interactive `.btn-unavailable`
+   ("Fully Booked", struck through with a diagonal) shows instead.
+   `coach-card.php`'s layout floats the photo to one side (alternating
+   per coach, by index, in `domain-overview.php`'s loop) so the name and
+   summary text wrap around it, magazine-style, rather than sitting in a
+   centered row above the text.
 4. **`templates/simple-content.php`** — plain prose, no collection data:
-   terms, privacy, a domain's full resources page.
+   terms, privacy, mission, coaching, a domain's full resources page.
 5. **`templates/card-list.php`** — one reusable "list of short cards"
    shape, reused for a domain's testimonials, whisper teasers, workshops,
    and retreats. The caller pre-renders each item with the matching card
    partial (`templates/partials/{coach,testimonial,whisper-teaser,event}-
-   card.php`) and hands this template the finished HTML fragments — it
-   doesn't know which collection it's listing.
+   card.php`, all using `.card-glass` plus each accepting the optional
+   `$card_class`/`$button_class` per-domain overrides) and hands this
+   template the finished HTML fragments — it doesn't know which
+   collection it's listing.
 6. **`templates/whisper-article.php`** — one whisper's full page, generated
    once per domain it's tagged into.
 
-No template yet exists/has been exercised for a domain with **zero**
-coaches — all six sample domains currently have at least one.
+A domain with zero coaches (currently `change`, `performance`,
+`discovery`) skips the Coaches heading/stack entirely (`if (!empty
+($coaches))` in `domain-overview.php`) — this path runs cleanly through
+generation and validation for all three, but hasn't been individually
+screenshotted the way leadership/creativity/intimate have.
 
 ## Guardrails and the validator (`lib/validate.php`)
 
@@ -228,20 +315,26 @@ Two passes, both wired into `gen-site.php`:
   warning, not an error; everything else here is a hard error.
 
 Both passes were verified against deliberately-broken fixtures during
-development (see the Phase 2 commit) — they're not just written, they fire.
+development — they're not just written, they fire. Note: neither checks
+inline CSS `background-image: url(...)` references (only `<img>`/`href`),
+which is exactly how a previous `shell.php` bug — a body background
+falling back to a `default-bg.jpg` that didn't exist — went undetected
+until traced by hand.
 
 ## Repository layout
 
 - `CONTENT-GUIDE.md` — the content-authoring reference (field-by-field, with
   copy-pasteable templates), for anyone writing a coach card, testimonial,
   whisper, or event listing. Replaced `page-variables`, which documented
-  the old engine's tokens and no longer applied to anything.
+  the old engine's tokens and no longer applied to anything. Keep it in
+  sync with the Content model section above — it's the friendlier version
+  of the same fields.
 - `content/` — the live source of truth: the six domains' own directories,
-  the five collection directories, `legal/`, and the sitewide
-  `index.entry`/`footer.entry`, plus the non-templated asset directories
-  (`css/`, `js/`, `scss/`, `vendor/`, `img/`, `doc/`) copied verbatim by
-  the generator.
-- `lib/` — the engine's PHP: `entry.php` (parsing/collections),
+  the five collection directories, `legal/`, the sitewide
+  `index.entry`/`mission.entry`/`coaching.entry`/`footer.entry`, and the
+  non-templated asset directories (`css/`, `js/` — just `toggle-expand.js`
+  —, `scss/`, `vendor/`, `img/`, `doc/`) copied verbatim by the generator.
+- `lib/` — the engine's PHP: `entry.php` (parsing/collections/sorting),
   `render.php` (templating), `validate.php` (guardrails), and the vendored
   `Parsedown.php`.
 - `templates/` — the six page shapes and their partials. Deliberately kept
@@ -258,9 +351,12 @@ development (see the Phase 2 commit) — they're not just written, they fire.
   `content/{css,js,scss,vendor}`. Reference material only.
 - `Testimonials - Originals/` — source `.odt` documents, not consumed by
   the generator.
-- `docs/coaching-site-restructure-plan.md` — the design doc this whole
-  engine was built from; check its progress checklist for what's done vs.
-  still open before assuming the current state matches every detail there.
+- `docs/coaching-site-restructure-plan.md` — the design doc the engine was
+  originally built from; check its progress checklist for what's done vs.
+  still open before assuming the current state matches every detail there
+  — a lot of the subsequent visual-design work (this file's "Visual
+  design" section) happened after that doc's own checklist was last
+  updated and isn't reflected in it.
 - `docs/improvement-plan-to-review.md` — superseded by the restructure
   plan for everything about the old `.con`/`.skel` engine; its still-live
   requirement (all internal links must be relative) is now enforced by the
@@ -272,25 +368,49 @@ This is a rebuild from an earlier personal-wellness site (see git log
 before the `coaching-rebuild` branch for that version's `.con`/`.skel`
 engine, now fully replaced). Current state:
 
-- The engine (this file's description above) is real and working.
-- **All six domains' content is placeholder/sample**, written to exercise
-  every page shape and guardrail — not real bios, testimonials, or copy.
-  Don't treat anything under `content/{leadership,creativity,change,
-  performance,intimate,discovery}/`, `content/coaches/`,
-  `content/testimonials/`, or `content/whispers/` as launch-ready.
-- Coach/background images are placeholder color blocks (generated with
-  ImageMagick), not real photos.
+- The engine and the current visual design (this file's descriptions
+  above) are real and working, verified with headless-Chrome screenshots
+  throughout development, not just by reading the CSS/templates.
+- **Content is a mix of real and placeholder, domain by domain.**
+  Creativity has a real ~1500-word overview piece, three real (if
+  fictional) coaches with real-shaped bios/summaries, and a real
+  resources-card pointer list — it's the domain the visual design was
+  built and iterated against. Leadership and intimate each have one
+  coach (the same person, Jane Doe, with independent domain-scoped cards
+  — used to demonstrate the coach-privacy design and per-domain
+  `fully_booked`). Change, performance, and discovery have no coaches at
+  all yet and only their original short placeholder intro copy. Don't
+  treat any of it as launch-ready; treat creativity as the pattern the
+  other five still need to follow, not as finished.
+- Coach/domain background images are placeholder color blocks (generated
+  with ImageMagick) except creativity's, which uses a real photo
+  (`yo-IMG_42290-5D3-raw-shaped-flattened.jpg`) and the hub's, which uses
+  the site's actual pre-rebuild hero photo
+  (`yo-IMG_56547-5DII-raw16-rawtherapee-shaped.jpg`, traced from the live
+  production site's actual behavior — see git history).
 - Booking links point at example.com-style placeholder URLs, which the
   validator correctly flags as dead — expected until real links exist.
+  (One coach card, Jane's intimate one, is deliberately `fully_booked`
+  with a real-shaped placeholder link still attached, to demonstrate that
+  field.)
+- The root-level pages (`mission.html`, `coaching.html`, `terms.html`,
+  `privacy.html`) don't yet have a background photo of their own — only
+  the hub (`index.html`) and the six domains do.
 
 ## Known gaps / open decisions
 
-- Visual design/tone (the site is meant to read as "seductive and
-  inviting," more so to women than men, without ever stating that) is
-  deliberately deferred — current templates reuse the old theme's
-  Bootstrap/`myfunk.css` classes with no new design system yet.
+- The other five domains (everything but creativity) still need their own
+  background photo, button color, and — the bigger piece — real content:
+  a proper overview piece, real coaches where applicable, and a
+  `pointers` list on their resources card. Creativity is the reference
+  pattern, not a one-off.
+- Root-level pages (mission/coaching/terms/privacy) have no background
+  photo treatment yet, unlike every other page on the site.
 - `push-site.php` depends entirely on the operator's local `aws` CLI
   credentials — none are configured in this repo, which is correct.
 
-See `docs/coaching-site-restructure-plan.md` for the full design reasoning
-behind all of the above.
+See `docs/coaching-site-restructure-plan.md` for the original design
+reasoning this was built from, and git log for the visual-design
+iteration since (a long sequence of small, verified changes — the commit
+messages are the more detailed record of *why* any given CSS/template
+choice looks the way it does).
