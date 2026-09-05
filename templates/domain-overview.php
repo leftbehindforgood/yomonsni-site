@@ -51,23 +51,27 @@ if ($text_align === 'left') {
 
       <div class="<?php echo $aside_col . ' ' . $aside_order; ?>">
 <?php if (!empty($coaches)): ?>
-        <h2>Coaches</h2>
+        <h2 class="text-center">Coaches</h2>
         <div class="row">
-<?php foreach ($coaches as $c): ?>
-<?php echo render_template(__DIR__ . '/partials/coach-card.php', array('entry' => $c, 'prefix' => $prefix, 'card_class' => $card_class)); ?>
+<?php foreach ($coaches as $i => $c):
+        // Image side alternates per coach — first coach's photo on the
+        // left of their name, second on the right, and so on.
+        $image_side = ($i % 2 === 0) ? 'left' : 'right';
+?>
+<?php echo render_template(__DIR__ . '/partials/coach-card.php', array('entry' => $c, 'prefix' => $prefix, 'card_class' => $card_class, 'button_class' => $button_class, 'image_side' => $image_side)); ?>
 <?php endforeach; ?>
         </div>
 <?php endif; ?>
 
         <h2>Resources</h2>
         <p><?php echo htmlspecialchars(field($resources_entry, 'teaser')); ?></p>
-        <a class="btn btn-primary" href="resources.html">Explore resources</a>
+        <a class="btn btn-primary <?php echo $button_class; ?>" href="resources.html">Explore resources</a>
 
 <?php if (!empty($whispers)): ?>
         <h2>Whispers</h2>
         <div class="row">
 <?php foreach (array_slice($whispers, 0, 3) as $w): ?>
-<?php echo render_template(__DIR__ . '/partials/whisper-teaser-card.php', array('entry' => $w, 'coaches' => $coaches, 'domain_slug' => $domain_slug, 'card_class' => $card_class)); ?>
+<?php echo render_template(__DIR__ . '/partials/whisper-teaser-card.php', array('entry' => $w, 'coaches' => $coaches, 'domain_slug' => $domain_slug, 'card_class' => $card_class, 'button_class' => $button_class)); ?>
 <?php endforeach; ?>
         </div>
         <a href="whispers.html">All whispers &rarr;</a>
@@ -77,7 +81,7 @@ if ($text_align === 'left') {
         <h2>Workshops</h2>
         <div class="row">
 <?php foreach ($workshops as $w): ?>
-<?php echo render_template(__DIR__ . '/partials/event-card.php', array('entry' => $w, 'card_class' => $card_class)); ?>
+<?php echo render_template(__DIR__ . '/partials/event-card.php', array('entry' => $w, 'card_class' => $card_class, 'button_class' => $button_class)); ?>
 <?php endforeach; ?>
         </div>
 <?php endif; ?>
@@ -86,7 +90,7 @@ if ($text_align === 'left') {
         <h2>Retreats</h2>
         <div class="row">
 <?php foreach ($retreats as $r): ?>
-<?php echo render_template(__DIR__ . '/partials/event-card.php', array('entry' => $r, 'card_class' => $card_class)); ?>
+<?php echo render_template(__DIR__ . '/partials/event-card.php', array('entry' => $r, 'card_class' => $card_class, 'button_class' => $button_class)); ?>
 <?php endforeach; ?>
         </div>
 <?php endif; ?>

@@ -12,7 +12,8 @@ if ($teaser === '') {
 }
 $author = resolve_coach_name($coaches, field($entry, 'coach'), $domain_slug);
 $md = new Parsedown();
-$extra = (isset($card_class) && $card_class !== '') ? " $card_class" : '';
+$extra        = (isset($card_class) && $card_class !== '') ? " $card_class" : '';
+$button_extra = (isset($button_class) && $button_class !== '') ? " $button_class" : '';
 ?>
   <div class="col-sm mb-4">
     <div class="card card-glass<?php echo $extra; ?> h-100">
@@ -20,7 +21,7 @@ $extra = (isset($card_class) && $card_class !== '') ? " $card_class" : '';
         <h5 class="card-title"><?php echo htmlspecialchars($title); ?></h5>
         <h6 class="card-subtitle mb-2 text-muted"><?php echo htmlspecialchars($author); ?></h6>
         <?php echo $md->text($teaser); ?>
-        <a class="btn btn-primary" href="whisper-<?php echo htmlspecialchars($entry['slug']); ?>.html">Read more</a>
+        <a class="btn btn-primary<?php echo $button_extra; ?>" href="whisper-<?php echo htmlspecialchars($entry['slug']); ?>.html">Read more</a>
       </div>
     </div>
   </div>

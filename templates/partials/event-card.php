@@ -6,7 +6,8 @@ $title    = field($entry, 'title');
 $when     = field($entry, 'date');
 $format   = field($entry, 'format');
 $booking  = field($entry, 'booking_link');
-$extra    = (isset($card_class) && $card_class !== '') ? " $card_class" : '';
+$extra        = (isset($card_class) && $card_class !== '') ? " $card_class" : '';
+$button_extra = (isset($button_class) && $button_class !== '') ? " $button_class" : '';
 ?>
   <div class="col-sm mb-4">
     <div class="card card-glass<?php echo $extra; ?> h-100">
@@ -17,7 +18,7 @@ $extra    = (isset($card_class) && $card_class !== '') ? " $card_class" : '';
         </h6>
         <?php echo entry_html($entry); ?>
 <?php if ($booking !== ''): ?>
-        <a class="btn btn-primary" href="<?php echo htmlspecialchars($booking); ?>" rel="noopener" target="_blank">Register</a>
+        <a class="btn btn-primary<?php echo $button_extra; ?>" href="<?php echo htmlspecialchars($booking); ?>" rel="noopener" target="_blank">Register</a>
 <?php endif; ?>
       </div>
     </div>

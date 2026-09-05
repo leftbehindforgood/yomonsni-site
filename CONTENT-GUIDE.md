@@ -71,10 +71,13 @@ coach_id: jane
 domain: leadership
 photo: jane-leadership.jpg
 booking_link: https://your-booking-tool.example/jane-leadership
+summary: A one-or-two-sentence hook shown on the domain page's coach card.
 +++
 
-Your bio for this domain, in Markdown. Only what's relevant here —
-credentials, approach, experience specific to this domain.
+Your full bio for this domain, in Markdown. Only what's relevant here —
+credentials, approach, experience specific to this domain. This is also
+what shows up when a visitor expands the card's "Read more" toggle, and
+on your full profile page.
 ```
 
 - `name` — your display name. The same across all your cards; it's not a
@@ -88,8 +91,14 @@ credentials, approach, experience specific to this domain.
 - `photo` — a filename under `content/img/`. Must be a **different file**
   from any photo used on your other domain cards — this is enforced
   automatically (`gen-site.php` will refuse to generate if it isn't).
+  Shown at 120x120 on the domain page's card, cropped to fit.
 - `booking_link` — your external booking page for this domain (Calendly
   or similar). Also domain-specific if you use different calendars.
+  Leave this blank while you're not taking new clients — the card shows
+  a plain "currently unavailable" notice instead of a Book button when
+  it's empty.
+- `summary` — optional. If you skip it, the card falls back to the first
+  sentence of your bio.
 
 ### Testimonial — `content/testimonials/<anything-unique>.entry`
 

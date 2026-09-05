@@ -34,9 +34,10 @@ $domain_slugs = array_keys($domain_titles);
 // standard (not fully transparent) card-glass treatment.
 $domain_design = array(
     "creativity" => array(
-        'bg'         => 'yo-IMG_42290-5D3-raw-shaped-flattened.jpg',
-        'text_align' => 'left', // intro column anchored left, ~2/3 width
-        'card_class' => 'card-glass-transparent',
+        'bg'           => 'yo-IMG_42290-5D3-raw-shaped-flattened.jpg',
+        'text_align'   => 'left', // intro column anchored left, ~2/3 width
+        'card_class'   => 'card-glass-transparent',
+        'button_class' => 'btn-creativity', // dark green, this domain only
     ),
 );
 
@@ -180,16 +181,17 @@ foreach ($domain_slugs as $slug) {
 
     // -- overview / index.html --
     $resources_entry = parse_entry_file("{$readprefix}{$slug}/resources.entry");
-    $bgimage    = domain_design($domain_design, $slug, 'bg', "{$slug}-bg.jpg");
-    $text_align = domain_design($domain_design, $slug, 'text_align', null);
-    $card_class = domain_design($domain_design, $slug, 'card_class', '');
+    $bgimage      = domain_design($domain_design, $slug, 'bg', "{$slug}-bg.jpg");
+    $text_align   = domain_design($domain_design, $slug, 'text_align', null);
+    $card_class   = domain_design($domain_design, $slug, 'card_class', '');
+    $button_class = domain_design($domain_design, $slug, 'button_class', '');
     write_page("{$writeprefix}{$slug}/index.html", $common + array(
         'title' => $title, 'bgimage' => $bgimage,
         'content_template' => 'domain-overview.php',
         'entry' => $domain_entries[$slug], 'domain_slug' => $slug, 'domain_title' => $title,
         'coaches' => $d_coaches, 'resources_entry' => $resources_entry,
         'whispers' => $d_whispers, 'workshops' => $d_workshops, 'retreats' => $d_retreats,
-        'text_align' => $text_align, 'card_class' => $card_class,
+        'text_align' => $text_align, 'card_class' => $card_class, 'button_class' => $button_class,
     ), $templates);
 
     // -- resources.html --
