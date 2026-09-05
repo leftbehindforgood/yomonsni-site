@@ -207,6 +207,7 @@ foreach ($domain_slugs as $slug) {
         write_page("{$writeprefix}{$slug}/coach-{$coach_id}.html", $common + array(
             'title' => field($coach, 'name', $coach_id) . " — $title", 'bgimage' => $bgimage,
             'content_template' => 'coach-profile.php', 'entry' => $coach, 'testimonials' => $coach_testimonials,
+            'card_class' => $card_class, 'button_class' => $button_class,
         ), $templates, false); // excluded from sitemap.xml — see write_page()
     }
 
@@ -225,7 +226,7 @@ foreach ($domain_slugs as $slug) {
     $whisper_cards = array();
     foreach ($d_whispers as $w) {
         $whisper_cards[] = render_template($templates . 'partials/whisper-teaser-card.php', array(
-            'entry' => $w, 'coaches' => $d_coaches, 'domain_slug' => $slug, 'card_class' => $card_class,
+            'entry' => $w, 'coaches' => $d_coaches, 'domain_slug' => $slug, 'card_class' => $card_class, 'button_class' => $button_class,
         ));
         write_page("{$writeprefix}{$slug}/whisper-{$w['slug']}.html", $common + array(
             'title' => field($w, 'title'), 'bgimage' => $bgimage,
@@ -242,7 +243,7 @@ foreach ($domain_slugs as $slug) {
     // -- workshops.html / retreats.html, only if this domain has any --
     if (!empty($d_workshops)) {
         $cards = array();
-        foreach ($d_workshops as $w) $cards[] = render_template($templates . 'partials/event-card.php', array('entry' => $w, 'card_class' => $card_class));
+        foreach ($d_workshops as $w) $cards[] = render_template($templates . 'partials/event-card.php', array('entry' => $w, 'card_class' => $card_class, 'button_class' => $button_class));
         write_page("{$writeprefix}{$slug}/workshops.html", $common + array(
             'title' => "$title workshops", 'bgimage' => $bgimage,
             'content_template' => 'card-list.php', 'cards' => $cards, 'empty_message' => '',
@@ -250,7 +251,7 @@ foreach ($domain_slugs as $slug) {
     }
     if (!empty($d_retreats)) {
         $cards = array();
-        foreach ($d_retreats as $r) $cards[] = render_template($templates . 'partials/event-card.php', array('entry' => $r, 'card_class' => $card_class));
+        foreach ($d_retreats as $r) $cards[] = render_template($templates . 'partials/event-card.php', array('entry' => $r, 'card_class' => $card_class, 'button_class' => $button_class));
         write_page("{$writeprefix}{$slug}/retreats.html", $common + array(
             'title' => "$title retreats", 'bgimage' => $bgimage,
             'content_template' => 'card-list.php', 'cards' => $cards, 'empty_message' => '',

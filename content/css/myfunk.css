@@ -525,6 +525,13 @@ footer {
    there's nothing to actually interact with. The diagonal (top-right to
    bottom-left, via ::after) reinforces that visually too. */
 .btn-unavailable {
+  /* Tighter than the shared .btn padding (1.25rem 2rem) — this label is
+     much longer than a normal button's ("Currently Unavailable for new
+     Bookings"), and the standard padding around wrapped multi-line text
+     made it look oversized next to its sibling button. */
+  padding: 0.5rem 0.75rem;
+  font-size: 70%;
+  line-height: 1.3;
   position: relative;
   overflow: hidden;
   background-color: transparent;
