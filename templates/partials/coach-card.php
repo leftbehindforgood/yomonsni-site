@@ -56,7 +56,7 @@ $more_id      = 'coach-more-' . $coach_id;
 <?php if ($booking !== ''): ?>
           <a class="btn btn-primary<?php echo $button_extra; ?>" href="<?php echo htmlspecialchars($booking); ?>" rel="noopener" target="_blank">Book</a>
 <?php else: ?>
-          <span class="btn btn-unavailable" aria-disabled="true">Currently Unavailable for new Bookings</span>
+          <span class="btn btn-unavailable" aria-disabled="true">Fully Booked</span>
 <?php endif; ?>
           <a class="btn btn-primary<?php echo $button_extra; ?>" href="coach-<?php echo htmlspecialchars($coach_id); ?>.html">Full profile</a>
         </div>

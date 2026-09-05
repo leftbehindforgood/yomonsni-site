@@ -142,3 +142,22 @@ function sort_by_date_desc($entries) {
     });
     return $entries;
 }
+
+// Sorts by an explicit numeric "order" front-matter field (lower first).
+// Without it, collections just come back in glob()'s filesystem order,
+// which happens to be alphabetical by filename — fine by accident, but
+// not something to rely on for "which coach appears first." Entries with
+// no order field (or a non-numeric one) sort after every ordered entry,
+// and ties fall back to name so the result is stable and predictable
+// rather than depending on file order.
+function sort_by_order($entries, $field = 'order') {
+    usort($entries, function ($a, $b) use ($field) {
+        $oa = field($a, $field);
+        $ob = field($b, $field);
+        $oa = ($oa === '' || !is_numeric($oa)) ? PHP_INT_MAX : (float) $oa;
+        $ob = ($ob === '' || !is_numeric($ob)) ? PHP_INT_MAX : (float) $ob;
+        if ($oa !== $ob) return ($oa < $ob) ? -1 : 1;
+        return strcmp(field($a, 'name'), field($b, 'name'));
+    });
+    return $entries;
+}

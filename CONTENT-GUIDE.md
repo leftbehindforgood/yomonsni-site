@@ -69,6 +69,7 @@ for that domain (nothing in one bio should reference the other).
 name: Jane Doe
 coach_id: jane
 domain: leadership
+order: 1
 photo: jane-leadership.jpg
 booking_link: https://your-booking-tool.example/jane-leadership
 summary: A one-or-two-sentence hook shown on the domain page's coach card.
@@ -88,6 +89,15 @@ on your full profile page.
   never shown to a visitor.
 - `domain` — exactly one of `leadership`, `creativity`, `change`,
   `performance`, `intimate`, `discovery`.
+- `order` — optional. A plain number controlling where this coach appears
+  in the list on that domain's page, lowest first. Without it, coaches
+  just appear in whatever order the files happen to sort on disk (which
+  today means alphabetically by filename) — fine by accident, not
+  something to rely on. You don't need to number every card consecutively
+  or worry about gaps; `1`, `2`, `5` works the same as `1`, `2`, `3`. A
+  coach with no `order` at all appears after every coach who has one.
+  Since this lives on the card, it's domain-specific too — the same
+  coach could be first in one domain and third in another.
 - `photo` — a filename under `content/img/`. Must be a **different file**
   from any photo used on your other domain cards — this is enforced
   automatically (`gen-site.php` will refuse to generate if it isn't).
@@ -95,8 +105,7 @@ on your full profile page.
 - `booking_link` — your external booking page for this domain (Calendly
   or similar). Also domain-specific if you use different calendars.
   Leave this blank while you're not taking new clients — the card shows
-  a plain "currently unavailable" notice instead of a Book button when
-  it's empty.
+  a plain "Fully Booked" notice instead of a Book button when it's empty.
 - `summary` — optional. If you skip it, the card falls back to the first
   sentence of your bio.
 

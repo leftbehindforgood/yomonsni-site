@@ -166,7 +166,7 @@ foreach ($domain_slugs as $slug) {
     $prefix = '../';
     $title  = $domain_titles[$slug];
 
-    $d_coaches      = filter_by_domain($coaches, $slug, 'domain');
+    $d_coaches      = sort_by_order(filter_by_domain($coaches, $slug, 'domain'));
     $d_testimonials = filter_by_domain($testimonials, $slug, 'domain');
     $d_whispers     = filter_by_domain($whispers, $slug, 'domains');
     $d_workshops    = filter_by_domain($workshops, $slug, 'domain');
