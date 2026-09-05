@@ -6,11 +6,17 @@
   <!-- Gradient only here, deliberately no image: the hero photo is set on
        <body> instead (see gen-site.php's write_page call for this page),
        so it renders fixed behind the whole page, not just this header.
-       Overriding just the image (not the whole background) would need
-       "background-image: none, url(...)" tricks; simplest is to give this
-       element the same gradient the body's own overlay uses and nothing
-       else, so the body's fixed photo shows through underneath it too. -->
-  <header class="masthead" style="background-image: linear-gradient(to bottom, rgba(22, 22, 22, 0.3) 0%, rgba(22, 22, 22, 0.7) 75%, #161616 100%);">
+       background-attachment: scroll is also deliberate and load-bearing:
+       .masthead's own CSS rule sets `background-attachment: fixed`, and
+       having two *separate* elements (this header, and <body>) each
+       independently peg their own background to the viewport is what was
+       causing the visible seam/scroll mismatch around the card grid —
+       each element's "fixed" background is calculated against the
+       viewport on its own, so as this header scrolls out of view its
+       gradient and the body's fixed photo drift apart. There must be
+       exactly one fixed-attachment layer on the page (the body's), so
+       this header's own background just scrolls normally with it. -->
+  <header class="masthead" style="background-image: linear-gradient(to bottom, rgba(22, 22, 22, 0.3) 0%, rgba(22, 22, 22, 0.7) 75%, #161616 100%); background-attachment: scroll;">
     <div class="container d-flex h-100 align-items-center">
       <div class="mx-auto text-center">
         <h1 class="mx-auto my-0 text-uppercase">Yomonsni</h1>
@@ -30,7 +36,7 @@
           <div class="card-body text-center">
             <h5 class="card-title"><?php echo htmlspecialchars($title); ?></h5>
             <p class="card-text"><?php echo htmlspecialchars($blurb); ?></p>
-            <a class="btn btn-primary" href="<?php echo asset_url($prefix, "$slug/index.html"); ?>">Explore</a>
+            <a class="btn btn-primary btn-explore" href="<?php echo asset_url($prefix, "$slug/index.html"); ?>">Explore</a>
           </div>
         </div>
       </div>
