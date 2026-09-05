@@ -382,12 +382,12 @@ engine, now fully replaced). Current state:
   all yet and only their original short placeholder intro copy. Don't
   treat any of it as launch-ready; treat creativity as the pattern the
   other five still need to follow, not as finished.
-- Coach/domain background images are placeholder color blocks (generated
-  with ImageMagick) except creativity's, which uses a real photo
-  (`yo-IMG_42290-5D3-raw-shaped-flattened.jpg`) and the hub's, which uses
-  the site's actual pre-rebuild hero photo
-  (`yo-IMG_56547-5DII-raw16-rawtherapee-shaped.jpg`, traced from the live
-  production site's actual behavior — see git history).
+- Every domain and the hub now use a real photo as their background (all
+  six domains' choices in `gen-site.php`'s `$domain_design`, picked by the
+  user directly rather than sampled unsupervised — see "Visual design"
+  above for why; the hub's was traced from the live pre-rebuild site's
+  actual behavior, see git history). **Coach photos are still placeholder
+  color blocks** (generated with ImageMagick) — that hasn't changed.
 - Booking links point at example.com-style placeholder URLs, which the
   validator correctly flags as dead — expected until real links exist.
   (One coach card, Jane's intimate one, is deliberately `fully_booked`
@@ -399,11 +399,15 @@ engine, now fully replaced). Current state:
 
 ## Known gaps / open decisions
 
-- The other five domains (everything but creativity) still need their own
-  background photo, button color, and — the bigger piece — real content:
-  a proper overview piece, real coaches where applicable, and a
-  `pointers` list on their resources card. Creativity is the reference
-  pattern, not a one-off.
+- All six domains now have their own real background photo and button
+  color (`$domain_design` in `gen-site.php`) — photo selection for the
+  five beyond creativity went through the user directly rather than being
+  picked from `content/img/` unsupervised, since that library mixes
+  nature/abstract shots with artistic nude photography. What's still
+  placeholder is content: only creativity has a proper overview piece,
+  real coaches, and a `pointers` list on its resources card. The other
+  five still need that — creativity is the reference pattern to extend,
+  not a one-off.
 - Root-level pages (mission/coaching/terms/privacy) have no background
   photo treatment yet, unlike every other page on the site.
 - `push-site.php` depends entirely on the operator's local `aws` CLI
