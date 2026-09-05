@@ -64,7 +64,12 @@ marked superseded rather than treated as an active punch list.
       instead of two, at the cost of it being more work to maintain than a
       terse reference alone would be. `CLAUDE.md` points to it from the
       content-model section.
-- [ ] Visual design/tone pass (§1) — deliberately deferred.
+- [~] Visual design/tone pass (§1) — started and substantially advanced,
+      not finished. **See §12 for the real checkpoint** — the hub page
+      and the domain-overview page shape are both fully designed and
+      correct on all six domains (verified with screenshots throughout);
+      what's left is mainly content for five of the six domains, plus a
+      few smaller loose ends §12 lists individually.
 
 ## 1. Mission and scope change
 
@@ -418,3 +423,97 @@ pushing doesn't ship something broken.
 links be relative, never absolute** still applies unchanged under the new
 architecture — if anything it matters more now, since local preview of a
 domain-siloed site depends on it working correctly without a server.
+
+## 12. Visual design pass — status as of 2026-09-06 (pick up here)
+
+Started as "let's do the visual design pass, one page at a time." This
+section is the real checkpoint for that work — the checklist entry near
+the top just points here. Everything below was verified with
+headless-Chrome screenshots during development, not just read back from
+the code.
+
+### Done
+
+**Hub page (`index.html`)** — fully designed:
+- One continuous background photo (the site's real pre-rebuild hero
+  photo, `yo-IMG_56547-...jpg`, traced from the live production site) on
+  `<body>`, no gradient/fade anywhere — now a standing site rule (see
+  `CLAUDE.md`'s "Visual design" section), not just this page's choice.
+- Nav has no domain list — brand is "Yomonsni Mission" (→ `mission.html`),
+  one link "Our view on coaching" (→ `coaching.html`); both labels are
+  sourced from those pages' own `title` field so the nav and the page
+  heading can't drift apart.
+- Domain cards: no title/label, just two "mom test" questions per domain
+  (`hook`/`hook2`), translucent (opacity-only, never blurred), rounded,
+  3-across, dark-navy "Explore" buttons, consistent button-to-bottom
+  spacing via flex regardless of how much text is above it.
+- Masthead compacted (root cause of the earlier excess space was a
+  `height: 100vh` hidden inside a `@media (min-width: 992px)` override,
+  not the base rule everyone had been editing), then ~1cm of top padding
+  deliberately restored afterward.
+
+**Domain-overview page shape** — now the default for all six domains
+(confirmed by generating leadership, which has zero `$domain_design`
+entry, and getting the full treatment anyway):
+- Two-column layout: intro text on its `text_align` side (~2/3), a
+  `Coaches → Resources → Whispers → Workshops → Retreats` stack on the
+  other (~1/3), Coaches deliberately first so a visitor reaches a
+  coach's booking link without scrolling past the whole intro.
+- Coach card: photo floated left/right (alternates per coach by index —
+  verified with creativity's 3 real coaches), name top-aligned with the
+  photo, summary text wrapping around it, a chevron toggle (not a "Read
+  more" link) revealing the full bio inline, two footer buttons — Book,
+  or a non-interactive "Fully Booked" (diagonal strike-through) driven by
+  either an empty `booking_link` or the new `fully_booked` field (lets a
+  coach go unavailable without losing their real booking URL). Display
+  order per domain is controllable via a new `order` field.
+- Resources card: a couple of quick `pointers` (always visible,
+  `|`-separated so a comma inside one doesn't break the list) plus a
+  chevron toggle revealing `teaser` text, then a link through to the full
+  resources page.
+- All section headings centered; buttons rounded/pill-shaped site-wide;
+  every domain has its own dark, muted accent button color
+  (`$domain_design`'s `button_class` in `gen-site.php`), threaded through
+  *every* page that domain has, not just the overview (an earlier gap
+  that caused a real, visible inconsistency bug — fixed).
+- All six domains now have a real background photo, user-selected
+  directly rather than sampled unsupervised (`content/img/` mixes
+  nature/abstract shots with artistic nude photography).
+- The site's only JavaScript, `content/js/toggle-expand.js` — a generic
+  `.toggle-more`/`data-target` show-hide-and-rotate-chevron, shared by
+  both toggles above.
+
+**Bugs found and fixed along the way** (surfaced by actually screenshotting
+pages, not just reading the templates):
+- `shell.php`'s body background silently 404'd on every page without an
+  explicit `bgimage` (a `default-bg.jpg` fallback that was never
+  created) — fixed, no fallback filename at all now.
+- `resolve_coach_name()`'s documented cross-domain fallback could never
+  fire in practice: every call site passed the domain-filtered coach list
+  instead of the global one, so a whisper's byline showed the bare
+  `coach_id` whenever its author had no card in a domain the whisper was
+  also tagged into. Fixed at all three call sites.
+
+### Not done / where to pick this up next
+
+1. **Content for the other five domains** — the bigger piece. Only
+   creativity has a real ~1500-word overview, real coaches (3, with
+   real-shaped bios/summaries), and a real `pointers` list. Leadership and
+   intimate each have one coach (Jane Doe, demonstrating the coach-privacy
+   design and per-domain `fully_booked`); change/performance/discovery
+   have none yet. Creativity is the pattern to extend, not a one-off —
+   each domain will likely want its own iterative pass the way creativity
+   got one, not a single mechanical copy.
+2. **Root-level pages** (`mission.html`, `coaching.html`, `terms.html`,
+   `privacy.html`) have no background photo yet — every other page does.
+3. **Coach photos** are still placeholder color blocks (ImageMagick),
+   even on domains that now have a real background photo.
+4. **A domain's sub-pages** (`resources.html`, `testimonials.html`,
+   `whispers.html`, `workshops.html`, individual coach-profile/whisper
+   pages) inherit the right photo/button color already but haven't had
+   their own layout pass — they're using the shared page-shape templates
+   (`simple-content.php`, `card-list.php`, `coach-profile.php`) as-is.
+5. No domain overview has been generated/screenshotted with **zero
+   whispers** or **zero workshops/retreats** all at once (every domain so
+   far has at least whispers) — the `if (!empty(...))` guards should
+   handle it, but it's unverified.

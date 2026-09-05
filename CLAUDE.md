@@ -213,11 +213,13 @@ apply everywhere, not just wherever they were first introduced:
   buttons, e.g. `btn-creativity`). The domain-overview *layout itself*
   (intro beside a Coaches/Resources/Whispers/Workshops stack, centered
   section headings, the coach card design) is **not** part of this
-  config — it's the same for every domain by default; only creativity
-  currently overrides `card_class`/`button_class`/`bg`, and every domain
-  gets the two-column layout whether or not it has an entry in
-  `$domain_design` at all (confirmed by generating leadership, which has
-  none). `domain_design($domain_design, $slug, $key, $default)` is the
+  config — it's the same for every domain by default; every domain now
+  has its own `bg`/`button_class` (see "History and current status"), and
+  only creativity currently also overrides `card_class` (fully
+  transparent cards, vs. everyone else's standard translucent). Every
+  domain gets the two-column layout whether or not it has an entry in
+  `$domain_design` at all (confirmed by generating leadership before it
+  had one). `domain_design($domain_design, $slug, $key, $default)` is the
   lookup helper; `$button_class`/`$card_class` get threaded through
   *every* page a domain has (overview, resources, testimonials, coach
   profiles, whispers, workshops/retreats) via `write_page()` calls and the
@@ -399,15 +401,9 @@ engine, now fully replaced). Current state:
 
 ## Known gaps / open decisions
 
-- All six domains now have their own real background photo and button
-  color (`$domain_design` in `gen-site.php`) — photo selection for the
-  five beyond creativity went through the user directly rather than being
-  picked from `content/img/` unsupervised, since that library mixes
-  nature/abstract shots with artistic nude photography. What's still
-  placeholder is content: only creativity has a proper overview piece,
-  real coaches, and a `pointers` list on its resources card. The other
-  five still need that — creativity is the reference pattern to extend,
-  not a one-off.
+- Content for five of the six domains — see "History and current status"
+  above for exactly what each domain has vs. still needs. Creativity is
+  the reference pattern to extend, not a one-off.
 - Root-level pages (mission/coaching/terms/privacy) have no background
   photo treatment yet, unlike every other page on the site.
 - `push-site.php` depends entirely on the operator's local `aws` CLI

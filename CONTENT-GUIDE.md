@@ -225,3 +225,21 @@ The full resources content, shown on the dedicated resources page.
   until a visitor clicks it. Optional — if you skip it, the card just
   won't have a toggle at all, only the pointers and the button through to
   the full page.
+
+### Sitewide pages
+
+Also usually only edited by whoever maintains the site structure. All take
+just a `title` and a Markdown body, same shape as everything else:
+
+- `content/index.entry` — the hub's own intro copy (the text under the
+  "YOMONSNI" heading).
+- `content/mission.entry`, `content/coaching.entry` — the two pages the
+  hub's nav links to. Their `title` field is reused as *both* the nav
+  label and the page's own `<h1>` — change the title here, not in the
+  template, if the nav text needs to change.
+- `content/footer.entry` — the ethical code / mission statement shown in
+  the footer on every page. Front matter can be empty here (just `+++`
+  immediately followed by `+++`) — there's nothing this one needs beyond
+  the body.
+- `content/legal/terms.entry`, `content/legal/privacy.entry` — the
+  top-level Terms and Privacy pages.
