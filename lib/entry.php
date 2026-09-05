@@ -68,9 +68,13 @@ function entry_html($entry) {
 
 // Front-matter values are plain strings; a handful of fields (like a
 // whisper's "domains") are comma-separated lists. This splits and trims one.
-function entry_list($value) {
+// $delimiter defaults to a comma (used by e.g. a whisper's "domains").
+// Pass '|' for a list whose individual items might contain commas of
+// their own (e.g. resources.entry's "pointers": each one is a full
+// sentence, which commas show up in constantly).
+function entry_list($value, $delimiter = ',') {
     if ($value === null || $value === '') return array();
-    return array_values(array_filter(array_map('trim', explode(',', $value)), function ($v) {
+    return array_values(array_filter(array_map('trim', explode($delimiter, $value)), function ($v) {
         return $v !== '';
     }));
 }

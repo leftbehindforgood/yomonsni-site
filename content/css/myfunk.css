@@ -500,19 +500,20 @@ footer {
    gen-site.php's $domain_design "button_class"), same pattern as the
    hub's .btn-explore navy. */
 .btn-creativity {
-  /* Three shades darker than the original #234d34. */
-  background-color: #16301f;
-  border-color: #16301f;
+  /* Three shades darker than the original #234d34, then another 15%
+     darker on top of that. */
+  background-color: #13291a;
+  border-color: #13291a;
 }
 
 .btn-creativity:hover,
 .btn-creativity:focus {
-  background-color: #102318;
-  border-color: #102318;
+  background-color: #0e1e14;
+  border-color: #0e1e14;
 }
 
 .btn-creativity:active {
-  background-color: #0a170f !important;
+  background-color: #09140d !important;
 }
 
 /* Non-interactive stand-in for a Book button when a coach has no
@@ -526,14 +527,23 @@ footer {
   box-shadow: none !important;
 }
 
-.coach-more {
+/* Generic expandable-content block, revealed by a .toggle-more chevron
+   (content/js/toggle-expand.js) — used by coach cards (full bio) and the
+   resources card (a bit more teaser text). */
+.expand-content {
   margin-top: 0.75rem;
 }
 
-/* Chevron toggle that expands a coach card's full bio (content/js/
-   coach-card-toggle.js) — a small inline widget next to the summary
-   text, not a "Read more" link. Rotates 90° when open. */
-.coach-toggle-more {
+.resource-pointers {
+  padding-left: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.resource-pointers li {
+  margin-bottom: 0.35rem;
+}
+
+.toggle-more {
   background: none;
   border: none;
   padding: 0 0.25rem;
@@ -542,12 +552,12 @@ footer {
   vertical-align: baseline;
 }
 
-.coach-toggle-more i {
+.toggle-more i {
   display: inline-block;
   transition: transform 0.15s ease;
 }
 
-.coach-toggle-more.is-open i {
+.toggle-more.is-open i {
   transform: rotate(90deg);
 }
 

@@ -43,7 +43,7 @@ if (isset($bgimage) && $bgimage !== '') {
 
 <?php echo $footer_html; ?>
 
-<script src="<?php echo asset_url($prefix, 'js/coach-card-toggle.js'); ?>"></script>
+<script src="<?php echo asset_url($prefix, 'js/toggle-expand.js'); ?>"></script>
 
 </body>
 </html>

@@ -188,15 +188,24 @@ these two questions, with no title or domain name on it at all.
 
 ### A domain's resources page — `content/<domain>/resources.entry`
 
+The domain overview page shows this as a card: a couple of quick
+pointers, a chevron toggle that reveals a bit more, then a button through
+to the full resources page (this file's own body).
+
 ```
 +++
 title: Leadership resources
-teaser: A short plain-text hook shown on the domain's overview page.
+pointers: Start with 10 minutes, not 2 hours. | Track streaks, not perfection. | Share unfinished work on purpose.
+teaser: A short plain-text paragraph revealed by the card's toggle — a bit more context, still not the full page.
 +++
 
-The full resources content.
+The full resources content, shown on the dedicated resources page.
 ```
 
-Note: `teaser` here is **plain text**, not Markdown — it's rendered as-is
-without formatting. Everything else in this guide's `teaser`/body fields
-is Markdown; this one field is the exception.
+- `pointers` — two or three short, plain-text pointers, **separated by
+  `|`** rather than a comma (a comma would get confused with one inside
+  an ordinary sentence). Always visible on the card.
+- `teaser` — plain text, not Markdown, hidden behind the card's toggle
+  until a visitor clicks it. Optional — if you skip it, the card just
+  won't have a toggle at all, only the pointers and the button through to
+  the full page.

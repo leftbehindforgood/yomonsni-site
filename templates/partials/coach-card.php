@@ -8,7 +8,7 @@
 // per coach by the caller) so the name and summary text wrap around it —
 // the name top-aligned with the image, text starting right under the
 // name — rather than sitting in a centered row above the text. A small
-// chevron toggle (content/js/coach-card-toggle.js) expands the coach's
+// chevron toggle (content/js/toggle-expand.js) expands the coach's
 // full bio inline without leaving the page. Two buttons at the bottom —
 // Book (external booking_link, or a non-interactive "currently
 // unavailable" stand-in if that field is empty) and Full profile.
@@ -44,11 +44,11 @@ $more_id      = 'coach-more-' . $coach_id;
 <?php endif; ?>
           <h5 class="card-title mt-0 mb-1"><?php echo htmlspecialchars($name); ?></h5>
           <p class="card-text"><?php echo htmlspecialchars($summary); ?>
-            <button type="button" class="coach-toggle-more" data-target="<?php echo $more_id; ?>" aria-expanded="false" aria-controls="<?php echo $more_id; ?>" aria-label="Show more about <?php echo htmlspecialchars($name); ?>"><i class="fas fa-chevron-right"></i></button>
+            <button type="button" class="toggle-more" data-target="<?php echo $more_id; ?>" aria-expanded="false" aria-controls="<?php echo $more_id; ?>" aria-label="Show more about <?php echo htmlspecialchars($name); ?>"><i class="fas fa-chevron-right"></i></button>
           </p>
         </div>
         <div class="clearfix"></div>
-        <div id="<?php echo $more_id; ?>" class="coach-more" hidden>
+        <div id="<?php echo $more_id; ?>" class="expand-content" hidden>
           <?php echo entry_html($entry); ?>
         </div>
 
