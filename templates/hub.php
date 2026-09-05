@@ -37,8 +37,13 @@
                different height in every card, leaving an inconsistent
                gap to the card's bottom edge. This pins it to the bottom
                of the (already-equal-height, via h-100) card instead, so
-               that gap is the same everywhere regardless of text length. -->
-          <div class="card-body text-center d-flex flex-column">
+               that gap is the same everywhere regardless of text length.
+               align-items-center is load-bearing too: a flex column's
+               default cross-axis behavior is to stretch items to fill
+               the container's width, which is why the button was
+               spanning edge-to-edge — this makes it size to its own
+               content instead, centered, like a normal button. -->
+          <div class="card-body text-center d-flex flex-column align-items-center">
             <p class="card-text"><?php echo htmlspecialchars($hook); ?></p>
             <a class="btn btn-primary btn-explore mt-auto" href="<?php echo asset_url($prefix, "$slug/index.html"); ?>">Explore</a>
           </div>
