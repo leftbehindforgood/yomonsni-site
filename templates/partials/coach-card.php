@@ -4,11 +4,13 @@
 // relative filename — never the domain prefix, since there's nothing to
 // cross into).
 //
-// Layout: photo beside the name (side set by $image_side, alternated per
-// coach by the caller), a short summary flowing full-width beneath both,
-// a JS toggle (content/js/coach-card-toggle.js) revealing the coach's
-// full bio inline without leaving the page, and two buttons at the
-// bottom — Book (external booking_link, or a non-interactive "currently
+// Layout: photo floated to one side (side set by $image_side, alternated
+// per coach by the caller) so the name and summary text wrap around it —
+// the name top-aligned with the image, text starting right under the
+// name — rather than sitting in a centered row above the text. A small
+// chevron toggle (content/js/coach-card-toggle.js) expands the coach's
+// full bio inline without leaving the page. Two buttons at the bottom —
+// Book (external booking_link, or a non-interactive "currently
 // unavailable" stand-in if that field is empty) and Full profile.
 //
 // Expects: $entry (a coach entry), $prefix (for the photo, which lives
@@ -30,21 +32,22 @@ if ($summary === '') {
 }
 $card_extra   = (isset($card_class) && $card_class !== '') ? " $card_class" : '';
 $button_extra = (isset($button_class) && $button_class !== '') ? " $button_class" : '';
-$reversed     = (isset($image_side) && $image_side === 'right');
+$photo_side   = (isset($image_side) && $image_side === 'right') ? 'coach-photo-right' : 'coach-photo-left';
 $more_id      = 'coach-more-' . $coach_id;
 ?>
   <div class="col-12 mb-4">
     <div class="card card-glass<?php echo $card_extra; ?>">
       <div class="card-body">
-        <div class="d-flex align-items-center coach-card-head<?php echo $reversed ? ' flex-row-reverse' : ''; ?>">
+        <div class="coach-card-wrap">
 <?php if ($photo !== ''): ?>
-          <img class="coach-photo rounded" src="<?php echo asset_url($prefix, "img/$photo"); ?>" alt="<?php echo htmlspecialchars($name); ?>">
+          <img class="coach-photo rounded <?php echo $photo_side; ?>" src="<?php echo asset_url($prefix, "img/$photo"); ?>" alt="<?php echo htmlspecialchars($name); ?>">
 <?php endif; ?>
-          <h5 class="card-title mb-0"><?php echo htmlspecialchars($name); ?></h5>
+          <h5 class="card-title mt-0 mb-1"><?php echo htmlspecialchars($name); ?></h5>
+          <p class="card-text"><?php echo htmlspecialchars($summary); ?>
+            <button type="button" class="coach-toggle-more" data-target="<?php echo $more_id; ?>" aria-expanded="false" aria-controls="<?php echo $more_id; ?>" aria-label="Show more about <?php echo htmlspecialchars($name); ?>"><i class="fas fa-chevron-right"></i></button>
+          </p>
         </div>
-
-        <p class="card-text"><?php echo htmlspecialchars($summary); ?></p>
-        <button type="button" class="btn btn-sm btn-link coach-toggle-more p-0" data-target="<?php echo $more_id; ?>">Read more</button>
+        <div class="clearfix"></div>
         <div id="<?php echo $more_id; ?>" class="coach-more" hidden>
           <?php echo entry_html($entry); ?>
         </div>

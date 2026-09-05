@@ -453,12 +453,25 @@ footer {
 }
 
 /* Coach headshot on a domain page's coach-card teaser: capped at 120x120,
-   cropped to fill that box rather than stretched (object-fit: cover). */
+   cropped to fill that box rather than stretched (object-fit: cover).
+   Floated (not flexed) so the name and summary text wrap around it —
+   the name top-aligns with the image and the text starts right under the
+   name, the way a magazine pull-image works, instead of the photo and
+   name sitting centered in their own row above the text. */
 .coach-photo {
   width: 120px;
   height: 120px;
   object-fit: cover;
-  flex-shrink: 0;
+}
+
+.coach-photo-left {
+  float: left;
+  margin: 0 1rem 0.5rem 0;
+}
+
+.coach-photo-right {
+  float: right;
+  margin: 0 0 0.5rem 1rem;
 }
 
 /* Dark blue, for the hub's domain-card "Explore" buttons specifically —
@@ -487,18 +500,19 @@ footer {
    gen-site.php's $domain_design "button_class"), same pattern as the
    hub's .btn-explore navy. */
 .btn-creativity {
-  background-color: #234d34;
-  border-color: #234d34;
+  /* Three shades darker than the original #234d34. */
+  background-color: #16301f;
+  border-color: #16301f;
 }
 
 .btn-creativity:hover,
 .btn-creativity:focus {
-  background-color: #1a3a27;
-  border-color: #1a3a27;
+  background-color: #102318;
+  border-color: #102318;
 }
 
 .btn-creativity:active {
-  background-color: #12291b !important;
+  background-color: #0a170f !important;
 }
 
 /* Non-interactive stand-in for a Book button when a coach has no
@@ -512,16 +526,29 @@ footer {
   box-shadow: none !important;
 }
 
-/* Coach card: image beside the name (side alternates per coach — see
-   templates/partials/coach-card.php), summary flowing full-width below
-   both, then a hidden expanded bio toggled by JS (content/js/
-   coach-card-toggle.js). */
-.coach-card-head {
-  gap: 1rem;
-}
-
 .coach-more {
   margin-top: 0.75rem;
+}
+
+/* Chevron toggle that expands a coach card's full bio (content/js/
+   coach-card-toggle.js) — a small inline widget next to the summary
+   text, not a "Read more" link. Rotates 90° when open. */
+.coach-toggle-more {
+  background: none;
+  border: none;
+  padding: 0 0.25rem;
+  color: inherit;
+  cursor: pointer;
+  vertical-align: baseline;
+}
+
+.coach-toggle-more i {
+  display: inline-block;
+  transition: transform 0.15s ease;
+}
+
+.coach-toggle-more.is-open i {
+  transform: rotate(90deg);
 }
 
 /* background-attachment: fixed is unreliable on mobile browsers (notably
