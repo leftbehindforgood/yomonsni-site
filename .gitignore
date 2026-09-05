@@ -1,6 +1,9 @@
 # Generated site output (written by gen-site.php)
 /working/
 
+# Runtime state: link-liveness cache and last-generation status
+/var/
+
 # Editor backup files
 *~
 

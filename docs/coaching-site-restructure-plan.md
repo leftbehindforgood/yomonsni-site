@@ -16,8 +16,39 @@ marked superseded rather than treated as an active punch list.
       yomonsni.com/`, and the `gen-site.php~`/`page-variables~` backup
       files no longer existed in the repo, so those bullets are removed
       below rather than checked off.
-- [ ] Everything else — engine rewrite (§6), content model (§4), templates
-      (§5), guardrails/validator (§7, §9) — not started.
+- [x] §4/§6 content model and engine: `+++`-fenced front matter + Markdown
+      (Parsedown, vendored at `lib/Parsedown.php`), collection loading and
+      domain filtering (`lib/entry.php`), the collection-loop templating
+      mechanism (`lib/render.php` — plain PHP files as templates), all six
+      page shapes (`templates/*.php`), and domain-scoped nav/footer
+      partials with no lateral cross-domain links (`templates/partials/`).
+      `gen-site.php` rewritten end to end on this model; the old
+      `.con`/`.skel` engine is gone.
+- [x] §7/§9 guardrails and validator: `lib/validate.php` implements
+      cross-reference validation (bad domain slugs, orphaned coach
+      references), the coach-photo-reuse-across-domains check, and the
+      output-side scan (dead links, absolute-internal-link detection,
+      cross-domain-leak detection, missing images, cached external-link
+      liveness). Wired into `gen-site.php` as a hard gate (aborts before
+      writing on a content error; reports a nonzero exit after generation
+      on an output error) and into `push-site.php` (refuses to sync unless
+      the last generation run recorded zero errors). All checks verified
+      firing correctly against deliberately-broken test fixtures, then
+      reverted — see commit for details.
+- [x] Old content fully retired: `about/`, `development/`, `lifestyle/`,
+      `massage/`, `reflections/`, `sanctuary/`, and the root `.con`/`.skel`
+      files are deleted. Replaced with placeholder scaffolding for all six
+      domains (intro copy, resources, one or two coaches, testimonials,
+      whispers, and a sample workshop/retreat) — enough to exercise every
+      page shape and guardrail, not real content. Real bios, testimonials,
+      and copy still need to replace the placeholders before launch.
+- [ ] `sitemap.xml` decision (§7/§10) — still open, nothing generated
+      either way.
+- [ ] Content-authoring guide for coaches (§8) — not started.
+- [ ] `page-variables` rewrite / `CLAUDE.md` architecture rewrite for the
+      new engine (§8) — not started; `CLAUDE.md` still describes the old
+      engine except for the Phase 1 path corrections.
+- [ ] Visual design/tone pass (§1) — deliberately deferred.
 
 ## 1. Mission and scope change
 
