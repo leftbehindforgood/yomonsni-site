@@ -163,15 +163,19 @@ individual coaches, but documented here for completeness:
 +++
 title: Leadership
 hook: A "mom test" style question shown on the homepage's domain card.
+hook2: A second, deeper follow-up question shown just below it.
 +++
 
 The domain's own intro/outline copy.
 ```
 
-`hook` is deliberately a question, not a description — something simple
-and personal enough that a visitor recognizes themselves in it (think "does
-this sound like you?", not "we offer X and Y"). The homepage card shows
-only this question, with no title or domain name on it at all.
+`hook`/`hook2` are deliberately questions, not descriptions — something
+simple and personal enough that a visitor recognizes themselves in them
+(think "does this sound like you?", not "we offer X and Y"). `hook` is the
+first thing a visitor reads; `hook2` follows it in smaller, quieter text as
+a second layer — meant to suggest there's more depth here than the first
+question alone lets on, not just repeat it. The homepage card shows only
+these two questions, with no title or domain name on it at all.
 
 ### A domain's resources page — `content/<domain>/resources.entry`
 

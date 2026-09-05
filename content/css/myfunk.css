@@ -414,7 +414,10 @@ footer {
    full-page dark photo. Text/link colors are overridden too: Bootstrap's
    default dark card text (#212529) is illegible on a dark card. */
 .card-glass {
-  background-color: rgba(30, 30, 30, 0.55);
+  /* Higher opacity than before (.55 -> .85) — at .55 too much of the
+     photo's own color (green, here) bled through and read as an
+     unwanted tint on the card rather than a neutral dark grey. */
+  background-color: rgba(30, 30, 30, 0.85);
   border-color: rgba(255, 255, 255, 0.15);
   border-radius: 1rem;
 }
@@ -424,23 +427,35 @@ footer {
   color: #f5f5f5;
 }
 
+/* The second, deeper hook question on each domain card — visually a
+   quieter follow-up to the first, not equal weight. */
+.card-glass .card-text-secondary {
+  color: rgba(245, 245, 245, 0.7);
+  font-size: 0.9rem;
+  margin-top: -0.5rem;
+}
+
 /* Dark blue, for the hub's domain-card "Explore" buttons specifically —
    not a change to .btn-primary itself, which is used site-wide (booking
    links, etc.) and stays the existing sage green. */
 .btn-explore {
-  background-color: #1c2b4a;
-  border-color: #1c2b4a;
+  /* Shifted further toward true navy: the previous color (#1c2b4a) had
+     green notably closer to blue than to red, giving it a steel/slate
+     cast. Keeping red and green close together (both well below blue) is
+     what reads as navy rather than a generic dark blue-grey. */
+  background-color: #151c40;
+  border-color: #151c40;
   border-radius: 2rem;
 }
 
 .btn-explore:hover,
 .btn-explore:focus {
-  background-color: #14213a;
-  border-color: #14213a;
+  background-color: #10152f;
+  border-color: #10152f;
 }
 
 .btn-explore:active {
-  background-color: #0e1728 !important;
+  background-color: #0a0d20 !important;
 }
 
 /* background-attachment: fixed is unreliable on mobile browsers (notably

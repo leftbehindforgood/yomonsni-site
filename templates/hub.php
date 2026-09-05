@@ -28,6 +28,7 @@
 <?php foreach ($domains as $slug => $title):
         $d = $domain_entries[$slug];
         $hook = field($d, 'hook');
+        $hook2 = field($d, 'hook2');
 ?>
       <div class="col-12 col-sm-6 col-md-4 mb-4">
         <div class="card card-glass h-100">
@@ -45,6 +46,7 @@
                content instead, centered, like a normal button. -->
           <div class="card-body text-center d-flex flex-column align-items-center">
             <p class="card-text"><?php echo htmlspecialchars($hook); ?></p>
+            <p class="card-text card-text-secondary"><?php echo htmlspecialchars($hook2); ?></p>
             <a class="btn btn-primary btn-explore mt-auto" href="<?php echo asset_url($prefix, "$slug/index.html"); ?>">Explore</a>
           </div>
         </div>
