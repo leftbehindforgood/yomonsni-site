@@ -94,7 +94,16 @@ foreach ($domain_slugs as $slug) {
     $domain_entries[$slug] = parse_entry_file("{$readprefix}{$slug}/index.entry");
 }
 
-$hub_nav_html = render_template($templates . 'partials/hub-nav.php', array('prefix' => './'));
+// The nav's two labels are each pulled from that page's own `title`
+// field rather than hardcoded separately in the nav partial, so the link
+// text and the destination page's own heading can never drift apart.
+$mission_entry = parse_entry_file("{$readprefix}mission.entry");
+$coaching_entry = parse_entry_file("{$readprefix}coaching.entry");
+$hub_nav_html = render_template($templates . 'partials/hub-nav.php', array(
+    'prefix'         => './',
+    'mission_title'  => field($mission_entry, 'title', 'Mission'),
+    'coaching_title' => field($coaching_entry, 'title', 'Coaching'),
+));
 
 write_page("{$writeprefix}index.html", array(
     'prefix'          => './',
@@ -117,9 +126,10 @@ write_page("{$writeprefix}index.html", array(
 // 4. Sitewide pages: mission, what-coaching-is, and legal (also
 // root-level, sharing the hub's nav/footer).
 // ---------------------------------------------------------------------
+$already_parsed = array('mission' => $mission_entry, 'coaching' => $coaching_entry);
 foreach (array('mission', 'coaching', 'legal/terms', 'legal/privacy') as $path) {
     $slug = basename($path);
-    $entry = parse_entry_file("{$readprefix}{$path}.entry");
+    $entry = isset($already_parsed[$path]) ? $already_parsed[$path] : parse_entry_file("{$readprefix}{$path}.entry");
     write_page("{$writeprefix}{$slug}.html", array(
         'prefix'          => './',
         'title'           => field($entry, 'title', ucfirst($slug)),
