@@ -417,7 +417,7 @@ footer {
   /* Translucent, NOT blurred — the background photo must stay sharp
      through it (see CLAUDE.md's "Never blur the background images" rule).
      Opacity alone is the only lever here. */
-  background-color: rgba(30, 30, 30, 0.35);
+  background-color: rgba(30, 30, 30, 0.25);
   border-color: rgba(255, 255, 255, 0.15);
   border-radius: 1rem;
 }
