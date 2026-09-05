@@ -28,12 +28,21 @@ $domain_titles = array(
 );
 $domain_slugs = array_keys($domain_titles);
 
-// Each domain's real background photo, once chosen. Defaults to the
-// placeholder "<slug>-bg.jpg" color block for any domain not listed here —
-// fill these in one at a time as each domain gets its own visual pass.
-$domain_bg = array(
-    "creativity" => "yo-IMG_42290-5D3-raw-shaped-flattened.jpg",
+// Per-domain visual tuning, filled in one domain at a time as each gets
+// its own pass. Anything not set here falls back to the shared default:
+// placeholder "<slug>-bg.jpg" background, full-width intro text, and the
+// standard (not fully transparent) card-glass treatment.
+$domain_design = array(
+    "creativity" => array(
+        'bg'         => 'yo-IMG_42290-5D3-raw-shaped-flattened.jpg',
+        'text_align' => 'left', // intro column anchored left, ~2/3 width
+        'card_class' => 'card-glass-transparent',
+    ),
 );
+
+function domain_design($domain_design, $slug, $key, $default) {
+    return isset($domain_design[$slug][$key]) ? $domain_design[$slug][$key] : $default;
+}
 
 // ---------------------------------------------------------------------
 // 1. Clean the output directory and stray editor backups in content.
@@ -171,18 +180,21 @@ foreach ($domain_slugs as $slug) {
 
     // -- overview / index.html --
     $resources_entry = parse_entry_file("{$readprefix}{$slug}/resources.entry");
-    $bgimage = isset($domain_bg[$slug]) ? $domain_bg[$slug] : "{$slug}-bg.jpg";
+    $bgimage    = domain_design($domain_design, $slug, 'bg', "{$slug}-bg.jpg");
+    $text_align = domain_design($domain_design, $slug, 'text_align', null);
+    $card_class = domain_design($domain_design, $slug, 'card_class', '');
     write_page("{$writeprefix}{$slug}/index.html", $common + array(
         'title' => $title, 'bgimage' => $bgimage,
         'content_template' => 'domain-overview.php',
         'entry' => $domain_entries[$slug], 'domain_slug' => $slug, 'domain_title' => $title,
         'coaches' => $d_coaches, 'resources_entry' => $resources_entry,
         'whispers' => $d_whispers, 'workshops' => $d_workshops, 'retreats' => $d_retreats,
+        'text_align' => $text_align, 'card_class' => $card_class,
     ), $templates);
 
     // -- resources.html --
     write_page("{$writeprefix}{$slug}/resources.html", $common + array(
-        'title' => field($resources_entry, 'title', "$title resources"), 'bgimage' => '',
+        'title' => field($resources_entry, 'title', "$title resources"), 'bgimage' => $bgimage,
         'content_template' => 'simple-content.php', 'entry' => $resources_entry,
     ), $templates);
 
@@ -191,7 +203,7 @@ foreach ($domain_slugs as $slug) {
         $coach_id = field($coach, 'coach_id');
         $coach_testimonials = entries_for_coach($testimonials, $coach_id, $slug);
         write_page("{$writeprefix}{$slug}/coach-{$coach_id}.html", $common + array(
-            'title' => field($coach, 'name', $coach_id) . " — $title", 'bgimage' => '',
+            'title' => field($coach, 'name', $coach_id) . " — $title", 'bgimage' => $bgimage,
             'content_template' => 'coach-profile.php', 'entry' => $coach, 'testimonials' => $coach_testimonials,
         ), $templates, false); // excluded from sitemap.xml — see write_page()
     }
@@ -199,10 +211,10 @@ foreach ($domain_slugs as $slug) {
     // -- testimonials.html --
     $testimonial_cards = array();
     foreach ($d_testimonials as $t) {
-        $testimonial_cards[] = render_template($templates . 'partials/testimonial-card.php', array('entry' => $t));
+        $testimonial_cards[] = render_template($templates . 'partials/testimonial-card.php', array('entry' => $t, 'card_class' => $card_class));
     }
     write_page("{$writeprefix}{$slug}/testimonials.html", $common + array(
-        'title' => "$title testimonials", 'bgimage' => '',
+        'title' => "$title testimonials", 'bgimage' => $bgimage,
         'content_template' => 'card-list.php', 'cards' => $testimonial_cards,
         'empty_message' => 'No testimonials published for this domain yet.',
     ), $templates);
@@ -211,16 +223,16 @@ foreach ($domain_slugs as $slug) {
     $whisper_cards = array();
     foreach ($d_whispers as $w) {
         $whisper_cards[] = render_template($templates . 'partials/whisper-teaser-card.php', array(
-            'entry' => $w, 'coaches' => $d_coaches, 'domain_slug' => $slug,
+            'entry' => $w, 'coaches' => $d_coaches, 'domain_slug' => $slug, 'card_class' => $card_class,
         ));
         write_page("{$writeprefix}{$slug}/whisper-{$w['slug']}.html", $common + array(
-            'title' => field($w, 'title'), 'bgimage' => '',
+            'title' => field($w, 'title'), 'bgimage' => $bgimage,
             'content_template' => 'whisper-article.php', 'entry' => $w,
             'coaches' => $d_coaches, 'domain_slug' => $slug,
         ), $templates);
     }
     write_page("{$writeprefix}{$slug}/whispers.html", $common + array(
-        'title' => "$title whispers", 'bgimage' => '',
+        'title' => "$title whispers", 'bgimage' => $bgimage,
         'content_template' => 'card-list.php', 'cards' => $whisper_cards,
         'empty_message' => 'No whispers published for this domain yet.',
     ), $templates);
@@ -228,17 +240,17 @@ foreach ($domain_slugs as $slug) {
     // -- workshops.html / retreats.html, only if this domain has any --
     if (!empty($d_workshops)) {
         $cards = array();
-        foreach ($d_workshops as $w) $cards[] = render_template($templates . 'partials/event-card.php', array('entry' => $w));
+        foreach ($d_workshops as $w) $cards[] = render_template($templates . 'partials/event-card.php', array('entry' => $w, 'card_class' => $card_class));
         write_page("{$writeprefix}{$slug}/workshops.html", $common + array(
-            'title' => "$title workshops", 'bgimage' => '',
+            'title' => "$title workshops", 'bgimage' => $bgimage,
             'content_template' => 'card-list.php', 'cards' => $cards, 'empty_message' => '',
         ), $templates);
     }
     if (!empty($d_retreats)) {
         $cards = array();
-        foreach ($d_retreats as $r) $cards[] = render_template($templates . 'partials/event-card.php', array('entry' => $r));
+        foreach ($d_retreats as $r) $cards[] = render_template($templates . 'partials/event-card.php', array('entry' => $r, 'card_class' => $card_class));
         write_page("{$writeprefix}{$slug}/retreats.html", $common + array(
-            'title' => "$title retreats", 'bgimage' => '',
+            'title' => "$title retreats", 'bgimage' => $bgimage,
             'content_template' => 'card-list.php', 'cards' => $cards, 'empty_message' => '',
         ), $templates);
     }

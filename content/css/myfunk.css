@@ -432,6 +432,15 @@ footer {
   color: rgba(245, 245, 245, 0.65) !important;
 }
 
+/* Per-domain variant (see gen-site.php's $domain_design "card_class"):
+   fully transparent instead of the standard translucent dark fill. Kept
+   as a separate modifier rather than changing .card-glass itself, since
+   that's still the default for the hub and any domain not opted into
+   this. Border/rounding/text color are inherited from .card-glass. */
+.card-glass-transparent {
+  background-color: transparent;
+}
+
 /* The second, deeper hook question on each domain card — visually a
    quieter follow-up to the first, not equal weight. */
 .card-glass .card-text-secondary {

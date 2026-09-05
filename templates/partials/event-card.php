@@ -6,9 +6,10 @@ $title    = field($entry, 'title');
 $when     = field($entry, 'date');
 $format   = field($entry, 'format');
 $booking  = field($entry, 'booking_link');
+$extra    = (isset($card_class) && $card_class !== '') ? " $card_class" : '';
 ?>
   <div class="col-sm mb-4">
-    <div class="card card-glass h-100">
+    <div class="card card-glass<?php echo $extra; ?> h-100">
       <div class="card-body">
         <h5 class="card-title"><?php echo htmlspecialchars($title); ?></h5>
         <h6 class="card-subtitle mb-2 text-muted">

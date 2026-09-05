@@ -4,7 +4,13 @@
 // from other collections filtered to this domain (restructure plan §5.2).
 // Expects: $entry, $domain_slug, $domain_title, $prefix, $coaches (already
 // filtered to this domain), $resources_entry, $whispers (filtered, sorted
-// newest-first), $workshops, $retreats (each filtered to this domain).
+// newest-first), $workshops, $retreats (each filtered to this domain),
+// $text_align ('left'/'right'/null — a per-domain layout choice, see
+// gen-site.php's $domain_design), $card_class (extra class appended to
+// this domain's cards, e.g. for a fully-transparent variant).
+$intro_col = 'col-12';
+if ($text_align === 'left') $intro_col = 'col-12 col-md-8';
+if ($text_align === 'right') $intro_col = 'col-12 col-md-8 offset-md-4';
 ?>
   <header class="mastblank" style="background: none;">
     <div class="container d-flex h-100 align-items-center">
@@ -16,7 +22,7 @@
 
   <div class="container-fluid p-3 tw">
     <div class="row">
-      <div class="col-12">
+      <div class="<?php echo $intro_col; ?>">
         <?php echo entry_html($entry); ?>
       </div>
     </div>
@@ -25,7 +31,7 @@
     <div class="row">
       <div class="col-12"><h2>Coaches</h2></div>
 <?php foreach ($coaches as $c): ?>
-<?php echo render_template(__DIR__ . '/partials/coach-card.php', array('entry' => $c, 'prefix' => $prefix)); ?>
+<?php echo render_template(__DIR__ . '/partials/coach-card.php', array('entry' => $c, 'prefix' => $prefix, 'card_class' => $card_class)); ?>
 <?php endforeach; ?>
     </div>
 <?php endif; ?>
@@ -42,7 +48,7 @@
     <div class="row">
       <div class="col-12"><h2>Whispers</h2></div>
 <?php foreach (array_slice($whispers, 0, 3) as $w): ?>
-<?php echo render_template(__DIR__ . '/partials/whisper-teaser-card.php', array('entry' => $w, 'coaches' => $coaches, 'domain_slug' => $domain_slug)); ?>
+<?php echo render_template(__DIR__ . '/partials/whisper-teaser-card.php', array('entry' => $w, 'coaches' => $coaches, 'domain_slug' => $domain_slug, 'card_class' => $card_class)); ?>
 <?php endforeach; ?>
       <div class="col-12"><a href="whispers.html">All whispers &rarr;</a></div>
     </div>
@@ -52,7 +58,7 @@
     <div class="row">
       <div class="col-12"><h2>Workshops</h2></div>
 <?php foreach ($workshops as $w): ?>
-<?php echo render_template(__DIR__ . '/partials/event-card.php', array('entry' => $w)); ?>
+<?php echo render_template(__DIR__ . '/partials/event-card.php', array('entry' => $w, 'card_class' => $card_class)); ?>
 <?php endforeach; ?>
     </div>
 <?php endif; ?>
@@ -61,7 +67,7 @@
     <div class="row">
       <div class="col-12"><h2>Retreats</h2></div>
 <?php foreach ($retreats as $r): ?>
-<?php echo render_template(__DIR__ . '/partials/event-card.php', array('entry' => $r)); ?>
+<?php echo render_template(__DIR__ . '/partials/event-card.php', array('entry' => $r, 'card_class' => $card_class)); ?>
 <?php endforeach; ?>
     </div>
 <?php endif; ?>
