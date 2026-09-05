@@ -525,10 +525,17 @@ footer {
    there's nothing to actually interact with. The diagonal (top-right to
    bottom-left, via ::after) reinforces that visually too. */
 .btn-unavailable {
-  /* Tighter than the shared .btn padding (1.25rem 2rem) — this label is
-     much longer than a normal button's ("Currently Unavailable for new
-     Bookings"), and the standard padding around wrapped multi-line text
-     made it look oversized next to its sibling button. */
+  /* Tighter than the shared .btn padding (1.25rem 2rem) — "Fully Booked"
+     is short, but the sibling button next to it (Full profile, Book) can
+     still wrap to two lines, and flex's default align-items: stretch
+     makes both buttons match that height. display:flex + centering here
+     is what actually keeps this one's own text centered in whatever
+     height it ends up stretched to, rather than sitting at the top of
+     it. */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
   padding: 0.5rem 0.75rem;
   font-size: 70%;
   line-height: 1.3;

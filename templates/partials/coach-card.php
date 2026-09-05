@@ -21,6 +21,7 @@ $coach_id = field($entry, 'coach_id');
 $name     = field($entry, 'name');
 $photo    = field($entry, 'photo');
 $booking  = field($entry, 'booking_link');
+$can_book = $booking !== '' && !field_bool($entry, 'fully_booked');
 $summary  = field($entry, 'summary');
 if ($summary === '') {
     // No explicit summary: fall back to the first sentence of the bio.
@@ -53,7 +54,7 @@ $more_id      = 'coach-more-' . $coach_id;
         </div>
 
         <div class="d-flex justify-content-between mt-3">
-<?php if ($booking !== ''): ?>
+<?php if ($can_book): ?>
           <a class="btn btn-primary<?php echo $button_extra; ?>" href="<?php echo htmlspecialchars($booking); ?>" rel="noopener" target="_blank">Book</a>
 <?php else: ?>
           <span class="btn btn-unavailable" aria-disabled="true">Fully Booked</span>

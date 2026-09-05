@@ -104,8 +104,15 @@ on your full profile page.
   Shown at 120x120 on the domain page's card, cropped to fit.
 - `booking_link` — your external booking page for this domain (Calendly
   or similar). Also domain-specific if you use different calendars.
-  Leave this blank while you're not taking new clients — the card shows
-  a plain "Fully Booked" notice instead of a Book button when it's empty.
+  Leave this blank while you're not taking new clients here — the card
+  shows a plain "Fully Booked" notice instead of a Book button when it's
+  empty.
+- `fully_booked` — optional, `yes` or `no` (default `no`). Set this to
+  `yes` to show the same "Fully Booked" notice *without* clearing out
+  `booking_link` — useful if you're only temporarily full and don't want
+  to retype your booking URL when you reopen. Since this lives on the
+  card, it's domain-specific like everything else here: you can be fully
+  booked in one domain and still taking clients in another.
 - `summary` — optional. If you skip it, the card falls back to the first
   sentence of your bio.
 

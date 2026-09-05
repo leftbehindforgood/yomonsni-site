@@ -28,14 +28,20 @@ $domain_titles = array(
 );
 $domain_slugs = array_keys($domain_titles);
 
-// Per-domain visual tuning, filled in one domain at a time as each gets
-// its own pass. Anything not set here falls back to the shared default:
-// placeholder "<slug>-bg.jpg" background, full-width intro text, and the
-// standard (not fully transparent) card-glass treatment.
+// Per-domain visual tuning. The domain overview page's *layout* (intro
+// beside a Coaches/Resources/Whispers/Workshops stack, centered section
+// headings, rounded buttons, the coach card design) is the same for every
+// domain — it's not something this config turns on, and it isn't
+// creativity-specific. What's actually meant to vary here is narrower:
+// which side the text lands on, the background photo, and color/theme
+// choices (button color, card transparency). Anything not set for a
+// given domain falls back to the shared default: placeholder
+// "<slug>-bg.jpg" background, text anchored left, and the standard (not
+// fully transparent) card-glass treatment.
 $domain_design = array(
     "creativity" => array(
         'bg'           => 'yo-IMG_42290-5D3-raw-shaped-flattened.jpg',
-        'text_align'   => 'left', // intro column anchored left, ~2/3 width
+        'text_align'   => 'left', // matches the shared default; explicit for clarity
         'card_class'   => 'card-glass-transparent',
         'button_class' => 'btn-creativity', // dark green, this domain only
     ),
@@ -182,7 +188,12 @@ foreach ($domain_slugs as $slug) {
     // -- overview / index.html --
     $resources_entry = parse_entry_file("{$readprefix}{$slug}/resources.entry");
     $bgimage      = domain_design($domain_design, $slug, 'bg', "{$slug}-bg.jpg");
-    $text_align   = domain_design($domain_design, $slug, 'text_align', null);
+    // 'left' is the shared default, not a creativity-only choice — the
+    // intro-beside-coaches layout (see templates/domain-overview.php) is
+    // meant to be how every domain's page works, with only which side
+    // the text lands on left open per domain. Only the color/image
+    // choices below (bg/card_class/button_class) are meant to vary.
+    $text_align   = domain_design($domain_design, $slug, 'text_align', 'left');
     $card_class   = domain_design($domain_design, $slug, 'card_class', '');
     $button_class = domain_design($domain_design, $slug, 'button_class', '');
     write_page("{$writeprefix}{$slug}/index.html", $common + array(

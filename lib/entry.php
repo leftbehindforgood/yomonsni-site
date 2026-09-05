@@ -83,6 +83,13 @@ function field($entry, $key, $default = '') {
     return isset($entry['data'][$key]) ? $entry['data'][$key] : $default;
 }
 
+// For a yes/no front-matter field (e.g. a coach's "fully_booked") —
+// "yes"/"true"/"1" (any case) are true, anything else (including unset)
+// is false.
+function field_bool($entry, $key) {
+    return in_array(strtolower(trim(field($entry, $key))), array('yes', 'true', '1'), true);
+}
+
 // Load every *.entry file directly inside $dir (collections are flat, not
 // nested — see the restructure plan §4.2).
 function load_collection($dir) {

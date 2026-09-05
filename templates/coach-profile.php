@@ -8,6 +8,7 @@
 $name    = field($entry, 'name');
 $photo   = field($entry, 'photo');
 $booking = field($entry, 'booking_link');
+$can_book = $booking !== '' && !field_bool($entry, 'fully_booked');
 $button_extra = (isset($button_class) && $button_class !== '') ? " $button_class" : '';
 ?>
   <div class="container-fluid p-3 tw">
@@ -20,7 +21,7 @@ $button_extra = (isset($button_class) && $button_class !== '') ? " $button_class
       <div class="col-md-8">
         <h1><?php echo htmlspecialchars($name); ?></h1>
         <?php echo entry_html($entry); ?>
-<?php if ($booking !== ''): ?>
+<?php if ($can_book): ?>
         <a class="btn btn-primary<?php echo $button_extra; ?>" href="<?php echo htmlspecialchars($booking); ?>" rel="noopener" target="_blank">Book with <?php echo htmlspecialchars($name); ?></a>
 <?php else: ?>
         <span class="btn btn-unavailable" aria-disabled="true">Fully Booked</span>
