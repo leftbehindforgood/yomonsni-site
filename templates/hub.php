@@ -29,11 +29,18 @@
         $d = $domain_entries[$slug];
         $hook = field($d, 'hook');
 ?>
-      <div class="col-sm mb-4">
+      <div class="col-12 col-sm-6 col-md-4 mb-4">
         <div class="card card-glass h-100">
-          <div class="card-body text-center">
+          <!-- d-flex flex-column + mt-auto on the button: the six hook
+               questions wrap to different numbers of lines, and without
+               this the button would sit right after the text at a
+               different height in every card, leaving an inconsistent
+               gap to the card's bottom edge. This pins it to the bottom
+               of the (already-equal-height, via h-100) card instead, so
+               that gap is the same everywhere regardless of text length. -->
+          <div class="card-body text-center d-flex flex-column">
             <p class="card-text"><?php echo htmlspecialchars($hook); ?></p>
-            <a class="btn btn-primary btn-explore" href="<?php echo asset_url($prefix, "$slug/index.html"); ?>">Explore</a>
+            <a class="btn btn-primary btn-explore mt-auto" href="<?php echo asset_url($prefix, "$slug/index.html"); ?>">Explore</a>
           </div>
         </div>
       </div>

@@ -157,8 +157,12 @@
 
 @media (min-width: 992px) {
   .masthead {
-    height: 100vh;
-    padding: 0;
+    /* Not height: 100vh — that was the real cause of the excess vertical
+       space around the heading (this rule applies at any normal desktop
+       width, so it was overriding the base .masthead rule's much smaller
+       padding/min-height on every viewport actually tested against). */
+    min-height: 18rem;
+    padding: 3rem 0;
   }
   .masthead h1 {
     font-size: 6.5rem;
@@ -343,6 +347,10 @@ a:focus, a:hover {
 
 footer {
   padding: 5rem 0;
+  /* Same nearly-white, subtle-rose color as .masthead h1/p — the footer
+     sits over the same kind of dark/photo background and needs the same
+     treatment for its default (unstyled) text to be legible. */
+  color: #fbf3f4;
 }
 
 /* pulled from business casual */
