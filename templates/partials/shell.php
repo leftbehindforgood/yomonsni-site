@@ -1,7 +1,18 @@
 <?php
 // Page shell: doctype/head/body wrapper shared by every page shape.
 // Expects: $prefix, $title, $bgimage, $nav_html, $content_html, $footer_html.
-$bg = isset($bgimage) && $bgimage !== '' ? $bgimage : 'default-bg.jpg';
+// $bgimage is optional — when it's empty, no inline style is emitted at
+// all, and content/css/myfunk.css's own plain `body { background-color:
+// #161616; }` applies. There is deliberately no made-up fallback filename
+// here: an earlier version of this file fell back to a "default-bg.jpg"
+// that was never actually created, silently 404ing on every page that
+// didn't set an explicit bgimage (every page shape except the hub and
+// domain overviews). Don't reintroduce that.
+$body_style = '';
+if (isset($bgimage) && $bgimage !== '') {
+    $url = asset_url($prefix, "img/$bgimage");
+    $body_style = " style=\"background-image: linear-gradient(to bottom, rgba(22, 22, 22, 0.3) 0%, rgba(22, 22, 22, 0.7) 75%, #161616 100%), url('$url');\"";
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -29,7 +40,7 @@ $bg = isset($bgimage) && $bgimage !== '' ? $bgimage : 'default-bg.jpg';
 
 </head>
 
-<body style="background-image: linear-gradient(to bottom, rgba(22, 22, 22, 0.3) 0%, rgba(22, 22, 22, 0.7) 75%, #161616 100%), url('<?php echo asset_url($prefix, "img/$bg"); ?>');">
+<body<?php echo $body_style; ?>>
 
 <?php echo $nav_html; ?>
 

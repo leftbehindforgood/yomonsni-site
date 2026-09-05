@@ -3,7 +3,12 @@
 // shape. Expects: $entry (content/index.entry), $domains (slug => title),
 // $domain_entries (slug => that domain's own index.entry, for its blurb).
 ?>
-  <header class="masthead" style="background-image: linear-gradient(to bottom, rgba(22, 22, 22, 0.3) 0%, rgba(22, 22, 22, 0.7) 75%, #161616 100%), url('<?php echo asset_url($prefix, 'img/hub-bg.jpg'); ?>');">
+  <!-- No inline background-image here, deliberately: content/css/myfunk.css's
+       own .masthead rule already carries the site's real hero photo
+       (yo-IMG_56547-...jpg — the same one the live pre-rebuild site used),
+       so this just lets that CSS default show through, the same way the
+       original design did. -->
+  <header class="masthead">
     <div class="container d-flex h-100 align-items-center">
       <div class="mx-auto text-center">
         <h1 class="mx-auto my-0 text-uppercase">Yomonsni</h1>

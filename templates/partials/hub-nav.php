@@ -1,5 +1,7 @@
 <?php
-// Root-only nav. Expects: $domains (slug => title), $prefix ("./" here).
+// Root-only nav. Deliberately does NOT list the six domains — those are
+// handled on the hub page itself (templates/hub.php), not in navigation.
+// Expects: $prefix ("./" here).
 ?>
   <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
     <div class="container-fluid">
@@ -10,11 +12,9 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ml-auto">
-<?php foreach ($domains as $slug => $title): ?>
           <li class="nav-item">
-            <a class="nav-link" href="<?php echo asset_url($prefix, "$slug/index.html"); ?>"><?php echo htmlspecialchars($title); ?></a>
+            <a class="nav-link" href="<?php echo asset_url($prefix, 'about.html'); ?>">About</a>
           </li>
-<?php endforeach; ?>
         </ul>
       </div>
     </div>

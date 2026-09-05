@@ -94,11 +94,17 @@ foreach ($domain_slugs as $slug) {
     $domain_entries[$slug] = parse_entry_file("{$readprefix}{$slug}/index.entry");
 }
 
+$hub_nav_html = render_template($templates . 'partials/hub-nav.php', array('prefix' => './'));
+
 write_page("{$writeprefix}index.html", array(
     'prefix'          => './',
     'title'           => field($hub_entry, 'title', 'Yomonsni'),
-    'bgimage'         => 'hub-bg.jpg',
-    'nav_html'        => render_template($templates . 'partials/hub-nav.php', array('prefix' => './', 'domains' => $domain_titles)),
+    // Body itself carries no image — content/css/myfunk.css's .masthead
+    // rule already supplies the real hero photo for that one element
+    // (see templates/hub.php), matching how the pre-rebuild site actually
+    // rendered this page rather than duplicating the photo site-wide.
+    'bgimage'         => '',
+    'nav_html'        => $hub_nav_html,
     'footer_html'     => footer_html_for('./', $footer_entry, $templates),
     'content_template' => 'hub.php',
     'entry'           => $hub_entry,
@@ -107,15 +113,17 @@ write_page("{$writeprefix}index.html", array(
 ), $templates);
 
 // ---------------------------------------------------------------------
-// 4. Sitewide legal pages (also root-level).
+// 4. Sitewide pages: About (mission + what coaching is) and legal
+// (also root-level, sharing the hub's nav/footer).
 // ---------------------------------------------------------------------
-foreach (array('terms', 'privacy') as $slug) {
-    $entry = parse_entry_file("{$readprefix}legal/{$slug}.entry");
+foreach (array('about', 'legal/terms', 'legal/privacy') as $path) {
+    $slug = basename($path);
+    $entry = parse_entry_file("{$readprefix}{$path}.entry");
     write_page("{$writeprefix}{$slug}.html", array(
         'prefix'          => './',
         'title'           => field($entry, 'title', ucfirst($slug)),
         'bgimage'         => '',
-        'nav_html'        => render_template($templates . 'partials/hub-nav.php', array('prefix' => './', 'domains' => $domain_titles)),
+        'nav_html'        => $hub_nav_html,
         'footer_html'     => footer_html_for('./', $footer_entry, $templates),
         'content_template' => 'simple-content.php',
         'entry'           => $entry,
