@@ -414,10 +414,16 @@ footer {
    full-page dark photo. Text/link colors are overridden too: Bootstrap's
    default dark card text (#212529) is illegible on a dark card. */
 .card-glass {
-  /* Higher opacity than before (.55 -> .85) — at .55 too much of the
-     photo's own color (green, here) bled through and read as an
-     unwanted tint on the card rather than a neutral dark grey. */
-  background-color: rgba(30, 30, 30, 0.85);
+  /* Genuinely translucent (lower opacity than the .85 this had briefly)
+     without reintroducing the color-tint problem that opacity alone was
+     fixing: backdrop-filter blurs whatever's behind the card, so what
+     shows through is a soft, colorless wash rather than a sharp, tinted
+     view of the photo. This is what a "translucent" card actually looks
+     like in modern UI (frosted glass), as opposed to just a dark
+     rectangle with a photo showing through it. */
+  background-color: rgba(30, 30, 30, 0.45);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
   border-color: rgba(255, 255, 255, 0.15);
   border-radius: 1rem;
 }
