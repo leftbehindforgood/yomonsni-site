@@ -158,6 +158,20 @@ across domains. This is enforced architecturally, not just by convention:
   exposure (see "Collections vs. one-off pages" above), not a new one a
   sitemap would introduce.
 
+## Visual design rules (read before touching CSS/templates)
+
+- **Never blur a background image, anywhere on the site — no
+  `backdrop-filter`, no `filter: blur()`, no blurred duplicate/thumbnail
+  standing in for the real photo.** The specific photo chosen for a given
+  page is a deliberate part of that page's aesthetic, not incidental
+  texture; it must always render sharp, including where it shows through
+  a translucent element (a card, a panel, an overlay). If something needs
+  to look translucent, the only lever is opacity/color on the element
+  itself — never touch the sharpness of what's behind it. (This rule
+  exists because a translucent-card treatment used `backdrop-filter: blur`
+  and was explicitly rejected for exactly this reason — see git history
+  around the hub page's `.card-glass` styling.)
+
 ## The six page shapes (`templates/`)
 
 Templates are plain PHP files, included with a set of variables in scope
