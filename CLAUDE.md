@@ -350,7 +350,12 @@ content.
    here and on the root-level mission/coaching/terms/privacy pages) does
    *not* list the domains — just a Mission/Coaching link pair, sourced
    from those two pages' own `title` fields so the nav label and the
-   page's own heading can't drift apart.
+   page's own heading can't drift apart. The brand slot links home
+   (`index.html`), showing the hub's own `title` field — same convention
+   `domain-nav.php` uses for its own brand — rather than linking to
+   `mission.html` the way it originally did (that made the mission page's
+   own top-left link to itself, with no way back to the hub from the nav
+   at all).
 2. **`templates/domain-overview.php`** — a domain's front door. Composite,
    two-column by default: intro copy on its `text_align` side (~2/3
    width), a `Coaches → Resources → Whispers → Events` stack
@@ -562,17 +567,21 @@ engine, now fully replaced). Current state:
   (One coach card, Jane's intimate one, is deliberately `fully_booked`
   with a real-shaped placeholder link still attached, to demonstrate that
   field.)
-- The root-level pages (`mission.html`, `coaching.html`, `terms.html`,
-  `privacy.html`) don't yet have a background photo of their own — only
-  the hub (`index.html`) and the six domains do.
+- Of the root-level pages, only `mission.html` has its own background
+  photo so far (`yo-IMG_57108-5DII-raw32-rawtherapee-shaped.jpg`, set via
+  `gen-site.php`'s `$root_page_bgimages` — the same per-page-lookup
+  pattern as `$domain_design`, just keyed by page slug instead of
+  domain). `coaching.html`/`terms.html`/`privacy.html` still don't have
+  one, picked up one page at a time rather than all at once.
 
 ## Known gaps / open decisions
 
 - Content for five of the six domains — see "History and current status"
   above for exactly what each domain has vs. still needs. Creativity is
   the reference pattern to extend, not a one-off.
-- Root-level pages (mission/coaching/terms/privacy) have no background
-  photo treatment yet, unlike every other page on the site.
+- Root-level pages: `mission.html` now has a background photo (see
+  "History and current status" above); `coaching.html`/`terms.html`/
+  `privacy.html` still don't, unlike every other page on the site.
 - `push-site.php` depends entirely on the operator's local `aws` CLI
   credentials — none are configured in this repo, which is correct.
 

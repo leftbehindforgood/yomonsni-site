@@ -144,6 +144,7 @@ $mission_entry = parse_entry_file("{$readprefix}mission.entry");
 $coaching_entry = parse_entry_file("{$readprefix}coaching.entry");
 $hub_nav_html = render_template($templates . 'partials/hub-nav.php', array(
     'prefix'         => './',
+    'site_title'     => field($hub_entry, 'title', 'Yomonsni'),
     'mission_title'  => field($mission_entry, 'title', 'Mission'),
     'coaching_title' => field($coaching_entry, 'title', 'Coaching'),
 ));
@@ -169,6 +170,12 @@ write_page("{$writeprefix}index.html", array(
 // 4. Sitewide pages: mission, what-coaching-is, and legal (also
 // root-level, sharing the hub's nav/footer).
 // ---------------------------------------------------------------------
+// Background photos for these, picked per page same as $domain_design —
+// still empty by default (see CLAUDE.md's "Known gaps"), filled in one
+// page at a time rather than all at once.
+$root_page_bgimages = array(
+    'mission' => 'yo-IMG_57108-5DII-raw32-rawtherapee-shaped.jpg',
+);
 $already_parsed = array('mission' => $mission_entry, 'coaching' => $coaching_entry);
 foreach (array('mission', 'coaching', 'legal/terms', 'legal/privacy') as $path) {
     $slug = basename($path);
@@ -176,7 +183,7 @@ foreach (array('mission', 'coaching', 'legal/terms', 'legal/privacy') as $path) 
     write_page("{$writeprefix}{$slug}.html", array(
         'prefix'          => './',
         'title'           => field($entry, 'title', ucfirst($slug)),
-        'bgimage'         => '',
+        'bgimage'         => isset($root_page_bgimages[$slug]) ? $root_page_bgimages[$slug] : '',
         'nav_html'        => $hub_nav_html,
         'footer_html'     => footer_html_for('./', $footer_entry, $templates),
         'content_template' => 'simple-content.php',
