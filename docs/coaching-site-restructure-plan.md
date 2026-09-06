@@ -508,12 +508,21 @@ pages, not just reading the templates):
    `privacy.html`) have no background photo yet — every other page does.
 3. **Coach photos** are still placeholder color blocks (ImageMagick),
    even on domains that now have a real background photo.
-4. **A domain's sub-pages** (`resources.html`, `testimonials.html`,
-   `whispers.html`, `workshops.html`, individual coach-profile/whisper
-   pages) inherit the right photo/button color already but haven't had
-   their own layout pass — they're using the shared page-shape templates
-   (`simple-content.php`, `card-list.php`, `coach-profile.php`) as-is.
-5. No domain overview has been generated/screenshotted with **zero
-   whispers** or **zero workshops/retreats** all at once (every domain so
-   far has at least whispers) — the `if (!empty(...))` guards should
-   handle it, but it's unverified.
+4. ~~**A domain's sub-pages** haven't had their own layout pass~~ —
+   resolved as of 2026-09-06, in a series of follow-on sessions after
+   this plan's last edit (see git log, not this document, for the
+   detailed why of each): `coach-profile.php` was redesigned (name/photo
+   layout, `photo_side` config, in-person location + a second booking
+   button, nested-scroll-box "What clients have said"/"What ... has
+   written" sections); workshops+retreats were merged into one
+   `content/events/` collection with its own full page per event
+   (embeddable photos, multi-coach attribution) and unified "Events" nav
+   item; the domain resources page became a real curated collection
+   (`content/resource-items/`, `templates/resources-page.php`) instead of
+   one free-text page; testimonials/whispers now link their coach to a
+   profile page. `CLAUDE.md`'s Content-model and page-shapes sections are
+   the current source of truth for all of this, not this plan document.
+5. ~~No domain overview verified with **zero whispers/events** at
+   once~~ — verified 2026-09-06: `performance` (zero coaches, whispers,
+   events, testimonials, and resource items) generates and renders
+   cleanly, every `if (!empty(...))` section correctly absent.
