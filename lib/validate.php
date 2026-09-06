@@ -12,7 +12,7 @@
 //
 // Both return an array of ['level' => 'error'|'warning', 'message' => ...].
 
-function validate_content_references($domain_slugs, $coaches, $testimonials, $whispers, $events = array()) {
+function validate_content_references($domain_slugs, $coaches, $testimonials, $whispers, $events = array(), $resource_items = array()) {
     $problems = array();
 
     $coach_keys = array(); // "domain|coach_id" => true
@@ -60,6 +60,22 @@ function validate_content_references($domain_slugs, $coaches, $testimonials, $wh
                 $problems[] = array('level' => 'error', 'message' =>
                     "{$e['path']}: coach \"$coach\" has no coach card in domain \"$domain\"");
             }
+        }
+    }
+
+    // A resource's `coach` (who recommends it) is optional and, like a
+    // testimonial's, a single coach_id.
+    foreach ($resource_items as $r) {
+        $domain = field($r, 'domain');
+        if (!in_array($domain, $domain_slugs, true)) {
+            $problems[] = array('level' => 'error', 'message' =>
+                "{$r['path']}: domain \"$domain\" is not a known domain slug");
+            continue;
+        }
+        $coach = field($r, 'coach');
+        if ($coach !== '' && !isset($coach_keys["$domain|$coach"])) {
+            $problems[] = array('level' => 'error', 'message' =>
+                "{$r['path']}: coach \"$coach\" has no coach card in domain \"$domain\"");
         }
     }
 

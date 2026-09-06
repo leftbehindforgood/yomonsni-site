@@ -179,15 +179,35 @@ are self-contained via a `domain` field.
   button below it. See `content/events/2025-11-creativity-writing-
   intensive.entry` for a worked example with two images.
 
+- `content/resource-items/` — a book, video, academic paper, article, or
+  podcast a coach recommends, shown as a large card on that domain's
+  resources page — this page is deliberately for anyone curious about
+  the subject, not just people ready to book a session, so these are
+  meant to be real recommendations, not a bibliography assembled to fill
+  the page. Fields: `title`, `domain` (single), `type` (`book`, `video`,
+  `paper`, `article`, `podcast` — picks the card's button label, e.g.
+  "Watch Video" for `video`; anything else falls back to a generic "View
+  Resource"), `coach` (optional — a `coach_id`, validated the same way a
+  testimonial's `coach` is; rendered "Recommended by {first name}" via
+  the new `first_name()` helper in `lib/entry.php`, linking to that
+  coach's profile in this domain the same way an event's/testimonial's/
+  whisper's coach does), `image` (optional cover/thumbnail filename under
+  `content/img/`), `url` (external link; blank means no button at all);
+  body = a short description, rendered via `entry_html()` like everything
+  else.
+
 Per-domain static content (not a collection): `content/<domain>/index.entry`
 (the domain's own overview/outline copy, plus `hook`/`hook2` — two "mom
 test" style questions shown on that domain's card on the hub page, the
 second smaller/quieter as a deeper follow-up, no title/label on the card at
-all) and `content/<domain>/resources.entry` (full resources page; its
-`pointers` field is a `|`-separated list of short always-visible bullets on
-the domain page's resources card, and its `teaser` field — *plain text*,
-not Markdown, the one exception — is revealed by that card's toggle rather
-than being "the one thing shown" the way it used to work). Sitewide:
+all) and `content/<domain>/resources.entry` (this domain's resources page —
+its body is only the page's *intro copy*, not the resources themselves,
+which are `content/resource-items/` entries filtered to this domain;
+its `pointers` field is a `|`-separated list of short always-visible
+bullets on the domain overview page's resources card, and its `teaser`
+field — *plain text*, not Markdown, the one exception — is revealed by
+that card's toggle rather than being "the one thing shown" the way it
+used to work). Sitewide:
 `content/index.entry` (hub copy), `content/mission.entry`/`coaching.entry`
 (the hub nav's two destinations — their own `title` field is reused as
 both the nav label and the page's own heading, so the two can't drift
@@ -312,7 +332,7 @@ apply everywhere, not just wherever they were first introduced:
   JS bundle — deliberately, since one interaction didn't justify pulling
   either in.
 
-## The seven page shapes (`templates/`)
+## The eight page shapes (`templates/`)
 
 Templates are plain PHP files, included with a set of variables in scope
 (`lib/render.php`'s `render_template()`) — this is the entire templating
@@ -382,7 +402,7 @@ content.
    is ignored when nested, since the point of `.card-glass-nested` is
    contrast against the panel holding it, not per-domain theming.
 4. **`templates/simple-content.php`** — plain prose, no collection data:
-   terms, privacy, mission, coaching, a domain's full resources page.
+   terms, privacy, mission, coaching.
 5. **`templates/card-list.php`** — one reusable "list of short cards"
    shape, reused for a domain's testimonials, whisper teasers, and events
    (workshops and retreats together — one collection, one nav item, one
@@ -417,6 +437,23 @@ content.
    the teaser, plus the full description and (if `booking_link` is set)
    a Register button — the teaser's own Register button and this page's
    are independent, both driven by the same `booking_link`.
+8. **`templates/resources-page.php`** — a domain's full resources page.
+   Composite like `domain-overview.php`: `resources.entry`'s own body as
+   framing/intro copy, then a grid of large resource cards
+   (`templates/partials/resource-card.php` — singular, one per resource
+   item; not to be confused with `resources-card.php` — plural, the
+   compact Resources teaser on the domain overview page, which is
+   unrelated and unchanged) pulled from `content/resource-items/`,
+   filtered to this domain. Two per row (`col-md-6`, deliberately
+   larger/fewer-per-row than the three-across testimonial/event grids),
+   each with an optional cover image on top (`.resource-cover`,
+   `object-fit: cover`, clipped to the card's rounded corners via
+   `.card-glass`'s own `overflow: hidden`), a type/coach-attribution
+   subtitle ("Book · Recommended by Sam", the coach linked the same way
+   as elsewhere), the description, and a type-specific button label
+   ("Watch Video", "Read Paper", etc., falling back to "View Resource").
+   This page is explicitly meant for anyone curious about the subject,
+   not just people ready to book — see its own intro copy.
 
 A domain with zero coaches (currently `change`, `performance`,
 `discovery`) skips the Coaches heading/stack entirely (`if (!empty
@@ -467,7 +504,7 @@ until traced by hand.
 - `lib/` — the engine's PHP: `entry.php` (parsing/collections/sorting),
   `render.php` (templating), `validate.php` (guardrails), and the vendored
   `Parsedown.php`.
-- `templates/` — the seven page shapes and their partials. Deliberately kept
+- `templates/` — the eight page shapes and their partials. Deliberately kept
   out of `content/` so the human-authored/engine-owned split is a real
   directory boundary, not just a convention.
 - `working/` — generated output (gitignored, wiped and rewritten on every
@@ -503,9 +540,11 @@ engine, now fully replaced). Current state:
   throughout development, not just by reading the CSS/templates.
 - **Content is a mix of real and placeholder, domain by domain.**
   Creativity has a real ~1500-word overview piece, three real (if
-  fictional) coaches with real-shaped bios/summaries, and a real
-  resources-card pointer list — it's the domain the visual design was
-  built and iterated against. Leadership and intimate each have one
+  fictional) coaches with real-shaped bios/summaries, a real
+  resources-card pointer list, and three real (if fictional)
+  `content/resource-items/` entries (a book, a video, a paper) with a
+  placeholder cover image on one of them — it's the domain the visual
+  design was built and iterated against. Leadership and intimate each have one
   coach (the same person, Jane Doe, with independent domain-scoped cards
   — used to demonstrate the coach-privacy design and per-domain
   `fully_booked`). Change, performance, and discovery have no coaches at

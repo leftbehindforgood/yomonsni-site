@@ -85,13 +85,14 @@ $coaches      = load_collection("{$readprefix}coaches");
 $testimonials = load_collection("{$readprefix}testimonials");
 $whispers     = sort_by_date_desc(load_collection("{$readprefix}whispers"));
 $events       = load_collection("{$readprefix}events");
+$resource_items = load_collection("{$readprefix}resource-items");
 $footer_entry = parse_entry_file("{$readprefix}footer.entry");
 
 // ---------------------------------------------------------------------
 // 2a. Validate cross-references before writing anything — a typo'd domain
 // or coach id should fail loudly, not silently drop content (plan §9).
 // ---------------------------------------------------------------------
-$problems = validate_content_references($domain_slugs, $coaches, $testimonials, $whispers, $events);
+$problems = validate_content_references($domain_slugs, $coaches, $testimonials, $whispers, $events, $resource_items);
 $hard_errors = print_problems($problems);
 if ($hard_errors > 0) {
     fwrite(STDERR, "\nAborting: fix the content errors above before generating.\n");
@@ -195,6 +196,7 @@ foreach ($domain_slugs as $slug) {
     $d_testimonials = filter_by_domain($testimonials, $slug, 'domain');
     $d_whispers     = filter_by_domain($whispers, $slug, 'domains');
     $d_events       = filter_by_domain($events, $slug, 'domain');
+    $d_resource_items = filter_by_domain($resource_items, $slug, 'domain');
 
     $nav_html = render_template($templates . 'partials/domain-nav.php', array(
         'prefix' => $prefix, 'domain_slug' => $slug, 'domain_title' => $title,
@@ -226,7 +228,9 @@ foreach ($domain_slugs as $slug) {
     // -- resources.html --
     write_page("{$writeprefix}{$slug}/resources.html", $common + array(
         'title' => field($resources_entry, 'title', "$title resources"), 'bgimage' => $bgimage,
-        'content_template' => 'simple-content.php', 'entry' => $resources_entry,
+        'content_template' => 'resources-page.php', 'entry' => $resources_entry,
+        'resource_items' => $d_resource_items, 'coaches' => $coaches, 'domain_slug' => $slug,
+        'card_class' => $card_class, 'button_class' => $button_class,
     ), $templates);
 
     // -- coach-<id>.html, one per coach card in this domain --

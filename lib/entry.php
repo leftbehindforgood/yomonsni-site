@@ -143,6 +143,15 @@ function resolve_coach_name($coaches, $coach_id, $domain_slug) {
     return $any !== null ? $any : $coach_id;
 }
 
+// First name only, e.g. "Sam" from "Sam Rivera" — used by a resource's
+// "Recommended by ..." tag (resource-card.php), which reads more
+// personal with just a first name than the full name links used
+// elsewhere (testimonials, events, whispers).
+function first_name($full_name) {
+    $parts = preg_split('/\s+/', trim($full_name));
+    return $parts[0];
+}
+
 // Whether $coach_id has an actual coach card in $domain_slug — i.e.
 // whether there's a profile page to link to there. Used by events, which
 // (unlike a whisper) always live in exactly one domain, so "does this

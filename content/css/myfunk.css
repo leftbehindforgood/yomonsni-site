@@ -460,11 +460,27 @@ footer {
   background-color: rgba(30, 30, 30, 0.25);
   border-color: rgba(255, 255, 255, 0.15);
   border-radius: 1rem;
+  /* Clips a full-bleed child (a resource card's cover image, sitting
+     flush against the card's top edge before .card-body's padding
+     starts) to the card's own rounded corners — without this its square
+     bottom corners poke out past the card's rounded top. */
+  overflow: hidden;
   /* Set here (inherited by every descendant) rather than listed out by
      child selector — new card content (whisper teasers, event listings,
      coach cards) shouldn't need a matching selector added by hand every
      time just to not render Bootstrap's default dark card text. */
   color: #f5f5f5;
+}
+
+/* A resource card's optional cover image (book cover, video thumbnail,
+   ...) — full width, fixed height, cropped to fill rather than
+   stretched. Sits directly inside .card, above .card-body, so
+   .card-glass's own overflow:hidden is what keeps its square corners
+   from poking out past the card's rounded ones. */
+.resource-cover {
+  width: 100%;
+  height: 12rem;
+  object-fit: cover;
 }
 
 .card-glass .text-muted {

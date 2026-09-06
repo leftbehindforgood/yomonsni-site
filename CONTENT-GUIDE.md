@@ -281,6 +281,45 @@ like the surrounding paragraphs.
   teaser card (which shows only `summary`), so there's no length limit to
   worry about.
 
+### Resource — `content/resource-items/<anything-unique>.entry`
+
+A book, video, academic paper, article, or podcast a coach actually
+recommends — shown as a large card on that domain's resources page
+(`content/<domain>/resources.entry` below is that page's own intro copy,
+not these). This is for anyone curious about the subject, not just
+people ready to book a session, so write these as real recommendations
+worth a stranger's time, not a bibliography assembled to fill the page.
+
+```
++++
+title: The Practice of Practice
+domain: creativity
+type: book
+coach: sam
+image: cover-photo.jpg
+url: https://example.com/the-practice-of-practice
++++
+
+A sentence or two on what it is and why you recommend it.
+```
+
+- `domain` — exactly one of the six domain slugs.
+- `type` — `book`, `video`, `paper`, `article`, or `podcast`. Picks the
+  button's label (e.g. `video` shows "Watch Video") — anything else
+  still works, it just gets a generic "View Resource" button.
+- `coach` — optional. The `coach_id` who's recommending it — must match
+  a real coach card in that domain, same as a testimonial's `coach`.
+  Shown as "Recommended by {first name}", linking to that coach's
+  profile page in this domain when they have one there. Leaving it blank
+  is fine for a resource the practice recommends generally rather than
+  one specific coach.
+- `image` — optional, a filename under `content/img/` — a cover image or
+  thumbnail shown at the top of the card. Skip it and the card just
+  starts with the title instead.
+- `url` — the external link. Leave it blank and no button shows at all.
+
+### A domain's own overview — `content/<domain>/index.entry`
+
 Usually only edited by whoever maintains the site structure, not by
 individual coaches, but documented here for completeness:
 
@@ -306,7 +345,10 @@ these two questions, with no title or domain name on it at all.
 
 The domain overview page shows this as a card: a couple of quick
 pointers, a chevron toggle that reveals a bit more, then a button through
-to the full resources page (this file's own body).
+to the full resources page. On that full page, this file's own body is
+just the intro copy at the top — the actual resources (books, videos,
+papers) are the `content/resource-items/` cards below it, documented
+above.
 
 ```
 +++
@@ -315,7 +357,9 @@ pointers: Start with 10 minutes, not 2 hours. | Track streaks, not perfection. |
 teaser: A short plain-text paragraph revealed by the card's toggle — a bit more context, still not the full page.
 +++
 
-The full resources content, shown on the dedicated resources page.
+Intro copy for the resources page — framing, not the resources
+themselves. Individual books/videos/papers are their own
+content/resource-items/ entries, not part of this body.
 ```
 
 - `pointers` — two or three short, plain-text pointers, **separated by
