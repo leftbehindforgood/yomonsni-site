@@ -233,10 +233,18 @@ foreach ($domain_slugs as $slug) {
     foreach ($d_coaches as $coach) {
         $coach_id = field($coach, 'coach_id');
         $coach_testimonials = entries_for_coach($testimonials, $coach_id, $slug);
+        // $d_whispers is already filtered to this domain (and sorted
+        // newest-first) — narrow further to just this coach's own. Can't
+        // reuse entries_for_coach() here: it checks a single 'domain'
+        // field, but a whisper's domain membership lives in 'domains'
+        // (comma-separated, already resolved into $d_whispers).
+        $coach_whispers = array_values(array_filter($d_whispers, function ($w) use ($coach_id) {
+            return field($w, 'coach') === $coach_id;
+        }));
         write_page("{$writeprefix}{$slug}/coach-{$coach_id}.html", $common + array(
             'title' => field($coach, 'name', $coach_id) . " — $title", 'bgimage' => $bgimage,
             'content_template' => 'coach-profile.php', 'entry' => $coach, 'testimonials' => $coach_testimonials,
-            'coaches' => $coaches, 'domain_slug' => $slug,
+            'coach_whispers' => $coach_whispers, 'coaches' => $coaches, 'domain_slug' => $slug,
             'card_class' => $card_class, 'button_class' => $button_class,
         ), $templates, false); // excluded from sitemap.xml — see write_page()
     }

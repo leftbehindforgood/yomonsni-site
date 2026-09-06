@@ -1,12 +1,20 @@
 <?php
 // Page shape 3: one coach's profile within one domain. Same layout for
 // every domain — only the entry's own data (photo, bio, booking links,
-// location, photo_side) and that domain's testimonials for this coach
-// differ. Expects: $entry, $testimonials (already filtered to this coach
-// + domain), $coaches (global, unfiltered — passed through to
-// testimonial-card.php's own coach-link resolution), $domain_slug,
-// $prefix, $card_class/$button_class (optional, this domain's
-// per-domain styling — see gen-site.php's $domain_design).
+// location, photo_side) and that domain's testimonials/whispers for this
+// coach differ. Expects: $entry, $testimonials (already filtered to this
+// coach + domain), $coach_whispers (likewise — this coach's whispers
+// tagged into this domain), $coaches (global, unfiltered — passed
+// through to testimonial-card.php's/whisper-teaser-card.php's own
+// coach-link resolution), $domain_slug, $prefix, $card_class/
+// $button_class (optional, this domain's per-domain styling — see
+// gen-site.php's $domain_design).
+//
+// Testimonials and whispers each render inside their own outer
+// .card-glass panel with a bounded-height, scrollable stack of nested
+// cards (.card-scroll-box/.card-glass-nested, myfunk.css) rather than a
+// grid that grows the page — "a card within a card" — so a coach with a
+// lot of either doesn't turn their profile into an endless scroll.
 //
 // `photo_side` (front matter on the coach entry itself, 'left'/'right',
 // default 'left') picks which side the photo lands on. Deliberately a
@@ -46,6 +54,7 @@ $in_person_booking = field($entry, 'in_person_booking_link');
 $can_book_in_person = $offers_in_person && $in_person_booking !== '' && !field_bool($entry, 'in_person_fully_booked');
 
 $button_extra = (isset($button_class) && $button_class !== '') ? " $button_class" : '';
+$card_extra   = (isset($card_class) && $card_class !== '') ? " $card_class" : '';
 ?>
   <div class="container-fluid p-3 tw nav-clearance">
     <div class="row">
@@ -79,10 +88,35 @@ $button_extra = (isset($button_class) && $button_class !== '') ? " $button_class
 
 <?php if (!empty($testimonials)): ?>
     <div class="row mt-5 pt-4">
-      <div class="col-12"><h2>What clients have said about <?php echo htmlspecialchars($name); ?></h2></div>
+      <div class="col-12">
+        <div class="card card-glass<?php echo $card_extra; ?>">
+          <div class="card-body">
+            <h2>What clients have said about <?php echo htmlspecialchars($name); ?></h2>
+            <div class="card-scroll-box testimonial-scroll-box">
 <?php foreach ($testimonials as $t): ?>
-<?php echo render_template(__DIR__ . '/partials/testimonial-card.php', array('entry' => $t, 'coaches' => $coaches, 'domain_slug' => $domain_slug, 'card_class' => $card_class)); ?>
+<?php echo render_template(__DIR__ . '/partials/testimonial-card.php', array('entry' => $t, 'coaches' => $coaches, 'domain_slug' => $domain_slug, 'nested' => true)); ?>
 <?php endforeach; ?>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+<?php endif; ?>
+
+<?php if (!empty($coach_whispers)): ?>
+    <div class="row mt-4">
+      <div class="col-12">
+        <div class="card card-glass<?php echo $card_extra; ?>">
+          <div class="card-body">
+            <h2>What <?php echo htmlspecialchars($name); ?> has written</h2>
+            <div class="card-scroll-box whisper-scroll-box">
+<?php foreach ($coach_whispers as $w): ?>
+<?php echo render_template(__DIR__ . '/partials/whisper-teaser-card.php', array('entry' => $w, 'coaches' => $coaches, 'domain_slug' => $domain_slug, 'nested' => true)); ?>
+<?php endforeach; ?>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 <?php endif; ?>
   </div>

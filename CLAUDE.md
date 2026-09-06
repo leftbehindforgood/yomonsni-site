@@ -122,7 +122,15 @@ are self-contained via a `domain` field.
   **The `domains` field is generation-time-only and must never be rendered
   to a visitor** — it only decides which domain page(s) the piece gets
   published under. A multi-tagged whisper becomes an independent generated
-  page per tagged domain; none of those pages link to each other.
+  page per tagged domain; none of those pages link to each other. `coach`
+  is rendered "By ..." and linked via `coach_links_html()` the same way an
+  event's coaches are (plain text when the coach has no card in whichever
+  domain the whisper is currently rendering on). Like an event's body, a
+  whisper's body can embed a photo via a raw `<img class="content-photo
+  content-photo-left|right">` tag — no engine support needed, see the
+  events entry below. A `teaser` that relies on the "first paragraph"
+  fallback (`whisper-teaser-card.php`) breaks if the body opens with an
+  image tag — write an explicit `teaser` whenever a whisper embeds one.
 - `content/events/` — workshops and retreats together in one flat folder
   (originally two separate collections/nav items; merged since a visitor
   browsing "what's coming up" doesn't care which bucket a given date came
@@ -361,6 +369,18 @@ content.
    their teaser and their full page) so the name and summary text wrap
    around it, magazine-style, rather than sitting in a centered row above
    the text.
+   Below the name/photo row, this coach's testimonials ("What clients
+   have said about ...") and their whispers tagged into this domain
+   ("What ... has written") each render inside their own outer
+   `.card-glass` panel wrapping a bounded-height, scrollable stack of
+   nested cards (`.card-scroll-box`/`.card-glass-nested`, `myfunk.css`) —
+   "a card within a card" — rather than a grid that grows the page as
+   more of either pile up. `testimonial-card.php`/`whisper-teaser-card.php`
+   both take an optional `$nested` param that swaps their normal
+   `.col-sm` grid wrapper (used by `card-list.php`'s own testimonials/
+   whispers pages) for this plain full-width nested-card form; `$card_class`
+   is ignored when nested, since the point of `.card-glass-nested` is
+   contrast against the panel holding it, not per-domain theming.
 4. **`templates/simple-content.php`** — plain prose, no collection data:
    terms, privacy, mission, coaching, a domain's full resources page.
 5. **`templates/card-list.php`** — one reusable "list of short cards"

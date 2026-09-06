@@ -180,8 +180,20 @@ The full piece, in Markdown.
   shown to a reader** — it only decides which domain page(s) the piece
   gets published to. Writing something for more than one domain is fine;
   see the rule at the top of this guide for what "fine" doesn't cover.
+- `coach` — the `coach_id` who wrote it. Shown as "By ...", linking to
+  that coach's profile page in whichever domain the whisper is currently
+  showing on, when they have a card there (plain text if they don't —
+  e.g. a whisper tagged into a domain its author doesn't formally coach
+  in).
 - `teaser` — optional. If you skip it, the listing page uses the first
-  paragraph of your piece instead.
+  paragraph of your piece instead — but if your piece opens with an
+  embedded photo (see below), always write an explicit teaser instead,
+  since the fallback would grab the raw image tag as your "first
+  paragraph" and show nothing else.
+
+**Embedding photos:** same technique as an event's description (see
+below) — a plain `<img src="../img/..." class="content-photo
+content-photo-left">` tag written directly in the piece, Markdown or not.
 
 ### Event (workshop or retreat) — `content/events/<anything>.entry`
 

@@ -480,6 +480,43 @@ footer {
   background-color: transparent;
 }
 
+/* A card nested inside another .card-glass panel — currently a coach's
+   testimonials/whispers box on their own profile page (coach-profile.php)
+   — "a card within a card". A lighter overlay than the outer card's own
+   translucent dark, rather than reusing .card-glass itself, so the
+   nested cards read as distinct from the panel holding them instead of
+   both blending into one flat dark surface. Fixed regardless of domain —
+   ignores $card_class — since the point is contrast against the outer
+   card, not per-domain theming. */
+.card-glass-nested {
+  background-color: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 0.75rem;
+}
+
+/* Bounded-height, scrollable stack of .card-glass-nested cards — shows
+   roughly the target number of cards before the rest need a scroll,
+   rather than growing a coach's profile page indefinitely as more
+   testimonials/whispers pile up. The two max-heights are tuned to each
+   card type's typical size, not a hard guarantee (card height still
+   varies with content length). */
+.card-scroll-box {
+  overflow-y: auto;
+  padding-right: 0.5rem; /* clears the scrollbar so it doesn't sit on the card edge */
+}
+
+.card-scroll-box > * + * {
+  margin-top: 1rem;
+}
+
+.testimonial-scroll-box {
+  max-height: 24rem; /* roughly three testimonial cards */
+}
+
+.whisper-scroll-box {
+  max-height: 30rem; /* roughly five whisper teaser cards */
+}
+
 /* The second, deeper hook question on each domain card — visually a
    quieter follow-up to the first, not equal weight. */
 .card-glass .card-text-secondary {
