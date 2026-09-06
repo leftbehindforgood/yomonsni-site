@@ -184,6 +184,7 @@ $root_page_bgimages = array(
     'mission'  => 'yo-IMG_57108-5DII-raw32-rawtherapee-shaped.jpg',
     'coaching' => 'yo-IMG_52696-5DII-raw16-rawtherapee-shaped.jpg',
     'privacy'  => 'yo-IMG_19690-5DSR-raw32-rawtherapee-shaped.jpg',
+    'terms'    => 'yo-IMG_32782-5DII-raw32-rawtherapee-shaped-layered.jpg',
 );
 $already_parsed = array('mission' => $mission_entry, 'coaching' => $coaching_entry);
 foreach (array('mission', 'coaching', 'legal/terms', 'legal/privacy') as $path) {
