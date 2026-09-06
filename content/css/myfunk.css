@@ -510,6 +510,30 @@ footer {
   margin: 0 0 0.5rem 1rem;
 }
 
+/* Floated images inside a long-form entry body — currently used by an
+   event's full description (templates/event-article.php) to show off an
+   in-person event's venue/facility, text flowing around the photo,
+   magazine-style — same idea as .coach-photo-left/-right above, just
+   sized for body content rather than a fixed 120x120 headshot. There's
+   no front-matter field or engine support for this: an entry's body is
+   Markdown, and Parsedown (unconfigured here) passes raw HTML in it
+   through untouched, so an author adds these classes directly on an
+   <img> tag written by hand in the body. See CONTENT-GUIDE.md. */
+.content-photo {
+  max-width: 45%;
+  border-radius: 0.5rem;
+}
+
+.content-photo-left {
+  float: left;
+  margin: 0 1.5rem 1rem 0;
+}
+
+.content-photo-right {
+  float: right;
+  margin: 0 0 1rem 1.5rem;
+}
+
 /* Dark blue, for the hub's domain-card "Explore" buttons specifically —
    not a change to .btn-primary itself, which is used site-wide (booking
    links, etc.) and stays the existing sage green. */

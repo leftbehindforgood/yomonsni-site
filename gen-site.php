@@ -236,6 +236,7 @@ foreach ($domain_slugs as $slug) {
         write_page("{$writeprefix}{$slug}/coach-{$coach_id}.html", $common + array(
             'title' => field($coach, 'name', $coach_id) . " — $title", 'bgimage' => $bgimage,
             'content_template' => 'coach-profile.php', 'entry' => $coach, 'testimonials' => $coach_testimonials,
+            'coaches' => $coaches, 'domain_slug' => $slug,
             'card_class' => $card_class, 'button_class' => $button_class,
         ), $templates, false); // excluded from sitemap.xml — see write_page()
     }
@@ -243,7 +244,7 @@ foreach ($domain_slugs as $slug) {
     // -- testimonials.html --
     $testimonial_cards = array();
     foreach ($d_testimonials as $t) {
-        $testimonial_cards[] = render_template($templates . 'partials/testimonial-card.php', array('entry' => $t, 'card_class' => $card_class));
+        $testimonial_cards[] = render_template($templates . 'partials/testimonial-card.php', array('entry' => $t, 'coaches' => $coaches, 'domain_slug' => $slug, 'card_class' => $card_class));
     }
     write_page("{$writeprefix}{$slug}/testimonials.html", $common + array(
         'title' => "$title testimonials", 'bgimage' => $bgimage,

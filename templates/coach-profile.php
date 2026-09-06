@@ -3,7 +3,9 @@
 // every domain — only the entry's own data (photo, bio, booking links,
 // location, photo_side) and that domain's testimonials for this coach
 // differ. Expects: $entry, $testimonials (already filtered to this coach
-// + domain), $prefix, $card_class/$button_class (optional, this domain's
+// + domain), $coaches (global, unfiltered — passed through to
+// testimonial-card.php's own coach-link resolution), $domain_slug,
+// $prefix, $card_class/$button_class (optional, this domain's
 // per-domain styling — see gen-site.php's $domain_design).
 //
 // `photo_side` (front matter on the coach entry itself, 'left'/'right',
@@ -79,7 +81,7 @@ $button_extra = (isset($button_class) && $button_class !== '') ? " $button_class
     <div class="row mt-5 pt-4">
       <div class="col-12"><h2>What clients have said about <?php echo htmlspecialchars($name); ?></h2></div>
 <?php foreach ($testimonials as $t): ?>
-<?php echo render_template(__DIR__ . '/partials/testimonial-card.php', array('entry' => $t, 'card_class' => $card_class)); ?>
+<?php echo render_template(__DIR__ . '/partials/testimonial-card.php', array('entry' => $t, 'coaches' => $coaches, 'domain_slug' => $domain_slug, 'card_class' => $card_class)); ?>
 <?php endforeach; ?>
     </div>
 <?php endif; ?>

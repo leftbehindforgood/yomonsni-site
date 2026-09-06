@@ -155,7 +155,8 @@ The testimonial text itself, in the client's own words where possible.
 - `domain` — which domain this testimonial belongs to.
 - `coach` — the `coach_id` of the coach it's about. Must match a real
   coach card in that same `domain`, or generation will fail with an error
-  telling you so.
+  telling you so. Rendered as "Client of ..." under the testimonial,
+  linking to that coach's profile page in this domain.
 
 ### Whisper — `content/whispers/<url-slug>.entry`
 
@@ -200,9 +201,11 @@ date: November 15, 2025
 format: Half-day, in-person
 location: Portland, OR
 booking_link: https://your-registration-page.example
+summary: A one- or two-sentence hook shown on the Events page's card.
 +++
 
-Description of the workshop or retreat.
+The full description, shown only on the event's own page — as long and
+as detailed as you want, it never appears anywhere else.
 ```
 
 - `domain` — exactly one of the six domain slugs.
@@ -232,8 +235,39 @@ Description of the workshop or retreat.
 - `booking_link` — external registration page. Leave it blank and no
   Register button shows (the teaser's "Learn More" button through to the
   event's own page shows either way).
+- `summary` — optional. If you skip it, the Events page's card falls
+  back to the first sentence of your description — but if your
+  description embeds an image (see below), always write an explicit
+  summary instead, since the fallback can't tell an image tag isn't part
+  of the first sentence.
 
-### A domain's own overview — `content/<domain>/index.entry`
+**Embedding photos in the description:** an in-person event's page is a
+good place to show off the venue — the room, the grounds, whatever helps
+someone picture showing up. The description field is Markdown, and
+Markdown's own image syntax doesn't support floating a photo with text
+wrapping around it, so do it with a plain HTML `<img>` tag written
+directly in the description instead — Parsedown (the Markdown renderer)
+passes raw HTML straight through:
+
+```
+<img src="../img/your-photo.jpg" alt="Describe what's in the photo" class="content-photo content-photo-left">
+
+The rest of your description flows around the photo — write it exactly
+like the surrounding paragraphs.
+```
+
+- `src` — same `content/img/` folder every other photo on the site uses;
+  from an event's own page the path back to it is always `../img/...`.
+- `alt` — a real description of the photo, not decorative — this is what
+  a screen reader announces.
+- `class` — `content-photo` plus either `content-photo-left` or
+  `content-photo-right`, picking which side the photo sits on while text
+  wraps around it. Use more than one image (alternating sides) for a
+  longer description — see the One-Day Writing Intensive event for a
+  worked example with two.
+- This only appears on the event's own full page, never on its Events-page
+  teaser card (which shows only `summary`), so there's no length limit to
+  worry about.
 
 Usually only edited by whoever maintains the site structure, not by
 individual coaches, but documented here for completeness:

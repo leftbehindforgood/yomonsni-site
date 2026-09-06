@@ -111,6 +111,11 @@ are self-contained via a `domain` field.
   `coach` (a `coach_id`); body = the testimonial. Always exactly one domain
   and one coach — `filter_by_domain($testimonials, $slug, 'domain')` gets a
   domain's full list, `entries_for_coach(...)` narrows to one coach.
+  Rendered as "Client of ..." under the quote, `coach` resolved and
+  linked to that coach's profile in this domain via the same
+  `coach_links_html()` helper an event's (possibly several) coaches use
+  — passed a one-element list here, since a testimonial only ever has
+  the one.
 - `content/whispers/` — `title`, `coach`, `date`, `domains` (comma-
   separated — the one record type allowed to span multiple domains).
   `filter_by_domain($whispers, $slug, 'domains')` handles the list form.
@@ -142,7 +147,29 @@ are self-contained via a `domain` field.
   on/off flag anywhere. Each event also gets its own full page
   (`event-<slug>.html`, `templates/event-article.php`) — unlike a
   whisper, an event lives in exactly one domain, so this is always a
-  single generated page, never one per tagged domain.
+  single generated page, never one per tagged domain. The Events-page
+  teaser card (`templates/partials/event-card.php`) shows only an
+  optional `summary` field (falling back to the body's first sentence,
+  same convention as a coach's `summary`) — the full body is reserved for
+  the event's own page, specifically so a body that embeds photos (see
+  next) never gets dumped whole onto a teaser card. `booking_link` drives
+  a Register button on both the teaser and the full page independently;
+  "Learn More" (teaser only) always links through to the full page
+  regardless of whether `booking_link` is set.
+  **Embedding photos in an event's body:** there's no front-matter field
+  or engine support for this — an entry's body is Markdown, and
+  Parsedown is used unconfigured (`entry_html()` in `lib/entry.php`),
+  which passes raw HTML in the body through untouched. So an in-person
+  event showing off its venue just writes a plain `<img>` tag by hand in
+  its body (`src="../img/..."`, same asset folder as everything else)
+  with class `content-photo` plus `content-photo-left` or
+  `content-photo-right` (myfunk.css) — floats the photo with body text
+  wrapping around it, magazine-style, the same idea as
+  `.coach-photo-left`/`-right` but sized for body content rather than a
+  fixed headshot. `event-article.php` puts a `<div class="clearfix">`
+  after the rendered body so a tall photo can't bleed into the Register
+  button below it. See `content/events/2025-11-creativity-writing-
+  intensive.entry` for a worked example with two images.
 
 Per-domain static content (not a collection): `content/<domain>/index.entry`
 (the domain's own overview/outline copy, plus `hook`/`hook2` — two "mom

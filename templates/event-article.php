@@ -30,6 +30,7 @@ if ($location !== '') $meta_parts[] = $location;
         <p class="text-muted">With <?php echo coach_links_html($coaches, $coach_ids, $domain_slug); ?></p>
 <?php endif; ?>
         <?php echo entry_html($entry); ?>
+        <div class="clearfix"></div>
 <?php if ($booking !== ''): ?>
         <a class="btn btn-primary mt-3<?php echo $button_extra; ?>" href="<?php echo htmlspecialchars($booking); ?>" rel="noopener" target="_blank">Register</a>
 <?php endif; ?>
