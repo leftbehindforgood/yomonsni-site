@@ -504,8 +504,15 @@ pages, not just reading the templates):
    have none yet. Creativity is the pattern to extend, not a one-off —
    each domain will likely want its own iterative pass the way creativity
    got one, not a single mechanical copy.
-2. **Root-level pages** (`mission.html`, `coaching.html`, `terms.html`,
-   `privacy.html`) have no background photo yet — every other page does.
+2. ~~**Root-level pages** have no background photo~~ — resolved
+   2026-09-06: all four (`mission.html`, `coaching.html`, `terms.html`,
+   `privacy.html`) now have their own photo, and `terms`/`privacy` both
+   got a real (not placeholder) policy in a deliberately more legalese
+   register than the rest of the site — every page on the site now has a
+   background photo. Also from this stretch: the sitewide dark
+   gradient/tint that had been layered over every background photo was
+   removed entirely (see `CLAUDE.md`'s "Visual design" section) — a
+   background photo now renders exactly as its file, full stop.
 3. **Coach photos** are still placeholder color blocks (ImageMagick),
    even on domains that now have a real background photo.
 4. ~~**A domain's sub-pages** haven't had their own layout pass~~ —
