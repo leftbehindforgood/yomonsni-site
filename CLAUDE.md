@@ -273,6 +273,20 @@ apply everywhere, not just wherever they were first introduced:
   a translucent element (a card, a panel, an overlay). If something needs
   to look translucent, the only lever is opacity/color on the element
   itself — never touch the sharpness of what's behind it.
+- **A background photo renders exactly as its file — full transparency,
+  no code-applied darkening/gradient/tint over it, ever.**
+  `templates/partials/shell.php` sets `body`'s `background-image` to
+  nothing but `url(...)`. An earlier version of this file layered a
+  `linear-gradient(...), url(...)` stack on top of the photo for text
+  contrast — removed, because that's exactly the kind of effect this
+  rule forbids: covering up a background image in code instead of
+  editing the image itself. If a specific photo doesn't contrast enough
+  with a page's text, the fix is to grade/darken *that image file* in an
+  actual image editor before it goes in `content/img/`, never to paint
+  something over it at render time. This is a standing rule, stated
+  explicitly after it was violated once already — don't reintroduce a
+  gradient/tint/overlay on a background image for any reason, including
+  "just this one page needs more contrast."
 - **One continuous background photo per page, on `<body>`, nothing else.**
   `templates/partials/shell.php` sets it (fixed attachment, `cover` sized)
   when a page has a `bgimage`; the masthead/mastblank header on that same

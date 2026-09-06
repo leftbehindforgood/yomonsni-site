@@ -8,10 +8,19 @@
 // that was never actually created, silently 404ing on every page that
 // didn't set an explicit bgimage (every page shape except the hub and
 // domain overviews). Don't reintroduce that.
+//
+// No darkening/gradient/tint is layered over the photo here (there used
+// to be one, a `linear-gradient(...), url(...)` stack painted on top of
+// it for text-legibility) — standing project rule: a background image
+// renders exactly as its file, full transparency, no code-applied effect
+// over it. If a given photo doesn't contrast enough with the page's text,
+// that gets fixed by editing the image file itself (crop/grade/darken it
+// in an actual image editor before it goes in content/img/), never by
+// covering it up in CSS/HTML. Don't reintroduce a gradient/tint here.
 $body_style = '';
 if (isset($bgimage) && $bgimage !== '') {
     $url = asset_url($prefix, "img/$bgimage");
-    $body_style = " style=\"background-image: linear-gradient(to bottom, rgba(22, 22, 22, 0.3) 0%, rgba(22, 22, 22, 0.7) 75%, #161616 100%), url('$url');\"";
+    $body_style = " style=\"background-image: url('$url');\"";
 }
 ?>
 <!DOCTYPE html>
