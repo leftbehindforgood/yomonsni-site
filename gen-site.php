@@ -58,7 +58,7 @@ $domain_design = array(
         'button_class' => 'btn-performance', // dark crimson/burgundy
     ),
     "intimate" => array(
-        'bg'           => 'yo-IMG_43079-5D-raw16-rawtherapee-shaped-flattened.jpg',
+        'bg'           => 'yo-IMG_20216-5DSR-raw16-rawtherapee-natural.jpg',
         'button_class' => 'btn-intimate', // dark plum/wine
     ),
     "discovery" => array(
