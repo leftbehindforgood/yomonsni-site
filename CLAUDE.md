@@ -350,12 +350,16 @@ content.
    here and on the root-level mission/coaching/terms/privacy pages) does
    *not* list the domains — just a Mission/Coaching link pair, sourced
    from those two pages' own `title` fields so the nav label and the
-   page's own heading can't drift apart. The brand slot links home
-   (`index.html`), showing the hub's own `title` field — same convention
-   `domain-nav.php` uses for its own brand — rather than linking to
-   `mission.html` the way it originally did (that made the mission page's
-   own top-left link to itself, with no way back to the hub from the nav
-   at all).
+   page's own heading can't drift apart, and each omitted on that page's
+   own nav (rendered per page via `gen-site.php`'s `hub_nav_for()`, not
+   one nav shared verbatim across all five root pages, precisely so each
+   can drop its own item — no point linking somewhere you already are,
+   same reasoning `domain-nav.php` never links a domain to itself). The
+   brand slot links home (`index.html`), showing the hub's own `title`
+   field — same convention `domain-nav.php` uses for its own brand —
+   rather than linking to `mission.html` the way it originally did (that
+   made the mission page's own top-left link to itself, with no way back
+   to the hub from the nav at all).
 2. **`templates/domain-overview.php`** — a domain's front door. Composite,
    two-column by default: intro copy on its `text_align` side (~2/3
    width), a `Coaches → Resources → Whispers → Events` stack

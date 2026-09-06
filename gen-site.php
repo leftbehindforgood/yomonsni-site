@@ -140,14 +140,21 @@ foreach ($domain_slugs as $slug) {
 // The nav's two labels are each pulled from that page's own `title`
 // field rather than hardcoded separately in the nav partial, so the link
 // text and the destination page's own heading can never drift apart.
+// Nav HTML is rendered per root page rather than once and reused — each
+// render gets told which page it's for ($current_slug) so that page can
+// omit its own nav-item (no point linking somewhere you already are),
+// same reasoning domain-nav.php never links a domain to itself.
 $mission_entry = parse_entry_file("{$readprefix}mission.entry");
 $coaching_entry = parse_entry_file("{$readprefix}coaching.entry");
-$hub_nav_html = render_template($templates . 'partials/hub-nav.php', array(
-    'prefix'         => './',
-    'site_title'     => field($hub_entry, 'title', 'Yomonsni'),
-    'mission_title'  => field($mission_entry, 'title', 'Mission'),
-    'coaching_title' => field($coaching_entry, 'title', 'Coaching'),
-));
+function hub_nav_for($current_slug, $hub_entry, $mission_entry, $coaching_entry, $templates) {
+    return render_template($templates . 'partials/hub-nav.php', array(
+        'prefix'         => './',
+        'current_slug'   => $current_slug,
+        'site_title'     => field($hub_entry, 'title', 'Yomonsni'),
+        'mission_title'  => field($mission_entry, 'title', 'Mission'),
+        'coaching_title' => field($coaching_entry, 'title', 'Coaching'),
+    ));
+}
 
 write_page("{$writeprefix}index.html", array(
     'prefix'          => './',
@@ -158,7 +165,7 @@ write_page("{$writeprefix}index.html", array(
     // its own gradient (no image) so the body's photo shows through there
     // too, continuously, instead of the masthead hiding it in that area.
     'bgimage'         => 'yo-IMG_56547-5DII-raw16-rawtherapee-shaped.jpg',
-    'nav_html'        => $hub_nav_html,
+    'nav_html'        => hub_nav_for('hub', $hub_entry, $mission_entry, $coaching_entry, $templates),
     'footer_html'     => footer_html_for('./', $footer_entry, $templates),
     'content_template' => 'hub.php',
     'entry'           => $hub_entry,
@@ -184,7 +191,7 @@ foreach (array('mission', 'coaching', 'legal/terms', 'legal/privacy') as $path) 
         'prefix'          => './',
         'title'           => field($entry, 'title', ucfirst($slug)),
         'bgimage'         => isset($root_page_bgimages[$slug]) ? $root_page_bgimages[$slug] : '',
-        'nav_html'        => $hub_nav_html,
+        'nav_html'        => hub_nav_for($slug, $hub_entry, $mission_entry, $coaching_entry, $templates),
         'footer_html'     => footer_html_for('./', $footer_entry, $templates),
         'content_template' => 'simple-content.php',
         'entry'           => $entry,

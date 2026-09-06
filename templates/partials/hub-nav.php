@@ -14,7 +14,17 @@
 // are both now plain nav-items, sourced from those two pages' (and the
 // hub's) own `title` fields (see gen-site.php) so no nav label can ever
 // drift from the destination page's own heading.
-// Expects: $prefix ("./" here), $site_title, $mission_title, $coaching_title.
+//
+// $current_slug ('hub', 'mission', 'coaching', 'terms', or 'privacy')
+// says which page this particular render is for, so that page's own
+// nav-item can be omitted entirely rather than linking to itself —
+// there's no point helping someone navigate to where they already are,
+// same reasoning domain-nav.php never links a domain to itself. Since
+// each root page needs its own nav render for this (not one shared
+// `$hub_nav_html` reused everywhere), gen-site.php calls
+// `hub_nav_for()` once per page instead.
+// Expects: $prefix ("./" here), $current_slug, $site_title,
+// $mission_title, $coaching_title.
 ?>
   <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
     <div class="container-fluid">
@@ -25,12 +35,16 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ml-auto">
+<?php if ($current_slug !== 'mission'): ?>
           <li class="nav-item">
             <a class="nav-link" href="<?php echo asset_url($prefix, 'mission.html'); ?>"><?php echo htmlspecialchars($mission_title); ?></a>
           </li>
+<?php endif; ?>
+<?php if ($current_slug !== 'coaching'): ?>
           <li class="nav-item">
             <a class="nav-link" href="<?php echo asset_url($prefix, 'coaching.html'); ?>"><?php echo htmlspecialchars($coaching_title); ?></a>
           </li>
+<?php endif; ?>
         </ul>
       </div>
     </div>
