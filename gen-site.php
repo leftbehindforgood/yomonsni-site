@@ -181,7 +181,8 @@ write_page("{$writeprefix}index.html", array(
 // still empty by default (see CLAUDE.md's "Known gaps"), filled in one
 // page at a time rather than all at once.
 $root_page_bgimages = array(
-    'mission' => 'yo-IMG_57108-5DII-raw32-rawtherapee-shaped.jpg',
+    'mission'  => 'yo-IMG_57108-5DII-raw32-rawtherapee-shaped.jpg',
+    'coaching' => 'yo-IMG_52696-5DII-raw16-rawtherapee-shaped.jpg',
 );
 $already_parsed = array('mission' => $mission_entry, 'coaching' => $coaching_entry);
 foreach (array('mission', 'coaching', 'legal/terms', 'legal/privacy') as $path) {
