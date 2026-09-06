@@ -12,7 +12,7 @@
 //
 // Both return an array of ['level' => 'error'|'warning', 'message' => ...].
 
-function validate_content_references($domain_slugs, $coaches, $testimonials, $whispers) {
+function validate_content_references($domain_slugs, $coaches, $testimonials, $whispers, $events = array()) {
     $problems = array();
 
     $coach_keys = array(); // "domain|coach_id" => true
@@ -39,6 +39,26 @@ function validate_content_references($domain_slugs, $coaches, $testimonials, $wh
             if (!in_array($domain, $domain_slugs, true)) {
                 $problems[] = array('level' => 'error', 'message' =>
                     "{$w['path']}: domain \"$domain\" is not a known domain slug");
+            }
+        }
+    }
+
+    // A workshop/retreat's `coaches` is optional (not every event is run
+    // by a named coach) and, unlike a testimonial's single `coach`, a
+    // comma-separated list — an event can have more than one coach
+    // running it. Each one named has to resolve the same way a
+    // testimonial's does.
+    foreach ($events as $e) {
+        $domain = field($e, 'domain');
+        if (!in_array($domain, $domain_slugs, true)) {
+            $problems[] = array('level' => 'error', 'message' =>
+                "{$e['path']}: domain \"$domain\" is not a known domain slug");
+            continue;
+        }
+        foreach (entry_list(field($e, 'coaches')) as $coach) {
+            if (!isset($coach_keys["$domain|$coach"])) {
+                $problems[] = array('level' => 'error', 'message' =>
+                    "{$e['path']}: coach \"$coach\" has no coach card in domain \"$domain\"");
             }
         }
     }

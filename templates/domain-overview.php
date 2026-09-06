@@ -6,13 +6,13 @@
 // filtered to this domain), $all_coaches (the *global*, unfiltered
 // collection — needed for whisper byline resolution; see the comment
 // below), $resources_entry, $whispers (filtered, sorted newest-first),
-// $workshops, $retreats (each filtered to this domain), $text_align
-// ('left'/'right'/null — a per-domain layout choice, see gen-site.php's
-// $domain_design), $card_class (extra class appended to this domain's
-// cards, e.g. for a fully-transparent variant).
+// $events (workshops and retreats together, filtered to this domain),
+// $text_align ('left'/'right'/null — a per-domain layout choice, see
+// gen-site.php's $domain_design), $card_class (extra class appended to
+// this domain's cards, e.g. for a fully-transparent variant).
 //
 // When $text_align is set, the intro text and the coaches/resources/
-// whispers/workshops/retreats stack sit side by side in one row (~2/3 +
+// whispers/events stack sit side by side in one row (~2/3 +
 // ~1/3) instead of the stack running full-width below the whole intro —
 // the point is getting a visitor to "Coaches" (deliberately first in the
 // stack, ahead of resources/whispers) without scrolling past a long
@@ -55,12 +55,8 @@ if ($text_align === 'left') {
 <?php if (!empty($coaches)): ?>
         <h2 class="text-center">Coaches</h2>
         <div class="row">
-<?php foreach ($coaches as $i => $c):
-        // Image side alternates per coach — first coach's photo on the
-        // left of their name, second on the right, and so on.
-        $image_side = ($i % 2 === 0) ? 'left' : 'right';
-?>
-<?php echo render_template(__DIR__ . '/partials/coach-card.php', array('entry' => $c, 'prefix' => $prefix, 'card_class' => $card_class, 'button_class' => $button_class, 'image_side' => $image_side)); ?>
+<?php foreach ($coaches as $c): ?>
+<?php echo render_template(__DIR__ . '/partials/coach-card.php', array('entry' => $c, 'prefix' => $prefix, 'card_class' => $card_class, 'button_class' => $button_class)); ?>
 <?php endforeach; ?>
         </div>
 <?php endif; ?>
@@ -82,22 +78,17 @@ if ($text_align === 'left') {
         <a href="whispers.html" class="d-block mb-5">All whispers &rarr;</a>
 <?php endif; ?>
 
-<?php if (!empty($workshops)): ?>
-        <h2 class="text-center">Workshops</h2>
+<?php if (!empty($events)): ?>
+        <h2 class="text-center">Events</h2>
         <div class="row">
-<?php foreach ($workshops as $w): ?>
-<?php echo render_template(__DIR__ . '/partials/event-card.php', array('entry' => $w, 'card_class' => $card_class, 'button_class' => $button_class)); ?>
+<?php foreach (array_slice($events, 0, 3) as $e): ?>
+<?php // 'coaches' here is $all_coaches (global), same reason as the
+     // whisper loop above — an event's coach may not have a card in
+     // this domain at all. ?>
+<?php echo render_template(__DIR__ . '/partials/event-card.php', array('entry' => $e, 'coaches' => $all_coaches, 'domain_slug' => $domain_slug, 'card_class' => $card_class, 'button_class' => $button_class)); ?>
 <?php endforeach; ?>
         </div>
-<?php endif; ?>
-
-<?php if (!empty($retreats)): ?>
-        <h2 class="text-center">Retreats</h2>
-        <div class="row">
-<?php foreach ($retreats as $r): ?>
-<?php echo render_template(__DIR__ . '/partials/event-card.php', array('entry' => $r, 'card_class' => $card_class, 'button_class' => $button_class)); ?>
-<?php endforeach; ?>
-        </div>
+        <a href="events.html" class="d-block mb-5">All events &rarr;</a>
 <?php endif; ?>
       </div>
     </div>

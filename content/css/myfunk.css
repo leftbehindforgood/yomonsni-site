@@ -135,6 +135,11 @@
 .masthead h2 {
   max-width: 20rem;
   font-size: 1rem;
+  /* Never actually rendered until coach-profile.php started nesting an h2
+     in a mastblank header for a coach's location: with no color rule here
+     it fell back to Bootstrap's dark heading color, all but unreadable
+     against this section's dark photo background. Same fix as h1/p above. */
+  color: #fbf3f4;
 }
 
 .mastblank h1 {
@@ -151,6 +156,11 @@
 .mastblank h2 {
   max-width: 20rem;
   font-size: 1.5rem;
+  /* Same fix as .masthead h2 just above: this rule had no color of its
+     own until coach-profile.php became the first template to actually
+     put an h2 inside a mastblank header (a coach's location), and it was
+     rendering nearly invisible against the dark photo background. */
+  color: #fbf3f4;
 }
 
 @media (min-width: 768px) {
@@ -351,6 +361,32 @@ a:focus, a:hover {
 
 .tw {
   color: #ffffff !important;
+}
+
+/* Reserves room at the top of a page whose first content isn't a
+   masthead/mastblank hero (coach-profile.php, currently the only user) —
+   #mainNav is `fixed-top`, so without this the page's real content
+   starts hidden underneath it instead of below it. Margin, not padding,
+   so it isn't clobbered by Bootstrap's `!important` spacing utilities
+   (e.g. `.p-3`) on the same element. Values match .masthead's own
+   already-tuned top padding, which clears the same navbar. */
+.nav-clearance {
+  margin-top: 6.5rem;
+}
+@media (min-width: 992px) {
+  .nav-clearance {
+    margin-top: 5.5rem;
+  }
+}
+
+/* A coach's in-person location on their full profile page, shown right
+   under their name. Plain text sitting directly on the page's dark
+   background (not inside a .card-glass box), so it can't use Bootstrap's
+   .text-muted — that's a mid-grey meant for light card backgrounds and
+   is nearly illegible here. Same near-white/quieter treatment as
+   .card-text-secondary uses for the hub's hook2 line. */
+.coach-location {
+  color: rgba(245, 245, 245, 0.75);
 }
 
 

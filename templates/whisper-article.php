@@ -7,7 +7,10 @@ $title  = field($entry, 'title');
 $date   = field($entry, 'date');
 $author = resolve_coach_name($coaches, field($entry, 'coach'), $domain_slug);
 ?>
-  <div class="container-fluid p-3 tw">
+  <!-- .nav-clearance (see myfunk.css): no masthead/mastblank hero here to
+       reserve room under the fixed #mainNav, same as card-list.php and
+       coach-profile.php. -->
+  <div class="container-fluid p-3 tw nav-clearance">
     <div class="row">
       <div class="col-12 col-md-8 offset-md-2">
         <h1><?php echo htmlspecialchars($title); ?></h1>

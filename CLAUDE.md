@@ -94,9 +94,19 @@ are self-contained via a `domain` field.
   `booking_link`, unlike leaving that field blank), `order` (optional
   number controlling display order on that domain's page, lowest first —
   see `sort_by_order()`), `summary` (a sentence or two for the domain
-  page's card; falls back to the bio's first sentence if omitted); body =
-  that domain's full bio. **See "The coach-privacy design" below before
-  adding or editing one of these.**
+  page's card; falls back to the bio's first sentence if omitted),
+  `location` (optional — set only by coaches who take in-person clients
+  in that domain; shown next to their name on the full profile page and
+  gates whether an in-person booking button can appear at all),
+  `in_person_booking_link`/`in_person_fully_booked` (same shape as
+  `booking_link`/`fully_booked`, but for the in-person offering — the two
+  tracks are independent, e.g. full online but still open in-person),
+  `photo_side` (`left`/`right`, default `left` — which side the photo
+  lands on, on both the teaser card and the full profile page; a
+  deliberate manual per-card choice rather than an automatic alternation,
+  so it can be A/B tested for booking rate rather than left to file
+  order); body = that domain's full bio. **See "The coach-privacy
+  design" below before adding or editing one of these.**
 - `content/testimonials/` — `client` (first name only), `date`, `domain`,
   `coach` (a `coach_id`); body = the testimonial. Always exactly one domain
   and one coach — `filter_by_domain($testimonials, $slug, 'domain')` gets a
@@ -108,12 +118,31 @@ are self-contained via a `domain` field.
   to a visitor** — it only decides which domain page(s) the piece gets
   published under. A multi-tagged whisper becomes an independent generated
   page per tagged domain; none of those pages link to each other.
-- `content/workshops/`, `content/retreats/` — `title`, `domain` (single),
-  `date`, `format`, `booking_link`; body = description. Purely data-driven:
-  a domain "has workshops" simply because at least one record names it —
-  `gen-site.php` only writes `workshops.html`/`retreats.html` for a domain
-  when `filter_by_domain(...)` for that collection is non-empty. No
-  separate on/off flag anywhere.
+- `content/events/` — workshops and retreats together in one flat folder
+  (originally two separate collections/nav items; merged since a visitor
+  browsing "what's coming up" doesn't care which bucket a given date came
+  from). Fields: `title`, `domain` (single), `coaches` (optional, comma-
+  separated `coach_id`s — an event, unlike a testimonial, can have more
+  than one; each is validated against that domain's coach cards the same
+  way a testimonial's single `coach` is, and rendered as "With ..." with
+  each name linking to that coach's profile page *within this domain*
+  when they have one there, via `coach_links_html()`/`coach_has_profile()`
+  in `lib/entry.php` — plain text, no link, when they don't), `type`
+  (`workshop` or `retreat` — a display label only, doesn't affect where
+  it's listed), `date` (plain text, not machine-parsed — events list in
+  file-sort order, so filenames are chosen to sort the way they should
+  read), `format` (free text — this is where "online" vs. "in-person"
+  actually lives, not a separate field), `location` (optional — city/
+  state or city/country, set only for an in-person event), `booking_link`
+  (external registration link; independent of whether the event has a
+  full page — see below); body = description. Purely data-driven: a
+  domain "has events" simply because at least one record names it —
+  `gen-site.php` only writes `events.html` for a domain when
+  `filter_by_domain(...)` for this collection is non-empty. No separate
+  on/off flag anywhere. Each event also gets its own full page
+  (`event-<slug>.html`, `templates/event-article.php`) — unlike a
+  whisper, an event lives in exactly one domain, so this is always a
+  single generated page, never one per tagged domain.
 
 Per-domain static content (not a collection): `content/<domain>/index.entry`
 (the domain's own overview/outline copy, plus `hook`/`hook2` — two "mom
@@ -198,6 +227,17 @@ apply everywhere, not just wherever they were first introduced:
   reintroduce a masthead-level background image or gradient — both were
   tried and explicitly removed for exactly this reason (see git history
   around the hub page's masthead).
+- **`#mainNav` is `fixed-top`, so any page shape needs *something*
+  reserving room under it.** `hub.php` and `domain-overview.php` get this
+  for free from their masthead/mastblank hero's own padding. Every other
+  page shape (`coach-profile.php`, `card-list.php`, `simple-content.php`,
+  `whisper-article.php`, `event-article.php`) has no hero and instead puts
+  `.nav-clearance`
+  (myfunk.css) on its outer `.container-fluid` — margin, not padding, so
+  it isn't clobbered by Bootstrap's `!important` spacing utilities like
+  `.p-3` on that same element. If you add a new page shape with no
+  masthead/mastblank of its own, it needs this class too, or its content
+  renders hidden underneath the navbar instead of below it.
 - **Buttons are rounded/pill-shaped everywhere** (`border-radius: 2rem` on
   the shared `.btn` rule, not a one-off per button style) and use
   `.card-glass` for translucency (opacity only, per the no-blur rule
@@ -222,7 +262,7 @@ apply everywhere, not just wherever they were first introduced:
   had one). `domain_design($domain_design, $slug, $key, $default)` is the
   lookup helper; `$button_class`/`$card_class` get threaded through
   *every* page a domain has (overview, resources, testimonials, coach
-  profiles, whispers, workshops/retreats) via `write_page()` calls and the
+  profiles, whispers, events) via `write_page()` calls and the
   card partials' own optional `$card_class`/`$button_class` params — if
   you add a new per-domain-styled element, thread it through all of these
   call sites, not just the overview page's; that gap (styling only
@@ -237,7 +277,7 @@ apply everywhere, not just wherever they were first introduced:
   JS bundle — deliberately, since one interaction didn't justify pulling
   either in.
 
-## The six page shapes (`templates/`)
+## The seven page shapes (`templates/`)
 
 Templates are plain PHP files, included with a set of variables in scope
 (`lib/render.php`'s `render_template()`) — this is the entire templating
@@ -258,7 +298,7 @@ content.
    page's own heading can't drift apart.
 2. **`templates/domain-overview.php`** — a domain's front door. Composite,
    two-column by default: intro copy on its `text_align` side (~2/3
-   width), a `Coaches → Resources → Whispers → Workshops → Retreats` stack
+   width), a `Coaches → Resources → Whispers → Events` stack
    on the other (~1/3) — Coaches deliberately first, so a visitor reaches
    a coach's profile/booking link without scrolling past the whole intro.
    `order-md-first`/`order-md-last` keeps the intro first in the actual
@@ -268,27 +308,59 @@ content.
    coach/whisper/event cards next to it.
 3. **`templates/coach-profile.php`** — one per coach card. Same layout for
    every domain; only the entry's own data and that domain's testimonials
-   for that coach differ. Shares the Book-or-Fully-Booked logic with the
-   card teaser (`templates/partials/coach-card.php`): a booking link
-   renders a Book button unless `fully_booked` is set, in which case (or
-   with no `booking_link` at all) a non-interactive `.btn-unavailable`
-   ("Fully Booked", struck through with a diagonal) shows instead.
-   `coach-card.php`'s layout floats the photo to one side (alternating
-   per coach, by index, in `domain-overview.php`'s loop) so the name and
-   summary text wrap around it, magazine-style, rather than sitting in a
-   centered row above the text.
+   for that coach differ. Name, location (if set), bio and booking
+   buttons sit in one column beside the photo in another — top-aligned
+   with each other, side controlled by the coach's own `photo_side`
+   field (see above) via `order-md-first`/`order-md-last`, the same
+   convention `domain-overview.php` uses for its intro/aside columns.
+   The outer container carries a `.nav-clearance` class (see
+   `myfunk.css`) purely to reserve room under the fixed `#mainNav` — this
+   page shape has no masthead/mastblank hero the way
+   `domain-overview.php`'s title header does, so without it the
+   name/photo would render hidden underneath the navbar instead of below
+   it. An online booking button (a booking link renders a Book button
+   unless `fully_booked` is set, in which case, or with no
+   `booking_link` at all, a non-interactive `.btn-unavailable` shows
+   instead) sits alongside a second, independent in-person booking button
+   that only appears at all when the coach has set `location` — not every
+   coach takes in-person clients. The teaser card
+   (`templates/partials/coach-card.php`) still shows only the single
+   online Book-or-Fully-Booked button — it hasn't been extended to the
+   in-person fields, since a domain-overview card's summary/space budget
+   doesn't have room for a second button; the full profile page is the
+   one source of truth for a coach's actual availability.
+   `coach-card.php`'s layout floats the photo to one side (per the same
+   `photo_side` field, so a coach's side choice is consistent between
+   their teaser and their full page) so the name and summary text wrap
+   around it, magazine-style, rather than sitting in a centered row above
+   the text.
 4. **`templates/simple-content.php`** — plain prose, no collection data:
    terms, privacy, mission, coaching, a domain's full resources page.
 5. **`templates/card-list.php`** — one reusable "list of short cards"
-   shape, reused for a domain's testimonials, whisper teasers, workshops,
-   and retreats. The caller pre-renders each item with the matching card
+   shape, reused for a domain's testimonials, whisper teasers, and events
+   (workshops and retreats together — one collection, one nav item, one
+   listing page; see the Content model section above). The caller
+   pre-renders each item with the matching card
    partial (`templates/partials/{coach,testimonial,whisper-teaser,event}-
    card.php`, all using `.card-glass` plus each accepting the optional
    `$card_class`/`$button_class` per-domain overrides) and hands this
    template the finished HTML fragments — it doesn't know which
-   collection it's listing.
+   collection it's listing. The event card's own card-body is a flex
+   column (`d-flex flex-column`) with its Register/Learn More buttons
+   pinned to the bottom via `mt-auto`, so the buttons line up across a
+   row of cards regardless of how much description text any one of them
+   has — same trick `hub.php`'s domain cards use for their Explore
+   button.
 6. **`templates/whisper-article.php`** — one whisper's full page, generated
    once per domain it's tagged into.
+7. **`templates/event-article.php`** — one event's full page, linked from
+   its teaser's "Learn More" button. Unlike a whisper, an event lives in
+   exactly one domain, so this is always a single generated page
+   (`event-<slug>.html`), never one per tagged domain. Shows the same
+   type/date/format/location meta line and linked coach attribution as
+   the teaser, plus the full description and (if `booking_link` is set)
+   a Register button — the teaser's own Register button and this page's
+   are independent, both driven by the same `booking_link`.
 
 A domain with zero coaches (currently `change`, `performance`,
 `discovery`) skips the Coaches heading/stack entirely (`if (!empty
@@ -339,7 +411,7 @@ until traced by hand.
 - `lib/` — the engine's PHP: `entry.php` (parsing/collections/sorting),
   `render.php` (templating), `validate.php` (guardrails), and the vendored
   `Parsedown.php`.
-- `templates/` — the six page shapes and their partials. Deliberately kept
+- `templates/` — the seven page shapes and their partials. Deliberately kept
   out of `content/` so the human-authored/engine-owned split is a real
   directory boundary, not just a convention.
 - `working/` — generated output (gitignored, wiped and rewritten on every

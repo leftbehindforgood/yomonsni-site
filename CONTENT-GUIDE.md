@@ -115,6 +115,27 @@ on your full profile page.
   booked in one domain and still taking clients in another.
 - `summary` — optional. If you skip it, the card falls back to the first
   sentence of your bio.
+- `location` — optional. Set this only if you offer **in-person** sessions
+  in this domain (not every coach does) — it's the city/region shown next
+  to your name on your full profile page, e.g. `Portland, OR`. Leaving it
+  blank means the page treats you as online-only: no location is shown,
+  and no in-person booking button appears at all.
+- `in_person_booking_link` — your external booking page for in-person
+  sessions, only meaningful if `location` is set. Leave it blank while
+  you're not taking new in-person clients — the profile page shows an
+  "In Person Coaching Fully Booked" notice instead of a button.
+- `in_person_fully_booked` — optional, `yes` or `no` (default `no`). Same
+  idea as `fully_booked`, but for the in-person booking button
+  specifically — set it to keep `in_person_booking_link` on file without
+  showing a working button. `fully_booked` and `in_person_fully_booked`
+  are independent: you can be full online but still taking in-person
+  clients, or vice versa.
+- `photo_side` — optional, `left` (default) or `right`. Which side your
+  photo appears on, both on your teaser card on the domain page and on
+  your full profile page. This is deliberately a manual per-card choice
+  rather than something the site picks for you — e.g. so it can be
+  changed and compared for which side books better, for a given coach in
+  a given domain.
 
 ### Testimonial — `content/testimonials/<anything-unique>.entry`
 
@@ -161,23 +182,56 @@ The full piece, in Markdown.
 - `teaser` — optional. If you skip it, the listing page uses the first
   paragraph of your piece instead.
 
-### Workshop / retreat — `content/workshops/<anything>.entry` or `content/retreats/<anything>.entry`
+### Event (workshop or retreat) — `content/events/<anything>.entry`
 
-Same shape for both — a domain "has workshops" (or retreats) simply
-because at least one file like this exists for it; there's nothing else
-to turn on.
+One flat folder for both workshops and retreats — a domain "has events"
+simply because at least one file like this exists for it; there's
+nothing else to turn on. They show up together, oldest-editing-effort
+aside, on that domain's single Events page and nav link, and each also
+gets its own full page (linked from that teaser's "Learn More" button).
 
 ```
 +++
 title: One-Day Writing Intensive
 domain: creativity
+coaches: sam
+type: workshop
 date: November 15, 2025
 format: Half-day, in-person
+location: Portland, OR
 booking_link: https://your-registration-page.example
 +++
 
 Description of the workshop or retreat.
 ```
+
+- `domain` — exactly one of the six domain slugs.
+- `coaches` — optional. A comma-separated list of `coach_id`s running it
+  (`sam` or `sam, priya`) — not every event is tied to a named coach at
+  all (some are run by the practice generally), but an event can have
+  more than one, unlike a testimonial's single `coach`. Each one must
+  match a real coach card in that domain. Shown as "With ...", each name
+  linking to that coach's own profile page in this domain when they have
+  one there (plain text if they don't).
+- `type` — `workshop` or `retreat`. Shown on the card as a small label;
+  doesn't change where the event appears (both types are listed
+  together) — it's just so a visitor scanning the list can tell them
+  apart at a glance.
+- `date` — plain text, not a machine-parsed date — write it however
+  reads best (`November 15, 2025`, `Three Tuesdays, starting October 7`,
+  a date range for a multi-day retreat, etc). Events are listed in
+  whatever order their files happen to sort on disk, so pick filenames
+  (like the existing ones) that sort roughly the way you want them to
+  read, e.g. `2025-11-...` .
+- `format` — free text, e.g. `Half-day, in-person` or `Evenings, online
+  via Zoom` — this is where "online" vs. "in-person" actually lives, not
+  a separate field.
+- `location` — optional. Set this for an in-person event (city/state or
+  city/country) — an online-only event should leave it blank. Shown
+  alongside the date/format on both the teaser and the event's own page.
+- `booking_link` — external registration page. Leave it blank and no
+  Register button shows (the teaser's "Learn More" button through to the
+  event's own page shows either way).
 
 ### A domain's own overview — `content/<domain>/index.entry`
 

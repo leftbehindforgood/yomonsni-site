@@ -4,19 +4,21 @@
 // relative filename — never the domain prefix, since there's nothing to
 // cross into).
 //
-// Layout: photo floated to one side (side set by $image_side, alternated
-// per coach by the caller) so the name and summary text wrap around it —
-// the name top-aligned with the image, text starting right under the
-// name — rather than sitting in a centered row above the text. A small
-// chevron toggle (content/js/toggle-expand.js) expands the coach's
-// full bio inline without leaving the page. Two buttons at the bottom —
-// Book (external booking_link, or a non-interactive "currently
-// unavailable" stand-in if that field is empty) and Full profile.
+// Layout: photo floated to one side (side set by the coach's own
+// `photo_side` front-matter field, default 'left' — same field
+// coach-profile.php reads for the full profile page's layout, so a
+// coach's side choice is consistent between their teaser and their full
+// page) so the name and summary text wrap around it — the name
+// top-aligned with the image, text starting right under the name —
+// rather than sitting in a centered row above the text. A small chevron
+// toggle (content/js/toggle-expand.js) expands the coach's full bio
+// inline without leaving the page. Two buttons at the bottom — Book
+// (external booking_link, or a non-interactive "currently unavailable"
+// stand-in if that field is empty) and Full profile.
 //
 // Expects: $entry (a coach entry), $prefix (for the photo, which lives
 // in the shared img/ asset dir), $card_class (optional extra card class),
-// $button_class (optional extra button class), $image_side ('left' or
-// 'right', default 'left').
+// $button_class (optional extra button class).
 $coach_id = field($entry, 'coach_id');
 $name     = field($entry, 'name');
 $photo    = field($entry, 'photo');
@@ -33,7 +35,7 @@ if ($summary === '') {
 }
 $card_extra   = (isset($card_class) && $card_class !== '') ? " $card_class" : '';
 $button_extra = (isset($button_class) && $button_class !== '') ? " $button_class" : '';
-$photo_side   = (isset($image_side) && $image_side === 'right') ? 'coach-photo-right' : 'coach-photo-left';
+$photo_side   = (field($entry, 'photo_side') === 'right') ? 'coach-photo-right' : 'coach-photo-left';
 $more_id      = 'coach-more-' . $coach_id;
 ?>
   <div class="col-12 mb-4">

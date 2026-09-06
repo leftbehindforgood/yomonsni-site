@@ -101,7 +101,7 @@ function load_collection($dir) {
 }
 
 // $field is 'domain' for a single-domain record (coach, testimonial,
-// workshop, retreat) or 'domains' for a whisper's comma-separated list.
+// event) or 'domains' for a whisper's comma-separated list.
 function filter_by_domain($entries, $domain_slug, $field = 'domain') {
     $out = array();
     foreach ($entries as $e) {
@@ -141,6 +141,41 @@ function resolve_coach_name($coaches, $coach_id, $domain_slug) {
         if ($any === null) $any = field($c, 'name');
     }
     return $any !== null ? $any : $coach_id;
+}
+
+// Whether $coach_id has an actual coach card in $domain_slug — i.e.
+// whether there's a profile page to link to there. Used by events, which
+// (unlike a whisper) always live in exactly one domain, so "does this
+// coach have a page in *this* domain" is a plain yes/no.
+function coach_has_profile($coaches, $coach_id, $domain_slug) {
+    foreach ($coaches as $c) {
+        if (field($c, 'coach_id') === $coach_id && field($c, 'domain') === $domain_slug) return true;
+    }
+    return false;
+}
+
+// Coach attribution for an event — unlike a testimonial or whisper, an
+// event can name more than one coach. Renders each name linked to that
+// coach's profile page within $domain_slug when they have one there
+// (a bare same-directory filename, same as coach-card.php's own link —
+// never crossing into another domain), or as plain text when they don't
+// (same graceful fallback as resolve_coach_name() itself). Returns an
+// HTML fragment (pieces already escaped) — the caller echoes it directly,
+// doesn't htmlspecialchars() it again. Empty string if $coach_ids is empty.
+function coach_links_html($coaches, $coach_ids, $domain_slug) {
+    $parts = array();
+    foreach ($coach_ids as $id) {
+        $name = htmlspecialchars(resolve_coach_name($coaches, $id, $domain_slug));
+        if (coach_has_profile($coaches, $id, $domain_slug)) {
+            $parts[] = '<a href="coach-' . htmlspecialchars($id) . '.html">' . $name . '</a>';
+        } else {
+            $parts[] = $name;
+        }
+    }
+    $count = count($parts);
+    if ($count === 0) return '';
+    if ($count === 1) return $parts[0];
+    return implode(', ', array_slice($parts, 0, -1)) . ' and ' . $parts[$count - 1];
 }
 
 function sort_by_date_desc($entries) {

@@ -84,15 +84,14 @@ system("find $readprefix -name '*~' -delete");
 $coaches      = load_collection("{$readprefix}coaches");
 $testimonials = load_collection("{$readprefix}testimonials");
 $whispers     = sort_by_date_desc(load_collection("{$readprefix}whispers"));
-$workshops    = load_collection("{$readprefix}workshops");
-$retreats     = load_collection("{$readprefix}retreats");
+$events       = load_collection("{$readprefix}events");
 $footer_entry = parse_entry_file("{$readprefix}footer.entry");
 
 // ---------------------------------------------------------------------
 // 2a. Validate cross-references before writing anything — a typo'd domain
 // or coach id should fail loudly, not silently drop content (plan §9).
 // ---------------------------------------------------------------------
-$problems = validate_content_references($domain_slugs, $coaches, $testimonials, $whispers);
+$problems = validate_content_references($domain_slugs, $coaches, $testimonials, $whispers, $events);
 $hard_errors = print_problems($problems);
 if ($hard_errors > 0) {
     fwrite(STDERR, "\nAborting: fix the content errors above before generating.\n");
@@ -186,7 +185,7 @@ foreach (array('mission', 'coaching', 'legal/terms', 'legal/privacy') as $path) 
 
 // ---------------------------------------------------------------------
 // 5. Each domain: overview, resources, coach profiles, testimonials,
-//    whispers (+ individual whisper pages), workshops/retreats if any.
+//    whispers (+ individual whisper pages), events if any.
 // ---------------------------------------------------------------------
 foreach ($domain_slugs as $slug) {
     $prefix = '../';
@@ -195,12 +194,11 @@ foreach ($domain_slugs as $slug) {
     $d_coaches      = sort_by_order(filter_by_domain($coaches, $slug, 'domain'));
     $d_testimonials = filter_by_domain($testimonials, $slug, 'domain');
     $d_whispers     = filter_by_domain($whispers, $slug, 'domains');
-    $d_workshops    = filter_by_domain($workshops, $slug, 'domain');
-    $d_retreats     = filter_by_domain($retreats, $slug, 'domain');
+    $d_events       = filter_by_domain($events, $slug, 'domain');
 
     $nav_html = render_template($templates . 'partials/domain-nav.php', array(
         'prefix' => $prefix, 'domain_slug' => $slug, 'domain_title' => $title,
-        'has_workshops' => !empty($d_workshops), 'has_retreats' => !empty($d_retreats),
+        'has_events' => !empty($d_events),
     ));
     $footer_html = footer_html_for($prefix, $footer_entry, $templates);
     $common = array('prefix' => $prefix, 'nav_html' => $nav_html, 'footer_html' => $footer_html);
@@ -221,7 +219,7 @@ foreach ($domain_slugs as $slug) {
         'content_template' => 'domain-overview.php',
         'entry' => $domain_entries[$slug], 'domain_slug' => $slug, 'domain_title' => $title,
         'coaches' => $d_coaches, 'all_coaches' => $coaches, 'resources_entry' => $resources_entry,
-        'whispers' => $d_whispers, 'workshops' => $d_workshops, 'retreats' => $d_retreats,
+        'whispers' => $d_whispers, 'events' => $d_events,
         'text_align' => $text_align, 'card_class' => $card_class, 'button_class' => $button_class,
     ), $templates);
 
@@ -279,20 +277,23 @@ foreach ($domain_slugs as $slug) {
         'empty_message' => 'No whispers published for this domain yet.',
     ), $templates);
 
-    // -- workshops.html / retreats.html, only if this domain has any --
-    if (!empty($d_workshops)) {
+    // -- events.html (teasers, workshops + retreats together) + one full
+    // page per event, only if this domain has any --
+    if (!empty($d_events)) {
         $cards = array();
-        foreach ($d_workshops as $w) $cards[] = render_template($templates . 'partials/event-card.php', array('entry' => $w, 'card_class' => $card_class, 'button_class' => $button_class));
-        write_page("{$writeprefix}{$slug}/workshops.html", $common + array(
-            'title' => "$title workshops", 'bgimage' => $bgimage,
-            'content_template' => 'card-list.php', 'cards' => $cards, 'empty_message' => '',
-        ), $templates);
-    }
-    if (!empty($d_retreats)) {
-        $cards = array();
-        foreach ($d_retreats as $r) $cards[] = render_template($templates . 'partials/event-card.php', array('entry' => $r, 'card_class' => $card_class, 'button_class' => $button_class));
-        write_page("{$writeprefix}{$slug}/retreats.html", $common + array(
-            'title' => "$title retreats", 'bgimage' => $bgimage,
+        foreach ($d_events as $e) {
+            $cards[] = render_template($templates . 'partials/event-card.php', array(
+                'entry' => $e, 'coaches' => $coaches, 'domain_slug' => $slug,
+                'card_class' => $card_class, 'button_class' => $button_class,
+            ));
+            write_page("{$writeprefix}{$slug}/event-{$e['slug']}.html", $common + array(
+                'title' => field($e, 'title') . " — $title", 'bgimage' => $bgimage,
+                'content_template' => 'event-article.php', 'entry' => $e,
+                'coaches' => $coaches, 'domain_slug' => $slug, 'button_class' => $button_class,
+            ), $templates);
+        }
+        write_page("{$writeprefix}{$slug}/events.html", $common + array(
+            'title' => "$title events", 'bgimage' => $bgimage,
             'content_template' => 'card-list.php', 'cards' => $cards, 'empty_message' => '',
         ), $templates);
     }

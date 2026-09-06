@@ -15,7 +15,7 @@ function render_template($__template, $__vars) {
 
 // $prefix is "./" for root-level pages, "../" for everything one directory
 // down (every domain page — overview, coach profile, resources, testimonials,
-// whispers, workshops, retreats all live flat inside content/<domain>/, so
+// whispers, events all live flat inside content/<domain>/, so
 // they're all exactly one level down, same as the old $dirs[$which]->level
 // distinction).
 function asset_url($prefix, $path) {
