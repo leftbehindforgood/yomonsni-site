@@ -40,7 +40,7 @@ $more_id      = 'coach-more-' . $coach_id;
 ?>
   <div class="col-12 mb-4">
     <div class="card card-glass<?php echo $card_extra; ?>">
-      <div class="card-body">
+      <div class="card-body d-flex flex-column">
         <div class="coach-card-wrap">
 <?php if ($photo !== ''): ?>
           <img class="coach-photo rounded <?php echo $photo_side; ?>" src="<?php echo asset_url($prefix, "img/$photo"); ?>" alt="<?php echo htmlspecialchars($name); ?>">
@@ -55,7 +55,7 @@ $more_id      = 'coach-more-' . $coach_id;
           <?php echo entry_html($entry); ?>
         </div>
 
-        <div class="d-flex justify-content-between mt-3">
+        <div class="d-flex justify-content-between mt-auto pt-3">
 <?php if ($can_book): ?>
           <a class="btn btn-primary<?php echo $button_extra; ?>" href="<?php echo htmlspecialchars($booking); ?>" rel="noopener" target="_blank">Book</a>
 <?php else: ?>

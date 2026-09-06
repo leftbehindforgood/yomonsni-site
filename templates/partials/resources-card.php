@@ -13,7 +13,7 @@ $button_extra = (isset($button_class) && $button_class !== '') ? " $button_class
 ?>
   <div class="col-12 mb-4">
     <div class="card card-glass<?php echo $card_extra; ?>">
-      <div class="card-body">
+      <div class="card-body d-flex flex-column">
 <?php if (!empty($pointers)): ?>
         <ul class="resource-pointers mb-0">
 <?php foreach ($pointers as $p): ?>
@@ -27,7 +27,7 @@ $button_extra = (isset($button_class) && $button_class !== '') ? " $button_class
           <p><?php echo htmlspecialchars($teaser); ?></p>
         </div>
 <?php endif; ?>
-        <a class="btn btn-primary<?php echo $button_extra; ?> mt-4" href="resources.html">More resources</a>
+        <a class="btn btn-primary mt-auto align-self-start<?php echo $button_extra; ?>" href="resources.html">More resources</a>
       </div>
     </div>
   </div>

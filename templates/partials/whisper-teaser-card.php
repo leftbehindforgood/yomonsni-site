@@ -42,10 +42,10 @@ if ($nested) {
 }
 echo $outer_open;
 ?>
-      <div class="card-body">
+      <div class="card-body d-flex flex-column">
         <h5 class="card-title"><?php echo htmlspecialchars($title); ?></h5>
         <h6 class="card-subtitle mb-2 text-muted">By <?php echo $author_html; ?></h6>
         <?php echo $md->text($teaser); ?>
-        <a class="btn btn-primary<?php echo $button_extra; ?>" href="whisper-<?php echo htmlspecialchars($entry['slug']); ?>.html">Read more</a>
+        <a class="btn btn-primary mt-auto align-self-start<?php echo $button_extra; ?>" href="whisper-<?php echo htmlspecialchars($entry['slug']); ?>.html">Read more</a>
       </div>
 <?php echo $outer_close; ?>

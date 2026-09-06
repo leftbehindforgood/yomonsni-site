@@ -392,12 +392,21 @@ content.
    card.php`, all using `.card-glass` plus each accepting the optional
    `$card_class`/`$button_class` per-domain overrides) and hands this
    template the finished HTML fragments — it doesn't know which
-   collection it's listing. The event card's own card-body is a flex
-   column (`d-flex flex-column`) with its Register/Learn More buttons
-   pinned to the bottom via `mt-auto`, so the buttons line up across a
-   row of cards regardless of how much description text any one of them
-   has — same trick `hub.php`'s domain cards use for their Explore
-   button.
+   collection it's listing. **Every card partial's card-body is a flex
+   column (`d-flex flex-column`) with its button(s) pinned to the bottom
+   via `mt-auto`** — a standing rule, not just the event card's own
+   Register/Learn More buttons — so buttons line up across a row of cards
+   regardless of how much text precedes them (same trick `hub.php`'s
+   domain cards use for their Explore button). When the button is a
+   direct flex child rather than sitting in its own wrapping row div
+   (`whisper-teaser-card.php`, `resources-card.php`), it also needs
+   `align-self-start` or flex's default cross-axis stretch spreads it to
+   the card's full width. A wrapping div (`coach-card.php`'s Book/Full
+   profile row, the event card's Register/Learn More row) can add `pt-3`
+   alongside `mt-auto` for a guaranteed minimum gap above the buttons —
+   but that only belongs on the wrapping div; putting `pt-3` directly on
+   a bare `<a class="btn">` pads the button's own interior instead of the
+   space above it. Any new card partial needs this same treatment.
 6. **`templates/whisper-article.php`** — one whisper's full page, generated
    once per domain it's tagged into.
 7. **`templates/event-article.php`** — one event's full page, linked from
