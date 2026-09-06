@@ -586,21 +586,24 @@ engine, now fully replaced). Current state:
   with a real-shaped placeholder link still attached, to demonstrate that
   field.)
 - Of the root-level pages, `mission.html`
-  (`yo-IMG_57108-5DII-raw32-rawtherapee-shaped.jpg`) and `coaching.html`
-  (`yo-IMG_52696-5DII-raw16-rawtherapee-shaped.jpg`) now have their own
+  (`yo-IMG_57108-5DII-raw32-rawtherapee-shaped.jpg`), `coaching.html`
+  (`yo-IMG_52696-5DII-raw16-rawtherapee-shaped.jpg`), and `privacy.html`
+  (`yo-IMG_19690-5DSR-raw32-rawtherapee-shaped.jpg`) now have their own
   background photo, set via `gen-site.php`'s `$root_page_bgimages` — the
   same per-page-lookup pattern as `$domain_design`, just keyed by page
-  slug instead of domain. `terms.html`/`privacy.html` still don't have
-  one, picked up one page at a time rather than all at once.
+  slug instead of domain. `terms.html` still doesn't have one, picked up
+  one page at a time rather than all at once. `privacy.html` also now has
+  a real (not placeholder) privacy policy — see its own `.entry` file;
+  `terms.html` is still the placeholder text.
 
 ## Known gaps / open decisions
 
 - Content for five of the six domains — see "History and current status"
   above for exactly what each domain has vs. still needs. Creativity is
   the reference pattern to extend, not a one-off.
-- Root-level pages: `mission.html`/`coaching.html` now have a background
-  photo (see "History and current status" above); `terms.html`/
-  `privacy.html` still don't, unlike every other page on the site.
+- Root-level pages: `mission.html`/`coaching.html`/`privacy.html` now
+  have a background photo (see "History and current status" above);
+  `terms.html` still doesn't, unlike every other page on the site.
 - `push-site.php` depends entirely on the operator's local `aws` CLI
   credentials — none are configured in this repo, which is correct.
 
