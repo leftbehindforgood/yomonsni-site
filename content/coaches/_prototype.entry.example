@@ -1,0 +1,36 @@
+This is a PROTOTYPE, not real content. gen-site.php only loads files
+whose name ends in exactly ".entry" — this one ends in ".entry.example",
+so it is never loaded, validated, or rendered. It exists purely so a
+human (or a content-generation tool) has a blank, all-fields-shown copy
+to start from.
+
+To use it:
+  1. Copy this file to a new name ending in ".entry", following this
+     type's naming convention (see the heading below).
+  2. Delete this whole instructional block, including the line of
+     dashes, so the file starts with "+++" on the very first line.
+  3. Fill in the fields. Leave optional ones blank (or delete the line
+     entirely) if they don't apply.
+  4. See CONTENT-GUIDE.md for what every field actually does.
+------------------------------------------------------------------------
+
+Coach card — one file per (coach × domain), named
+"<name>--<domain>.entry", e.g. "jane--leadership.entry".
+
++++
+name:
+coach_id:
+domain:
+order:
+photo:
+booking_link:
+fully_booked: no
+location:
+in_person_booking_link:
+in_person_fully_booked: no
+summary:
+photo_side: left
++++
+
+Full bio for this domain, in Markdown. Only what's relevant to this one
+domain — nothing that reveals you also coach in another.

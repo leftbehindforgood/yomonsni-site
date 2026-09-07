@@ -86,6 +86,15 @@ into pages at generation time** — not the old one-file-to-one-page model.
 directly inside a directory (collections are flat, never nested); domains
 are self-contained via a `domain` field.
 
+Every collection folder also carries a `_prototype.entry.example` — a
+blank, every-field-shown copy for a human (or a content-generation tool)
+to start from, with instructions at the top on how to turn it into real
+content. It's inert by construction, not by convention: `load_collection()`
+only globs `*.entry`, and `.entry.example` doesn't match that, so it can
+never be accidentally loaded, validated, or rendered regardless of what's
+in it. **When adding a new collection type, add a matching prototype file
+too** — see CONTENT-GUIDE.md's "Starting from a blank copy".
+
 - `content/coaches/` — one file per (coach × domain), e.g.
   `jane--leadership.entry` and `jane--intimate.entry` are the *same real
   person*, two independent cards. Fields: `name`, `coach_id` (the stable

@@ -1,0 +1,32 @@
+This is a PROTOTYPE, not real content. gen-site.php only loads files
+whose name ends in exactly ".entry" — this one ends in ".entry.example",
+so it is never loaded, validated, or rendered. It exists purely so a
+human (or a content-generation tool) has a blank, all-fields-shown copy
+to start from.
+
+To use it:
+  1. Copy this file to a new name ending in ".entry", following this
+     type's naming convention (see the heading below).
+  2. Delete this whole instructional block, including the line of
+     dashes, so the file starts with "+++" on the very first line.
+  3. Fill in the fields. Leave optional ones blank (or delete the line
+     entirely) if they don't apply.
+  4. See CONTENT-GUIDE.md for what every field actually does.
+------------------------------------------------------------------------
+
+Whisper — filename becomes part of the URL, so keep it short and
+URL-friendly, e.g. "the-question-underneath-the-question.entry".
+
++++
+title:
+coach:
+date:
+domains:
+teaser:
++++
+
+The full piece, in Markdown. To embed a photo (in-person events use the
+same technique): a plain <img src="../img/your-photo.jpg" alt="..."
+class="content-photo content-photo-left"> tag written directly here —
+and if the piece opens with one, set an explicit teaser above instead of
+relying on the first-paragraph fallback.

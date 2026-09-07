@@ -1,0 +1,32 @@
+This is a PROTOTYPE, not real content. gen-site.php only loads files
+whose name ends in exactly ".entry" — this one ends in ".entry.example",
+so it is never loaded, validated, or rendered. It exists purely so a
+human (or a content-generation tool) has a blank, all-fields-shown copy
+to start from.
+
+To use it:
+  1. Copy this file to a new name ending in ".entry", following this
+     type's naming convention (see the heading below).
+  2. Delete this whole instructional block, including the line of
+     dashes, so the file starts with "+++" on the very first line.
+  3. Fill in the fields. Leave optional ones blank (or delete the line
+     entirely) if they don't apply.
+  4. See CONTENT-GUIDE.md for what every field actually does.
+------------------------------------------------------------------------
+
+Resource — any unique filename, e.g. "the-practice-of-practice.entry".
+`type` is one of: book, video, paper, article, podcast (anything else
+still works, it just gets a generic button label).
+
++++
+title:
+domain:
+type: book
+coach:
+image:
+url:
++++
+
+A sentence or two on what it is and why it's actually worth a stranger's
+time — this is for anyone curious about the subject, not a bibliography
+assembled to fill the page.

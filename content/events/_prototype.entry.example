@@ -1,0 +1,42 @@
+This is a PROTOTYPE, not real content. gen-site.php only loads files
+whose name ends in exactly ".entry" — this one ends in ".entry.example",
+so it is never loaded, validated, or rendered. It exists purely so a
+human (or a content-generation tool) has a blank, all-fields-shown copy
+to start from.
+
+To use it:
+  1. Copy this file to a new name ending in ".entry", following this
+     type's naming convention (see the heading below).
+  2. Delete this whole instructional block, including the line of
+     dashes, so the file starts with "+++" on the very first line.
+  3. Fill in the fields. Leave optional ones blank (or delete the line
+     entirely) if they don't apply.
+  4. See CONTENT-GUIDE.md for what every field actually does.
+------------------------------------------------------------------------
+
+Event — one flat folder for both event types (a workshop and a retreat
+share this exact same shape, distinguished only by the `type` field
+below, which is `workshop` in this copy — change it to `retreat` for
+one); a filename that sorts the way you want it to read, e.g.
+"2025-11-creativity-writing-intensive.entry".
+
++++
+title:
+domain:
+coaches:
+type: workshop
+date:
+format:
+location:
+booking_link:
+summary:
++++
+
+The full description, shown only on the event's own page. To embed a
+photo of the venue (in-person events only): a plain
+<img src="../img/your-photo.jpg" alt="Describe what's in the photo"
+class="content-photo content-photo-left"> tag written directly here —
+content-photo-left or content-photo-right, and more than one is fine for
+a longer description (alternate sides). If your description opens with
+one, set an explicit summary above instead of relying on the
+first-sentence fallback.

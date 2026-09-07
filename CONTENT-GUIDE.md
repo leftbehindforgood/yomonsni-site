@@ -56,6 +56,20 @@ Run `php gen-site.php` from the repo root. Read what it prints:
   copy (mirrored to `/tmp/foo`, or look under `working/`) in a browser and
   check your page before it's pushed live.
 
+## Starting from a blank copy
+
+Every collection folder below (`content/coaches/`, `content/coach-landing/`,
+`content/testimonials/`, `content/whispers/`, `content/events/`,
+`content/resource-items/`) has a `_prototype.entry.example` file sitting
+in it — a blank copy showing every field for that type, with instructions
+at the top. It's not real content: it ends in `.entry.example`, not
+`.entry`, and `gen-site.php` only ever loads files ending in exactly
+`.entry`, so this one is guaranteed to never be loaded, validated, or
+rendered no matter what's in it. To use one, copy it to a new name ending
+in `.entry`, delete the instructional block at the top so the file starts
+with `+++`, and fill in the fields — the reference below explains what
+each one does.
+
 ## Field reference, by content type
 
 ### Coach card — `content/coaches/<your-name>--<domain>.entry`
