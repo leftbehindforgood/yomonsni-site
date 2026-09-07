@@ -137,6 +137,57 @@ on your full profile page.
   changed and compared for which side books better, for a given coach in
   a given domain.
 
+### Coach landing page — `content/coach-landing/<your-coach_id>.entry`
+
+A separate, optional page about *you*, not any one domain — meant to be
+handed out privately (e.g. printed on a business card or given out in
+person), not linked to from anywhere on the site itself. **This is one
+file per coach, not one per domain** — the filename is just your
+`coach_id`, e.g. `sam.entry`, regardless of how many domains you work in.
+
+The whole point of this page is that it never reveals which domain(s)
+you actually coach in. That means:
+
+- **Your bio here must be written fresh, not copied from any of your
+  domain cards.** Write about your general approach to coaching, not
+  what you help with in any specific domain — no mention of leadership,
+  creativity, intimacy, or any other domain name or domain-specific
+  language. This is the same "no automated check can read your prose"
+  situation as the coach-privacy rule at the top of this guide — nobody
+  but you can catch a bio that gives the game away.
+- **Your photo here must be a different file from every photo on your
+  domain cards.** This one *is* checked automatically (generation fails
+  with an error if you reuse one) — reusing a photo would let anyone
+  who's seen one of your domain cards recognize you here and infer the
+  connection backwards.
+- There's no booking link, no location, no testimonials, nothing
+  domain-specific at all — just your name, an optional photo, and your
+  general bio.
+
+```
++++
+name: Sam Rivera
+coach_id: sam
+photo: a-different-photo-than-any-domain-card.jpg
+photo_side: right
++++
+
+A general bio about your coaching approach, written without naming any
+domain you work in.
+```
+
+- `coach_id` — must match the `coach_id` on at least one of your real
+  domain cards (this page is an addition to your roster entry, not a
+  standalone identity).
+- `photo` — optional, same as a domain card, except it must be a photo
+  that doesn't appear on any of your domain cards (see above).
+- `photo_side` — optional, `left` (default) or `right` — same meaning as
+  on a domain card.
+- `bgimage` — optional, a filename under `content/img/` for this page's
+  own background photo. Unlike a domain's background (chosen centrally in
+  `gen-site.php`), this one is yours to pick, since it's your own page.
+  Leave it blank for a plain dark background.
+
 ### Testimonial — `content/testimonials/<anything-unique>.entry`
 
 ```

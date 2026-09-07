@@ -12,12 +12,14 @@
 //
 // Both return an array of ['level' => 'error'|'warning', 'message' => ...].
 
-function validate_content_references($domain_slugs, $coaches, $testimonials, $whispers, $events = array(), $resource_items = array()) {
+function validate_content_references($domain_slugs, $coaches, $testimonials, $whispers, $events = array(), $resource_items = array(), $coach_landing = array()) {
     $problems = array();
 
     $coach_keys = array(); // "domain|coach_id" => true
+    $coach_photos_by_id = array(); // coach_id => [photo, photo, ...] across all that coach's domain cards
     foreach ($coaches as $c) {
         $coach_keys[field($c, 'domain') . '|' . field($c, 'coach_id')] = true;
+        $coach_photos_by_id[field($c, 'coach_id')][] = field($c, 'photo');
     }
 
     foreach ($testimonials as $t) {
@@ -91,6 +93,28 @@ function validate_content_references($domain_slugs, $coaches, $testimonials, $wh
             list($coach_id, $photo) = explode('|', $key, 2);
             $problems[] = array('level' => 'error', 'message' =>
                 "coach \"$coach_id\" reuses photo \"$photo\" across domains: " . implode(', ', $domains_used));
+        }
+    }
+
+    // A coach landing page (content/coach-landing/, see gen-site.php) is
+    // meant to be handed out without revealing which domain(s) that coach
+    // works in — its `coach_id` must belong to a real coach (at least one
+    // domain card), and its own `photo` must be genuinely new, not one
+    // already seen on any of that coach's domain cards. Reusing one would
+    // let anyone who's seen that domain card recognize the same face on
+    // this supposedly domain-neutral page and infer the connection
+    // backwards — exactly what this whole design exists to prevent.
+    foreach ($coach_landing as $cl) {
+        $coach_id = field($cl, 'coach_id');
+        if (!isset($coach_photos_by_id[$coach_id])) {
+            $problems[] = array('level' => 'error', 'message' =>
+                "{$cl['path']}: coach_id \"$coach_id\" has no coach card in any domain");
+            continue;
+        }
+        $photo = field($cl, 'photo');
+        if ($photo !== '' && in_array($photo, $coach_photos_by_id[$coach_id], true)) {
+            $problems[] = array('level' => 'error', 'message' =>
+                "{$cl['path']}: photo \"$photo\" is already used on one of coach \"$coach_id\"'s domain cards — a landing page photo must be different");
         }
     }
 
@@ -246,6 +270,41 @@ function validate_sitemap($writeprefix) {
             if (preg_match('#/coach-[^/]+\.html$#', $url)) {
                 $problems[] = array('level' => 'error', 'message' =>
                     "sitemap.xml includes a coach-profile URL, which must be excluded: $url");
+            }
+        }
+    }
+    return $problems;
+}
+
+// A coach landing page (coach-<id>.html, at the site root — see
+// gen-site.php's write_page() calls for content/coach-landing/) is meant
+// to be handed out privately (a business card) without ever pointing a
+// visitor toward any specific domain, so unlike every other page on the
+// site, its only permitted outbound links are Home, Mission, and
+// Coaching. This checks that promise directly against the generated
+// HTML rather than trusting the template was written correctly — same
+// philosophy as this file's other checks. Only <a> tags are considered
+// (a <link>/<script> tag's href/src for CSS/JS is a different thing
+// entirely, not a link a visitor could click through to another page).
+function validate_coach_landing_pages($writeprefix) {
+    $problems = array();
+    $writeprefix = rtrim($writeprefix, '/');
+    // Root-level pages always render their links with a "./" prefix
+    // (asset_url()'s $prefix for anything at the site root), so that's
+    // what actually shows up in the generated href, not a bare filename.
+    $allowed = array('./index.html', './mission.html', './coaching.html');
+
+    // glob() doesn't recurse, so this only ever matches root-level
+    // coach-*.html files — a domain's own coach-<id>.html profile pages
+    // live one directory down and are untouched by this check.
+    foreach (glob("$writeprefix/coach-*.html") as $file) {
+        $html = file_get_contents($file);
+        if (preg_match_all('/<a\b[^>]*\bhref="([^"]+)"/i', $html, $m)) {
+            foreach ($m[1] as $href) {
+                if (!in_array($href, $allowed, true)) {
+                    $problems[] = array('level' => 'error', 'message' =>
+                        "$file: a coach landing page may only link to index.html, mission.html, or coaching.html (found \"$href\")");
+                }
             }
         }
     }

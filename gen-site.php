@@ -86,23 +86,25 @@ $testimonials = load_collection("{$readprefix}testimonials");
 $whispers     = sort_by_date_desc(load_collection("{$readprefix}whispers"));
 $events       = load_collection("{$readprefix}events");
 $resource_items = load_collection("{$readprefix}resource-items");
+$coach_landing = load_collection("{$readprefix}coach-landing");
 $footer_entry = parse_entry_file("{$readprefix}footer.entry");
 
 // ---------------------------------------------------------------------
 // 2a. Validate cross-references before writing anything — a typo'd domain
 // or coach id should fail loudly, not silently drop content (plan §9).
 // ---------------------------------------------------------------------
-$problems = validate_content_references($domain_slugs, $coaches, $testimonials, $whispers, $events, $resource_items);
+$problems = validate_content_references($domain_slugs, $coaches, $testimonials, $whispers, $events, $resource_items, $coach_landing);
 $hard_errors = print_problems($problems);
 if ($hard_errors > 0) {
     fwrite(STDERR, "\nAborting: fix the content errors above before generating.\n");
     exit(1);
 }
 
-function footer_html_for($prefix, $footer_entry, $templates) {
+function footer_html_for($prefix, $footer_entry, $templates, $show_legal_links = true) {
     return render_template($templates . 'partials/site-footer.php', array(
         'prefix'           => $prefix,
         'footer_body_html' => entry_html($footer_entry),
+        'show_legal_links' => $show_legal_links,
     ));
 }
 
@@ -202,7 +204,31 @@ foreach (array('mission', 'coaching', 'legal/terms', 'legal/privacy') as $path) 
 }
 
 // ---------------------------------------------------------------------
-// 5. Each domain: overview, resources, coach profiles, testimonials,
+// 5. Coach landing pages — one per real coach (not per domain), from
+// content/coach-landing/, for handing out privately (e.g. a business
+// card) rather than linking to from anywhere on the site. Deliberately
+// never mentions which domain(s) that coach actually works in: no
+// booking link, no domain-scoped bio, and validate_coach_landing_pages()
+// (run later, on the generated output) enforces that the only outbound
+// links it ends up with are Home/Mission/Coaching — see CLAUDE.md's "The
+// coach-privacy design". $show_legal_links=false on the footer for the
+// same reason: Terms/Privacy aren't on that allowlist.
+// ---------------------------------------------------------------------
+foreach ($coach_landing as $cl) {
+    $coach_id = field($cl, 'coach_id');
+    write_page("{$writeprefix}coach-{$coach_id}.html", array(
+        'prefix'          => './',
+        'title'           => field($cl, 'name', $coach_id),
+        'bgimage'         => field($cl, 'bgimage'),
+        'nav_html'        => hub_nav_for("coach-{$coach_id}", $hub_entry, $mission_entry, $coaching_entry, $templates),
+        'footer_html'     => footer_html_for('./', $footer_entry, $templates, false),
+        'content_template' => 'coach-landing.php',
+        'entry'           => $cl,
+    ), $templates, false); // excluded from sitemap.xml — not linked from anywhere, so it shouldn't be discoverable there either
+}
+
+// ---------------------------------------------------------------------
+// 6. Each domain: overview, resources, coach profiles, testimonials,
 //    whispers (+ individual whisper pages), events if any.
 // ---------------------------------------------------------------------
 foreach ($domain_slugs as $slug) {
@@ -330,7 +356,7 @@ foreach ($domain_slugs as $slug) {
 }
 
 // ---------------------------------------------------------------------
-// 6. sitemap.xml — everything write_page() registered except coach
+// 7. sitemap.xml — everything write_page() registered except coach
 // profiles (see the comment on write_page() above).
 // ---------------------------------------------------------------------
 $sitemap = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
@@ -342,22 +368,23 @@ $sitemap .= "</urlset>\n";
 file_put_contents("{$writeprefix}sitemap.xml", $sitemap);
 
 // ---------------------------------------------------------------------
-// 7. Non-templated asset directories, copied verbatim.
+// 8. Non-templated asset directories, copied verbatim.
 // ---------------------------------------------------------------------
 foreach ($noworkdir as $which) {
     system("rsync -a --delete {$readprefix}{$which} {$writeprefix}");
 }
 
 // ---------------------------------------------------------------------
-// 8. Validate the generated output (dead/absolute/cross-domain links,
+// 9. Validate the generated output (dead/absolute/cross-domain links,
 //    missing images, external link liveness, sitemap exclusions — §9).
 // ---------------------------------------------------------------------
 $output_problems = validate_output($writeprefix, $domain_slugs, $site_domain);
 $output_problems = array_merge($output_problems, validate_sitemap($writeprefix));
+$output_problems = array_merge($output_problems, validate_coach_landing_pages($writeprefix));
 $hard_errors = print_problems($output_problems);
 
 // ---------------------------------------------------------------------
-// 9. Mirror to /tmp/foo — the local dry-run/preview step. Not debugging
+// 10. Mirror to /tmp/foo — the local dry-run/preview step. Not debugging
 //    leftovers; this is what gets browsed before push-site.php ever runs.
 // ---------------------------------------------------------------------
 system("rsync -a $writeprefix /tmp/foo");

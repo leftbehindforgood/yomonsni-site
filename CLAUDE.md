@@ -195,6 +195,22 @@ are self-contained via a `domain` field.
   `content/img/`), `url` (external link; blank means no button at all);
   body = a short description, rendered via `entry_html()` like everything
   else.
+- `content/coach-landing/` — one file **per coach, not per domain**
+  (filename is the coach's `coach_id`, e.g. `sam.entry`), generating a
+  root-level `coach-<id>.html` handed out privately (a business card)
+  rather than linked from anywhere on the site. See "The coach-privacy
+  design" below — this collection exists specifically so a coach can
+  point someone at a page about themselves without it revealing which
+  domain(s) they actually work in. Fields: `name`, `coach_id` (must match
+  a real domain card), `photo` (optional — must be a *different* file
+  from every one of that coach's domain-card photos; checked
+  automatically, same enforcement style as the domain-photo-reuse check),
+  `photo_side` (`left`/`right`, same as a domain card), `bgimage`
+  (optional, this page's own background photo — the coach's choice, not
+  centrally assigned like a domain's); body = a bio written fresh for
+  this page, which must not name or otherwise reveal any domain (nothing
+  automated can check this part — same "read back what you wrote" caveat
+  CONTENT-GUIDE.md gives for coach bios/testimonials/whispers).
 
 Per-domain static content (not a collection): `content/<domain>/index.entry`
 (the domain's own overview/outline copy, plus `hook`/`hook2` — two "mom
@@ -258,6 +274,25 @@ across domains. This is enforced architecturally, not just by convention:
   content across its tagged domains is already a deliberately accepted
   exposure (§4.2 of the restructure plan allows cross-tagging into
   `intimate`), not a new one a sitemap would introduce.
+- **A coach landing page (`content/coach-landing/`, `coach-<id>.html` at
+  the site root, `templates/coach-landing.php`) is the one place a coach
+  is presented on their own, deliberately outside this whole domain-
+  privacy structure** — for handing out privately (a business card), not
+  for on-site browsing. It's never linked to from anywhere on the site
+  (excluded from `sitemap.xml` the same way a domain coach-profile page
+  is), and its content must never reveal which domain(s) that coach
+  works in: no booking link, no domain-scoped bio reused from a
+  `content/coaches/` card, nothing. Two things are enforced
+  automatically rather than left to convention: its `photo` must differ
+  from every one of that coach's domain-card photos
+  (`validate_content_references()`, same enforcement style as the
+  domain-photo-reuse check above), and `validate_coach_landing_pages()`
+  scans the generated page's own `<a>` tags and fails the build if any
+  link isn't Home, Mission, or Coaching — this page's *only* permitted
+  outbound links, checked directly rather than trusted from the
+  template. The bio's actual wording (not mentioning a domain by name)
+  is the one part nothing automated can check — same caveat
+  CONTENT-GUIDE.md gives for coach bios/testimonials/whispers.
 
 ## Visual design (read before touching CSS/templates)
 
@@ -346,7 +381,7 @@ apply everywhere, not just wherever they were first introduced:
   JS bundle — deliberately, since one interaction didn't justify pulling
   either in.
 
-## The eight page shapes (`templates/`)
+## The nine page shapes (`templates/`)
 
 Templates are plain PHP files, included with a set of variables in scope
 (`lib/render.php`'s `render_template()`) — this is the entire templating
@@ -477,6 +512,18 @@ content.
    ("Watch Video", "Read Paper", etc., falling back to "View Resource").
    This page is explicitly meant for anyone curious about the subject,
    not just people ready to book — see its own intro copy.
+9. **`templates/coach-landing.php`** — a coach's own landing page, one per
+   real coach (not per domain, unlike every other coach-related page
+   shape), from `content/coach-landing/`. Deliberately the simplest shape
+   on the site: name, an optional photo (`photo_side` same as a domain
+   card), and a bio — no booking button, no location, no testimonials, no
+   domain reference of any kind. Root-level like `simple-content.php`'s
+   pages, but with its own nav (`hub_nav_for()` called with a
+   `$current_slug` that's neither `mission` nor `coaching`, so both stay
+   visible) and its own stripped-down footer (`footer_html_for(...,
+   false)` — no Terms/Privacy links). See "The coach-privacy design"
+   above for why this page exists and what keeps it from leaking a
+   coach's domain(s).
 
 A domain with zero coaches (currently `change`, `performance`,
 `discovery`) skips the Coaches heading/stack entirely (`if (!empty
@@ -486,13 +533,16 @@ screenshotted the way leadership/creativity/intimate have.
 
 ## Guardrails and the validator (`lib/validate.php`)
 
-Two passes, both wired into `gen-site.php`:
+Four functions, all wired into `gen-site.php`:
 
 - **`validate_content_references()`** runs on the loaded collections
   *before* any HTML is written: a testimonial's `coach` must resolve to a
   real coach card in that domain, a whisper's `domains` must all be real
-  domain slugs, and no coach photo may be reused across domains. Any error
-  here aborts generation — nothing gets written.
+  domain slugs, no coach photo may be reused across domains, and (for
+  `content/coach-landing/`) a landing page's `coach_id` must be a real
+  coach and its `photo` must differ from every one of that coach's
+  domain-card photos. Any error here aborts generation — nothing gets
+  written.
 - **`validate_output()`** runs after generation, by walking every
   generated `.html` file: every internal link must resolve to a real file,
   every internal link must be relative (a root-relative `/foo.html` or an
@@ -503,13 +553,19 @@ Two passes, both wired into `gen-site.php`:
   `var/link-cache.json` for a week so routine local generation doesn't
   hammer third-party sites on every run. A dead external link is a
   warning, not an error; everything else here is a hard error.
+- **`validate_sitemap()`** fails the build if any `coach-*.html` URL —
+  whether a domain's own coach profile or a root-level coach landing page
+  — ever ends up in `sitemap.xml` (see "The coach-privacy design" above).
+- **`validate_coach_landing_pages()`** scans just the generated
+  `coach-*.html` files at the site root and fails the build if any of
+  them links anywhere other than Home, Mission, or Coaching.
 
-Both passes were verified against deliberately-broken fixtures during
-development — they're not just written, they fire. Note: neither checks
-inline CSS `background-image: url(...)` references (only `<img>`/`href`),
-which is exactly how a previous `shell.php` bug — a body background
-falling back to a `default-bg.jpg` that didn't exist — went undetected
-until traced by hand.
+All four were verified against deliberately-broken fixtures during
+development — they're not just written, they fire. Note: none of them
+check inline CSS `background-image: url(...)` references (only
+`<img>`/`href`), which is exactly how a previous `shell.php` bug — a body
+background falling back to a `default-bg.jpg` that didn't exist — went
+undetected until traced by hand.
 
 ## Repository layout
 
@@ -527,7 +583,7 @@ until traced by hand.
 - `lib/` — the engine's PHP: `entry.php` (parsing/collections/sorting),
   `render.php` (templating), `validate.php` (guardrails), and the vendored
   `Parsedown.php`.
-- `templates/` — the eight page shapes and their partials. Deliberately kept
+- `templates/` — the nine page shapes and their partials. Deliberately kept
   out of `content/` so the human-authored/engine-owned split is a real
   directory boundary, not just a convention.
 - `working/` — generated output (gitignored, wiped and rewritten on every
@@ -566,8 +622,9 @@ engine, now fully replaced). Current state:
   fictional) coaches with real-shaped bios/summaries, a real
   resources-card pointer list, and three real (if fictional)
   `content/resource-items/` entries (a book, a video, a paper) with a
-  placeholder cover image on one of them — it's the domain the visual
-  design was built and iterated against. Leadership and intimate each have one
+  placeholder cover image on one of them, and one real (if fictional)
+  `content/coach-landing/` page (Sam's) demonstrating that feature — it's
+  the domain the visual design was built and iterated against. Leadership and intimate each have one
   coach (the same person, Jane Doe, with independent domain-scoped cards
   — used to demonstrate the coach-privacy design and per-domain
   `fully_booked`). Change, performance, and discovery have no coaches at
