@@ -41,6 +41,24 @@ validator" below) and writes the result to `var/last-generation.json`.
 validation errors, so forgetting to check `/tmp/foo` before pushing doesn't
 ship something broken.
 
+The live site sits behind **CloudFront** (distribution `E2EATBQF9HJ2AR`),
+put in front of the S3 bucket specifically to get HTTPS — S3's own website
+endpoint is HTTP-only, so CloudFront terminates TLS (cert from ACM,
+`us-east-1`, covering both `yomonsni.com` and `www.yomonsni.com`) with the
+S3 website endpoint as its origin over plain HTTP on the backend. Route 53
+aliases both the apex and `www` records at the distribution rather than at
+S3 directly. Nothing about `content/`/`gen-site.php`/the sync target
+changed for this — `push-site.php` still syncs straight to
+`s3://yomonsni.com` with the same `--acl public-read`. What did change:
+since that sync sends no `Cache-Control` header, CloudFront falls back to
+its default TTL (24h, `CachingOptimized`) for everything, so
+`push-site.php` also fires a `create-invalidation --paths '/*'` after a
+successful sync — without it, a just-pushed page can keep serving stale to
+visitors for up to a day. An invalidation failure is a warning, not a
+build-breaking error (the content is already live in S3 by that point;
+worst case is staleness until the TTL naturally expires), printed with the
+manual command to re-run by hand.
+
 ## Content model: `+++`-fenced front matter, one shape for everything
 
 For the friendly, example-driven version of everything in this section and
@@ -670,7 +688,9 @@ engine, now fully replaced). Current state:
   above for exactly what each domain has vs. still needs. Creativity is
   the reference pattern to extend, not a one-off.
 - `push-site.php` depends entirely on the operator's local `aws` CLI
-  credentials — none are configured in this repo, which is correct.
+  credentials — none are configured in this repo, which is correct. Those
+  credentials now need `cloudfront:CreateInvalidation` on distribution
+  `E2EATBQF9HJ2AR` in addition to whatever S3 permissions synced before.
 
 See `docs/coaching-site-restructure-plan.md` for the original design
 reasoning this was built from, and git log for the visual-design
