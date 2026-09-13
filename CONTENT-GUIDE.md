@@ -391,6 +391,7 @@ individual coaches, but documented here for completeness:
 ```
 +++
 title: Leadership
+subtitle: An optional tagline shown under the title on this domain's own page.
 hook: A "mom test" style question shown on the homepage's domain card.
 hook2: A second, deeper follow-up question shown just below it.
 +++
@@ -405,6 +406,13 @@ first thing a visitor reads; `hook2` follows it in smaller, quieter text as
 a second layer — meant to suggest there's more depth here than the first
 question alone lets on, not just repeat it. The homepage card shows only
 these two questions, with no title or domain name on it at all.
+
+`subtitle` is optional and unrelated to `hook`/`hook2` — it doesn't show
+on the homepage card at all. When set, it renders as a smaller line under
+the big title in the header of this domain's *own* overview page
+(`content/<domain>/index.html`), e.g. "Where the Mind Meets the Moment".
+Leave it out and that header shows just the title, same as before this
+field existed.
 
 ### A domain's resources page — `content/<domain>/resources.entry`
 

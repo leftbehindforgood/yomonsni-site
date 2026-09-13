@@ -21,6 +21,14 @@
 // it lands on visually. With no $text_align, both columns are col-12,
 // which just stacks them full-width in document order — today's
 // no-side-chosen-yet default for every domain except this one.
+// Optional per-domain tagline shown under the title in the mastblank
+// header — most domains don't set one yet (see content/<domain>/
+// index.entry), so this only renders when a domain's own file has it.
+// Reuses .mastblank h2 (myfunk.css), styled for exactly this since it was
+// first written for a since-removed coach-profile.php use — see that
+// rule's own comment.
+$subtitle = field($entry, 'subtitle');
+
 $intro_col = 'col-12';
 $aside_col = 'col-12';
 $intro_order = '';
@@ -41,6 +49,9 @@ if ($text_align === 'left') {
     <div class="container d-flex h-100 align-items-center">
       <div class="mx-auto text-center">
         <h1 class="mx-auto my-0 text-uppercase"><?php echo htmlspecialchars($domain_title); ?></h1>
+<?php if ($subtitle !== ''): ?>
+        <h2 class="mx-auto my-0"><?php echo htmlspecialchars($subtitle); ?></h2>
+<?php endif; ?>
       </div>
     </div>
   </header>

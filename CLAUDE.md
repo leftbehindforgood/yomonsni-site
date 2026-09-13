@@ -243,7 +243,13 @@ Per-domain static content (not a collection): `content/<domain>/index.entry`
 (the domain's own overview/outline copy, plus `hook`/`hook2` — two "mom
 test" style questions shown on that domain's card on the hub page, the
 second smaller/quieter as a deeper follow-up, no title/label on the card at
-all) and `content/<domain>/resources.entry` (this domain's resources page —
+all — and an optional `subtitle`, a tagline rendered under the big title in
+the header of this domain's *own* overview page, e.g. "Where the Mind
+Meets the Moment"; unrelated to `hook`/`hook2` and not shown anywhere on
+the hub page. Most domains don't set one; `templates/domain-overview.php`
+only renders the line when it's present, reusing `.mastblank h2`
+(myfunk.css) — styled for exactly this, first written for a since-removed
+coach-profile.php use) and `content/<domain>/resources.entry` (this domain's resources page —
 its body is only the page's *intro copy*, not the resources themselves,
 which are `content/resource-items/` entries filtered to this domain;
 its `pointers` field is a `|`-separated list of short always-visible
