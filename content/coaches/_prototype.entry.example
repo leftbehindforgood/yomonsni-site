@@ -23,6 +23,10 @@ coach_id:
 domain:
 order:
 photo:
+# booking_link: leave blank if you're not taking clients here yet — an
+# empty booking_link shows "Fully Booked" on its own, *whether or not*
+# fully_booked below is set to "no". fully_booked is for going full
+# *temporarily* without clearing out a booking_link you'll reuse later.
 booking_link:
 fully_booked: no
 location:

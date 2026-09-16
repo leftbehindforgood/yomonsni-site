@@ -12,6 +12,12 @@
 // it falls back to the distribution's default TTL (24h, CachingOptimized)
 // — without an invalidation, a page just pushed to S3 can keep serving
 // stale to visitors for up to a day.
+//
+// The sync uses --delete so S3 always ends up exactly matching working/
+// (which gen-site.php wipes and fully regenerates every run) — without it,
+// a page whose source content is deleted (a removed coach card, a removed
+// event) stays live in S3 forever even though nothing in the site links to
+// it anymore. Nothing should ever land in this bucket except by this sync.
 
 $cloudfront_distribution_id = 'E2EATBQF9HJ2AR';
 
@@ -36,7 +42,7 @@ if ($status['errors'] > 0) {
 $age_minutes = round((time() - $status['generated_at']) / 60);
 echo "howdy, pushing yomonsni (last generated {$age_minutes} minute(s) ago, validation clean)\n";
 
-system("aws s3 sync working/ s3://yomonsni.com --acl public-read", $ret);
+system("aws s3 sync working/ s3://yomonsni.com --acl public-read --delete", $ret);
 if ($ret !== 0) {
     exit($ret);
 }
