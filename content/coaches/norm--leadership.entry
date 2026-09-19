@@ -4,10 +4,10 @@ coach_id: norm
 domain: leadership
 order: 1
 photo: coach-norm-leadership.jpg
-booking_link:
+booking_link: https://forms.gle/qykpK98PDLeQELz27
 fully_booked: no
 location: Gold Coast, Australia
-in_person_booking_link:
+in_person_booking_link: https://forms.gle/qykpK98PDLeQELz27
 in_person_fully_booked: no
 summary:
 photo_side: left
