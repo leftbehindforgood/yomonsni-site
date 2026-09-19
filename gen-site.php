@@ -71,6 +71,64 @@ function domain_design($domain_design, $slug, $key, $default) {
     return isset($domain_design[$slug][$key]) ? $domain_design[$slug][$key] : $default;
 }
 
+// Placeholder headshot colors, one muted tone per domain — used only when
+// a coach card's own `photo` field is blank (see ensure_coach_photo()
+// below). Independent from $domain_design's button_class colors above
+// (those are much darker, chosen for button contrast, not a 400x400
+// portrait swatch) but the same one-hue-per-domain idea.
+$coach_placeholder_colors = array(
+    "leadership"  => "#3b506b", // slate blue
+    "creativity"  => "#596b3b", // olive green
+    "change"      => "#6b5a3b", // amber/bronze
+    "performance" => "#6b453c", // crimson/burgundy
+    "intimate"    => "#6b3b51", // plum/wine
+    "discovery"   => "#3b6b64", // teal
+);
+
+// A coach card with a blank `photo` field hasn't gotten a real headshot
+// yet. Rather than special-case that in validate_content_references()'s
+// cross-domain photo-reuse check (two blank photos would otherwise look
+// like the same reused photo), generate a real, if placeholder, photo
+// file for it — the same solid-color-plus-name style a prior hand-run
+// ImageMagick pass used (git log: "Add Norm's performance coach card +
+// placeholder photos for both of Norm's cards") — and wire the entry's
+// `photo` field to it in memory, so every downstream consumer (the
+// validator, the templates) sees a normal, non-blank photo like any
+// other coach's. Written into content/img/ (not working/img/), so it's
+// picked up by the verbatim content/img -> working/img rsync below like
+// any other asset, and becomes a real committed file from then on — a
+// generated placeholder today, replaceable with a real photo later,
+// exactly like every other coach's still-placeholder headshot. Idempotent:
+// re-running gen-site.php never regenerates a file that's already there.
+function ensure_coach_photo(&$coach, $readprefix, $coach_placeholder_colors) {
+    if (field($coach, 'photo') !== '') return;
+
+    $coach_id = field($coach, 'coach_id');
+    $domain   = field($coach, 'domain');
+    $name     = field($coach, 'name');
+    $filename = "coach-{$coach_id}-{$domain}.jpg";
+    $path     = "{$readprefix}img/{$filename}";
+
+    if (!file_exists($path)) {
+        $color = isset($coach_placeholder_colors[$domain]) ? $coach_placeholder_colors[$domain] : '#4a4a4a';
+        $cmd = sprintf(
+            'magick -size 400x400 xc:%s -gravity center -fill white ' .
+            '-pointsize 36 -annotate +0-20 %s -pointsize 22 -annotate +0+30 %s %s 2>&1',
+            escapeshellarg($color),
+            escapeshellarg($name),
+            escapeshellarg("($domain)"),
+            escapeshellarg($path)
+        );
+        exec($cmd, $output, $exit_code);
+        if ($exit_code !== 0) {
+            fwrite(STDERR, "WARNING: couldn't generate placeholder photo for coach \"$coach_id\" ($domain): " . implode("\n", $output) . "\n");
+            return; // leave photo blank — the reuse check tolerates that
+        }
+    }
+
+    $coach['data']['photo'] = $filename;
+}
+
 // ---------------------------------------------------------------------
 // 1. Clean the output directory and stray editor backups in content.
 // ---------------------------------------------------------------------
@@ -90,7 +148,16 @@ $coach_landing = load_collection("{$readprefix}coach-landing");
 $footer_entry = parse_entry_file("{$readprefix}footer.entry");
 
 // ---------------------------------------------------------------------
-// 2a. Validate cross-references before writing anything — a typo'd domain
+// 2a. Force a placeholder photo for any coach card that doesn't have a
+// real one yet — see ensure_coach_photo() above.
+// ---------------------------------------------------------------------
+foreach ($coaches as &$c) {
+    ensure_coach_photo($c, $readprefix, $coach_placeholder_colors);
+}
+unset($c);
+
+// ---------------------------------------------------------------------
+// 2b. Validate cross-references before writing anything — a typo'd domain
 // or coach id should fail loudly, not silently drop content (plan §9).
 // ---------------------------------------------------------------------
 $problems = validate_content_references($domain_slugs, $coaches, $testimonials, $whispers, $events, $resource_items, $coach_landing);

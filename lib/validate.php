@@ -82,10 +82,18 @@ function validate_content_references($domain_slugs, $coaches, $testimonials, $wh
     }
 
     // Coach-privacy guardrail: the same photo file must never be used by a
-    // coach's cards in more than one domain (restructure plan §3/§7).
+    // coach's cards in more than one domain (restructure plan §3/§7). A
+    // blank photo isn't a real file to compare — skip it, or two coach
+    // cards that simply haven't gotten a photo yet would look like the
+    // same reused photo and wrongly abort generation. (In practice
+    // gen-site.php's ensure_coach_photo() fills in a placeholder before
+    // this check ever runs, but this check stays blank-safe on its own
+    // regardless of that.)
     $photo_domains = array(); // coach_id|photo => [domains]
     foreach ($coaches as $c) {
-        $key = field($c, 'coach_id') . '|' . field($c, 'photo');
+        $photo = field($c, 'photo');
+        if ($photo === '') continue;
+        $key = field($c, 'coach_id') . '|' . $photo;
         $photo_domains[$key][] = field($c, 'domain');
     }
     foreach ($photo_domains as $key => $domains_used) {
