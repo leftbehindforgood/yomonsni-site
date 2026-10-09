@@ -16,7 +16,7 @@
         <ul class="navbar-nav ml-auto">
           <li class="nav-item"><a class="nav-link" href="<?php echo asset_url($prefix, "$domain_slug/resources.html"); ?>">Resources</a></li>
           <li class="nav-item"><a class="nav-link" href="<?php echo asset_url($prefix, "$domain_slug/testimonials.html"); ?>">Testimonials</a></li>
-          <li class="nav-item"><a class="nav-link" href="<?php echo asset_url($prefix, "$domain_slug/whispers.html"); ?>">Whispers</a></li>
+          <li class="nav-item"><a class="nav-link" href="<?php echo asset_url($prefix, "$domain_slug/field-notes.html"); ?>">Field Notes</a></li>
 <?php if (!empty($has_events)): ?>
           <li class="nav-item"><a class="nav-link" href="<?php echo asset_url($prefix, "$domain_slug/events.html"); ?>">Events</a></li>
 <?php endif; ?>

@@ -9,7 +9,7 @@
 // facility photos — see myfunk.css's .content-photo-left/-right) and the
 // actual Register button. Same teaser/full-page relationship
 // coach-card.php has to coach-profile.php. Expects: $entry, $coaches
-// (global, unfiltered — same reason as whisper-teaser-card.php: an
+// (global, unfiltered — same reason as field-note-teaser-card.php: an
 // event's coach may not have a card in this domain), $domain_slug.
 $title    = field($entry, 'title');
 $when     = field($entry, 'date');

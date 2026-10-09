@@ -1,10 +1,12 @@
 <?php
 // Page shape 5: one reusable "list of short cards" shape, reused for a
-// domain's testimonials, whisper teasers, and events — the
+// domain's testimonials, field note teasers, and events — the
 // caller pre-renders each item with the appropriate card partial and just
 // hands this template the finished HTML fragments (restructure plan §5.5).
 // Expects: $title, $cards (array of already-rendered HTML strings),
-// $empty_message (shown when $cards is empty).
+// $empty_message (shown when $cards is empty), and an optional $intro —
+// one line of plain text shown under the title, above the cards (only
+// the field notes listing sets it).
 //
 // Carries `.nav-clearance` (see myfunk.css) because this page shape has
 // no masthead/mastblank hero reserving room under the fixed #mainNav —
@@ -15,6 +17,11 @@
     <div class="row">
       <div class="col-12"><h1><?php echo htmlspecialchars($title); ?></h1></div>
     </div>
+<?php if (!empty($intro)): ?>
+    <div class="row">
+      <div class="col-12"><p><?php echo htmlspecialchars($intro); ?></p></div>
+    </div>
+<?php endif; ?>
 <?php if (empty($cards)): ?>
     <div class="row">
       <div class="col-12"><p><?php echo htmlspecialchars($empty_message); ?></p></div>

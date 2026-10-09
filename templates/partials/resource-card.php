@@ -19,7 +19,7 @@ $button_extra = (isset($button_class) && $button_class !== '') ? " $button_class
 $coach_html = '';
 if ($coach_id !== '') {
     // First name only ("Recommended by Sam") — reads more personal here
-    // than the full-name links testimonials/events/whispers use, but
+    // than the full-name links testimonials/events/field notes use, but
     // it's the same coach_has_profile() fallback: a link to that coach's
     // profile in this domain when they have one there, plain text
     // otherwise.

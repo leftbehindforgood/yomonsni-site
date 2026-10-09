@@ -1,5 +1,5 @@
 <?php
-// One whisper's teaser on a domain's whispers listing (or, nested, on a
+// One field note's teaser on a domain's field notes listing (or, nested, on a
 // coach's own profile page). The "domains" field is generation-time-only
 // metadata (it decides which domain page(s) this renders on) and must
 // never appear in the rendered output — see restructure plan §4.2.
@@ -12,9 +12,9 @@
 // wrapper and a lighter .card-glass-nested background instead of the
 // domain's own $card_class — meant to sit inside a scrollable
 // .card-scroll-box on a coach's own profile page (coach-profile.php),
-// stacked with that coach's other whispers in this domain rather than
+// stacked with that coach's other field notes in this domain rather than
 // laid out in a grid ("a card within a card"). The default (false) is
-// the original grid-of-cards layout a domain's whispers.html page (and
+// the original grid-of-cards layout a domain's field-notes.html page (and
 // domain-overview.php's teaser stack) use.
 $title  = field($entry, 'title');
 $teaser = field($entry, 'teaser');
@@ -25,7 +25,7 @@ if ($teaser === '') {
 }
 $coach_id = field($entry, 'coach');
 // Same coach_links_html() helper testimonial-card.php/event-card.php use
-// — a whisper always has exactly one coach, but the link-or-plain-text
+// — a field note always has exactly one coach, but the link-or-plain-text
 // fallback logic (does this coach have a profile in *this* domain?) is
 // identical either way.
 $author_html = coach_links_html($coaches, array($coach_id), $domain_slug);
@@ -46,6 +46,6 @@ echo $outer_open;
         <h5 class="card-title"><?php echo htmlspecialchars($title); ?></h5>
         <h6 class="card-subtitle mb-2 text-muted">By <?php echo $author_html; ?></h6>
         <?php echo $md->text($teaser); ?>
-        <a class="btn btn-primary mt-auto align-self-start<?php echo $button_extra; ?>" href="whisper-<?php echo htmlspecialchars($entry['slug']); ?>.html">Read more</a>
+        <a class="btn btn-primary mt-auto align-self-start<?php echo $button_extra; ?>" href="field-note-<?php echo htmlspecialchars($entry['slug']); ?>.html">Read more</a>
       </div>
 <?php echo $outer_close; ?>

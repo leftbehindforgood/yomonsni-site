@@ -12,7 +12,7 @@
 //
 // Both return an array of ['level' => 'error'|'warning', 'message' => ...].
 
-function validate_content_references($domain_slugs, $coaches, $testimonials, $whispers, $events = array(), $resource_items = array(), $coach_landing = array()) {
+function validate_content_references($domain_slugs, $coaches, $testimonials, $field_notes, $events = array(), $resource_items = array(), $coach_landing = array()) {
     $problems = array();
 
     $coach_keys = array(); // "domain|coach_id" => true
@@ -36,7 +36,7 @@ function validate_content_references($domain_slugs, $coaches, $testimonials, $wh
         }
     }
 
-    foreach ($whispers as $w) {
+    foreach ($field_notes as $w) {
         foreach (entry_list(field($w, 'domains')) as $domain) {
             if (!in_array($domain, $domain_slugs, true)) {
                 $problems[] = array('level' => 'error', 'message' =>

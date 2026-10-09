@@ -1,7 +1,7 @@
 # Writing content for yomonsni.com
 
 This is for anyone adding or editing content on the site — a coach writing
-their own bio, submitting a testimonial, or publishing a whisper — with no
+their own bio, submitting a testimonial, or publishing a field note — with no
 HTML or PHP knowledge required. It replaces the old `page-variables` file,
 which documented the previous engine's tokens; this covers the same ground
 (what fields exist and what they do) plus how to actually write a file,
@@ -9,7 +9,7 @@ since that was always the intent behind that old cheat-sheet too.
 
 ## The one rule nothing automated checks for you
 
-**Never write a bio, testimonial, or whisper that reveals a coach works in
+**Never write a bio, testimonial, or field note that reveals a coach works in
 more than one domain.** The site's whole design (see `CLAUDE.md`'s "The
 coach-privacy design") depends on this, and the automated checks
 (`lib/validate.php`) only catch *structural* mistakes — a reused photo, a
@@ -59,7 +59,7 @@ Run `php gen-site.php` from the repo root. Read what it prints:
 ## Starting from a blank copy
 
 Every collection folder below (`content/coaches/`, `content/coach-landing/`,
-`content/testimonials/`, `content/whispers/`, `content/events/`,
+`content/testimonials/`, `content/field-notes/`, `content/events/`,
 `content/resource-items/`) has a `_prototype.entry.example` file sitting
 in it — a blank copy showing every field for that type, with instructions
 at the top. It's not real content: it ends in `.entry.example`, not
@@ -99,7 +99,7 @@ on your full profile page.
   secret, only the cross-domain *connection* is meant to stay non-obvious.
 - `coach_id` — a short, stable, lowercase identifier (e.g. `jane`). Must
   be the exact same value on every one of your cards, in every domain —
-  it's how testimonials and whispers get attributed to you, and it's
+  it's how testimonials and field notes get attributed to you, and it's
   never shown to a visitor.
 - `domain` — exactly one of `leadership`, `creativity`, `change`,
   `performance`, `intimate`, `discovery`.
@@ -223,7 +223,7 @@ The testimonial text itself, in the client's own words where possible.
   telling you so. Rendered as "Client of ..." under the testimonial,
   linking to that coach's profile page in this domain.
 
-### Whisper — `content/whispers/<url-slug>.entry`
+### Field Note — `content/field-notes/<url-slug>.entry`
 
 The filename (minus `.entry`) becomes part of the page's URL, so keep it
 short and URL-friendly (lowercase, hyphens, no spaces).
@@ -246,9 +246,9 @@ The full piece, in Markdown.
   gets published to. Writing something for more than one domain is fine;
   see the rule at the top of this guide for what "fine" doesn't cover.
 - `coach` — the `coach_id` who wrote it. Shown as "By ...", linking to
-  that coach's profile page in whichever domain the whisper is currently
+  that coach's profile page in whichever domain the field note is currently
   showing on, when they have a card there (plain text if they don't —
-  e.g. a whisper tagged into a domain its author doesn't formally coach
+  e.g. a field note tagged into a domain its author doesn't formally coach
   in).
 - `teaser` — optional. If you skip it, the listing page uses the first
   paragraph of your piece instead — but if your piece opens with an

@@ -1,6 +1,6 @@
 <?php
 // Page shape 7: one event's (workshop or retreat) full page, linked from
-// its teaser card's "Learn More" button. Unlike a whisper, an event
+// its teaser card's "Learn More" button. Unlike a field note, an event
 // lives in exactly one domain, so this is a single generated page per
 // event, not one per tagged domain. Expects: $entry, $coaches (global,
 // unfiltered — see event-card.php's own comment), $domain_slug.

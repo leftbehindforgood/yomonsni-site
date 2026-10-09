@@ -1,6 +1,6 @@
 <?php
 // One testimonial. Expects: $entry (a testimonial entry), $coaches
-// (global, unfiltered — same reason as whisper-teaser-card.php/
+// (global, unfiltered — same reason as field-note-teaser-card.php/
 // event-card.php: resolve_coach_name()'s cross-domain fallback needs to
 // see a coach's cards in domains other than this one), $domain_slug,
 // $card_class (optional extra class — see gen-site.php's $domain_design;

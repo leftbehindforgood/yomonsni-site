@@ -1,5 +1,10 @@
 # Yomonsni Coaching Site — Restructure Plan (draft)
 
+Note (2026-10-09): the "whispers" collection described throughout this
+document has since been renamed "field notes" (`content/field-notes/`,
+`field-notes.html`, `field-note-<slug>.html`). The text below is left as
+written.
+
 Status: consolidated from architecture discussion, 2026-09-05. This
 supersedes most of `docs/improvement-plan-to-review.md` — that document's
 generator bugs and dead-code items (the `.con`-detection regex, the

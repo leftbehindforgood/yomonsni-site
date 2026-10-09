@@ -1,6 +1,6 @@
 <?php
 // The domain overview page's Resources teaser, as a card matching the
-// coach/whisper/event cards. A couple of quick pointers (always visible),
+// coach/field note/event cards. A couple of quick pointers (always visible),
 // a chevron toggle revealing a bit more teaser text (content/js/
 // toggle-expand.js — same mechanism as a coach card's "read more"), then
 // a link through to the domain's full resources page.

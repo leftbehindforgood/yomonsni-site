@@ -29,7 +29,7 @@ $domain_titles = array(
 $domain_slugs = array_keys($domain_titles);
 
 // Per-domain visual tuning. The domain overview page's *layout* (intro
-// beside a Coaches/Resources/Whispers/Workshops stack, centered section
+// beside a Coaches/Resources/Field Notes/Workshops stack, centered section
 // headings, rounded buttons, the coach card design) is the same for every
 // domain — it's not something this config turns on, and it isn't
 // creativity-specific. What's actually meant to vary here is narrower:
@@ -141,7 +141,7 @@ system("find $readprefix -name '*~' -delete");
 // ---------------------------------------------------------------------
 $coaches      = load_collection("{$readprefix}coaches");
 $testimonials = load_collection("{$readprefix}testimonials");
-$whispers     = sort_by_date_desc(load_collection("{$readprefix}whispers"));
+$field_notes     = sort_by_date_desc(load_collection("{$readprefix}field-notes"));
 $events       = load_collection("{$readprefix}events");
 $resource_items = load_collection("{$readprefix}resource-items");
 $coach_landing = load_collection("{$readprefix}coach-landing");
@@ -160,7 +160,7 @@ unset($c);
 // 2b. Validate cross-references before writing anything — a typo'd domain
 // or coach id should fail loudly, not silently drop content (plan §9).
 // ---------------------------------------------------------------------
-$problems = validate_content_references($domain_slugs, $coaches, $testimonials, $whispers, $events, $resource_items, $coach_landing);
+$problems = validate_content_references($domain_slugs, $coaches, $testimonials, $field_notes, $events, $resource_items, $coach_landing);
 $hard_errors = print_problems($problems);
 if ($hard_errors > 0) {
     fwrite(STDERR, "\nAborting: fix the content errors above before generating.\n");
@@ -181,7 +181,7 @@ function footer_html_for($prefix, $footer_entry, $templates, $show_legal_links =
 // leadership/coach-jane.html next to intimate/coach-jane.html would hand
 // over the exact connection on-site browsing was built to avoid — no
 // clicking around required, just opening /sitemap.xml. Every other page
-// type doesn't have that problem (a whisper spanning domains is already a
+// type doesn't have that problem (a field note spanning domains is already a
 // deliberately-accepted exposure, not a new one — see the plan), so only
 // coach profiles are excluded.
 function write_page($path, $shell_vars, $templates, $in_sitemap = true) {
@@ -296,7 +296,7 @@ foreach ($coach_landing as $cl) {
 
 // ---------------------------------------------------------------------
 // 6. Each domain: overview, resources, coach profiles, testimonials,
-//    whispers (+ individual whisper pages), events if any.
+//    field notes (+ individual field note pages), events if any.
 // ---------------------------------------------------------------------
 foreach ($domain_slugs as $slug) {
     $prefix = '../';
@@ -304,7 +304,7 @@ foreach ($domain_slugs as $slug) {
 
     $d_coaches      = sort_by_order(filter_by_domain($coaches, $slug, 'domain'));
     $d_testimonials = filter_by_domain($testimonials, $slug, 'domain');
-    $d_whispers     = filter_by_domain($whispers, $slug, 'domains');
+    $d_field_notes     = filter_by_domain($field_notes, $slug, 'domains');
     $d_events       = filter_by_domain($events, $slug, 'domain');
     $d_resource_items = filter_by_domain($resource_items, $slug, 'domain');
 
@@ -331,7 +331,7 @@ foreach ($domain_slugs as $slug) {
         'content_template' => 'domain-overview.php',
         'entry' => $domain_entries[$slug], 'domain_slug' => $slug, 'domain_title' => $title,
         'coaches' => $d_coaches, 'all_coaches' => $coaches, 'resources_entry' => $resources_entry,
-        'whispers' => $d_whispers, 'events' => $d_events,
+        'field_notes' => $d_field_notes, 'events' => $d_events,
         'text_align' => $text_align, 'card_class' => $card_class, 'button_class' => $button_class,
     ), $templates);
 
@@ -347,18 +347,18 @@ foreach ($domain_slugs as $slug) {
     foreach ($d_coaches as $coach) {
         $coach_id = field($coach, 'coach_id');
         $coach_testimonials = entries_for_coach($testimonials, $coach_id, $slug);
-        // $d_whispers is already filtered to this domain (and sorted
+        // $d_field_notes is already filtered to this domain (and sorted
         // newest-first) — narrow further to just this coach's own. Can't
         // reuse entries_for_coach() here: it checks a single 'domain'
-        // field, but a whisper's domain membership lives in 'domains'
-        // (comma-separated, already resolved into $d_whispers).
-        $coach_whispers = array_values(array_filter($d_whispers, function ($w) use ($coach_id) {
+        // field, but a field note's domain membership lives in 'domains'
+        // (comma-separated, already resolved into $d_field_notes).
+        $coach_field_notes = array_values(array_filter($d_field_notes, function ($w) use ($coach_id) {
             return field($w, 'coach') === $coach_id;
         }));
         write_page("{$writeprefix}{$slug}/coach-{$coach_id}.html", $common + array(
             'title' => field($coach, 'name', $coach_id) . " — $title", 'bgimage' => $bgimage,
             'content_template' => 'coach-profile.php', 'entry' => $coach, 'testimonials' => $coach_testimonials,
-            'coach_whispers' => $coach_whispers, 'coaches' => $coaches, 'domain_slug' => $slug,
+            'coach_field_notes' => $coach_field_notes, 'coaches' => $coaches, 'domain_slug' => $slug,
             'card_class' => $card_class, 'button_class' => $button_class,
         ), $templates, false); // excluded from sitemap.xml — see write_page()
     }
@@ -374,30 +374,31 @@ foreach ($domain_slugs as $slug) {
         'empty_message' => 'No testimonials published for this domain yet.',
     ), $templates);
 
-    // -- whispers.html (teasers) + one page per whisper --
-    $whisper_cards = array();
-    foreach ($d_whispers as $w) {
+    // -- field-notes.html (teasers) + one page per field note --
+    $field_note_cards = array();
+    foreach ($d_field_notes as $w) {
         // 'coaches' here is deliberately the *global*, un-filtered
         // collection, not $d_coaches — resolve_coach_name() needs to see
         // a coach's cards in domains other than this one to fall back
-        // correctly when a whisper is tagged into a domain its author
-        // has no card in at all (a real case: whispers can span domains
+        // correctly when a field note is tagged into a domain its author
+        // has no card in at all (a real case: field notes can span domains
         // a coach doesn't formally coach in). Passing the domain-filtered
         // list here silently broke that fallback (rendered the bare
         // coach_id instead of a real name) until this was traced.
-        $whisper_cards[] = render_template($templates . 'partials/whisper-teaser-card.php', array(
+        $field_note_cards[] = render_template($templates . 'partials/field-note-teaser-card.php', array(
             'entry' => $w, 'coaches' => $coaches, 'domain_slug' => $slug, 'card_class' => $card_class, 'button_class' => $button_class,
         ));
-        write_page("{$writeprefix}{$slug}/whisper-{$w['slug']}.html", $common + array(
+        write_page("{$writeprefix}{$slug}/field-note-{$w['slug']}.html", $common + array(
             'title' => field($w, 'title'), 'bgimage' => $bgimage,
-            'content_template' => 'whisper-article.php', 'entry' => $w,
+            'content_template' => 'field-note-article.php', 'entry' => $w,
             'coaches' => $coaches, 'domain_slug' => $slug,
         ), $templates);
     }
-    write_page("{$writeprefix}{$slug}/whispers.html", $common + array(
-        'title' => "$title whispers", 'bgimage' => $bgimage,
-        'content_template' => 'card-list.php', 'cards' => $whisper_cards,
-        'empty_message' => 'No whispers published for this domain yet.',
+    write_page("{$writeprefix}{$slug}/field-notes.html", $common + array(
+        'title' => "$title Field Notes", 'bgimage' => $bgimage,
+        'content_template' => 'card-list.php', 'cards' => $field_note_cards,
+        'intro' => "Drawn from our coaches' observations and experimentations in life.",
+        'empty_message' => 'No field notes published for this domain yet.',
     ), $templates);
 
     // -- events.html (teasers, workshops + retreats together) + one full

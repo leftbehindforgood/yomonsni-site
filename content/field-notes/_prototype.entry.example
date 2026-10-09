@@ -14,7 +14,7 @@ To use it:
   4. See CONTENT-GUIDE.md for what every field actually does.
 ------------------------------------------------------------------------
 
-Whisper — filename becomes part of the URL, so keep it short and
+Field Note — filename becomes part of the URL, so keep it short and
 URL-friendly, e.g. "the-question-underneath-the-question.entry".
 
 +++

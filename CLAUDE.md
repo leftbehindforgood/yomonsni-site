@@ -143,21 +143,21 @@ too** — see CONTENT-GUIDE.md's "Starting from a blank copy".
   `coach_links_html()` helper an event's (possibly several) coaches use
   — passed a one-element list here, since a testimonial only ever has
   the one.
-- `content/whispers/` — `title`, `coach`, `date`, `domains` (comma-
+- `content/field-notes/` — `title`, `coach`, `date`, `domains` (comma-
   separated — the one record type allowed to span multiple domains).
-  `filter_by_domain($whispers, $slug, 'domains')` handles the list form.
+  `filter_by_domain($field_notes, $slug, 'domains')` handles the list form.
   **The `domains` field is generation-time-only and must never be rendered
   to a visitor** — it only decides which domain page(s) the piece gets
-  published under. A multi-tagged whisper becomes an independent generated
+  published under. A multi-tagged field note becomes an independent generated
   page per tagged domain; none of those pages link to each other. `coach`
   is rendered "By ..." and linked via `coach_links_html()` the same way an
   event's coaches are (plain text when the coach has no card in whichever
-  domain the whisper is currently rendering on). Like an event's body, a
-  whisper's body can embed a photo via a raw `<img class="content-photo
+  domain the field note is currently rendering on). Like an event's body, a
+  field note's body can embed a photo via a raw `<img class="content-photo
   content-photo-left|right">` tag — no engine support needed, see the
   events entry below. A `teaser` that relies on the "first paragraph"
-  fallback (`whisper-teaser-card.php`) breaks if the body opens with an
-  image tag — write an explicit `teaser` whenever a whisper embeds one.
+  fallback (`field-note-teaser-card.php`) breaks if the body opens with an
+  image tag — write an explicit `teaser` whenever a field note embeds one.
 - `content/events/` — workshops and retreats together in one flat folder
   (originally two separate collections/nav items; merged since a visitor
   browsing "what's coming up" doesn't care which bucket a given date came
@@ -181,7 +181,7 @@ too** — see CONTENT-GUIDE.md's "Starting from a blank copy".
   `filter_by_domain(...)` for this collection is non-empty. No separate
   on/off flag anywhere. Each event also gets its own full page
   (`event-<slug>.html`, `templates/event-article.php`) — unlike a
-  whisper, an event lives in exactly one domain, so this is always a
+  field note, an event lives in exactly one domain, so this is always a
   single generated page, never one per tagged domain. The Events-page
   teaser card (`templates/partials/event-card.php`) shows only an
   optional `summary` field (falling back to the body's first sentence,
@@ -218,7 +218,7 @@ too** — see CONTENT-GUIDE.md's "Starting from a blank copy".
   testimonial's `coach` is; rendered "Recommended by {first name}" via
   the new `first_name()` helper in `lib/entry.php`, linking to that
   coach's profile in this domain the same way an event's/testimonial's/
-  whisper's coach does), `image` (optional cover/thumbnail filename under
+  field note's coach does), `image` (optional cover/thumbnail filename under
   `content/img/`), `url` (external link; blank means no button at all);
   body = a short description, rendered via `entry_html()` like everything
   else.
@@ -237,7 +237,7 @@ too** — see CONTENT-GUIDE.md's "Starting from a blank copy".
   centrally assigned like a domain's); body = a bio written fresh for
   this page, which must not name or otherwise reveal any domain (nothing
   automated can check this part — same "read back what you wrote" caveat
-  CONTENT-GUIDE.md gives for coach bios/testimonials/whispers).
+  CONTENT-GUIDE.md gives for coach bios/testimonials/field notes).
 
 Per-domain static content (not a collection): `content/<domain>/index.entry`
 (the domain's own overview/outline copy, plus `hook`/`hook2` — two "mom
@@ -302,8 +302,8 @@ across domains. This is enforced architecturally, not just by convention:
   visitor navigates — even with zero on-site links between
   `leadership/coach-jane.html` and `intimate/coach-jane.html`, having both
   listed a few lines apart in one file hands over the connection to
-  anyone who opens `/sitemap.xml`, no browsing required. Whisper pages are
-  *not* excluded despite also spanning domains — a whisper's identical
+  anyone who opens `/sitemap.xml`, no browsing required. Field-note pages are
+  *not* excluded despite also spanning domains — a field note's identical
   content across its tagged domains is already a deliberately accepted
   exposure (§4.2 of the restructure plan allows cross-tagging into
   `intimate`), not a new one a sitemap would introduce.
@@ -325,7 +325,7 @@ across domains. This is enforced architecturally, not just by convention:
   outbound links, checked directly rather than trusted from the
   template. The bio's actual wording (not mentioning a domain by name)
   is the one part nothing automated can check — same caveat
-  CONTENT-GUIDE.md gives for coach bios/testimonials/whispers.
+  CONTENT-GUIDE.md gives for coach bios/testimonials/field notes.
 
 ## Visual design (read before touching CSS/templates)
 
@@ -368,7 +368,7 @@ apply everywhere, not just wherever they were first introduced:
   reserving room under it.** `hub.php` and `domain-overview.php` get this
   for free from their masthead/mastblank hero's own padding. Every other
   page shape (`coach-profile.php`, `card-list.php`, `simple-content.php`,
-  `whisper-article.php`, `event-article.php`) has no hero and instead puts
+  `field-note-article.php`, `event-article.php`) has no hero and instead puts
   `.nav-clearance`
   (myfunk.css) on its outer `.container-fluid` — margin, not padding, so
   it isn't clobbered by Bootstrap's `!important` spacing utilities like
@@ -388,7 +388,7 @@ apply everywhere, not just wherever they were first introduced:
   on), `card_class` (extra class on that domain's cards, e.g.
   `card-glass-transparent`), `button_class` (extra class on that domain's
   buttons, e.g. `btn-creativity`). The domain-overview *layout itself*
-  (intro beside a Coaches/Resources/Whispers/Workshops stack, centered
+  (intro beside a Coaches/Resources/Field Notes/Workshops stack, centered
   section headings, the coach card design) is **not** part of this
   config — it's the same for every domain by default; every domain now
   has its own `bg`/`button_class` (see "History and current status"), and
@@ -399,7 +399,7 @@ apply everywhere, not just wherever they were first introduced:
   had one). `domain_design($domain_design, $slug, $key, $default)` is the
   lookup helper; `$button_class`/`$card_class` get threaded through
   *every* page a domain has (overview, resources, testimonials, coach
-  profiles, whispers, events) via `write_page()` calls and the
+  profiles, field notes, events) via `write_page()` calls and the
   card partials' own optional `$card_class`/`$button_class` params — if
   you add a new per-domain-styled element, thread it through all of these
   call sites, not just the overview page's; that gap (styling only
@@ -444,14 +444,14 @@ content.
    to the hub from the nav at all).
 2. **`templates/domain-overview.php`** — a domain's front door. Composite,
    two-column by default: intro copy on its `text_align` side (~2/3
-   width), a `Coaches → Resources → Whispers → Events` stack
+   width), a `Coaches → Resources → Field Notes → Events` stack
    on the other (~1/3) — Coaches deliberately first, so a visitor reaches
    a coach's profile/booking link without scrolling past the whole intro.
    `order-md-first`/`order-md-last` keeps the intro first in the actual
    markup regardless of which side it lands on visually. Resources renders
    via `templates/partials/resources-card.php` (pointers + toggle + link
    through to the full resources page), matching the look of the
-   coach/whisper/event cards next to it.
+   coach/field note/event cards next to it.
 3. **`templates/coach-profile.php`** — one per coach card. Same layout for
    every domain; only the entry's own data and that domain's testimonials
    for that coach differ. Name, location (if set), bio and booking
@@ -481,36 +481,39 @@ content.
    around it, magazine-style, rather than sitting in a centered row above
    the text.
    Below the name/photo row, this coach's testimonials ("What clients
-   have said about ...") and their whispers tagged into this domain
+   have said about ...") and their field notes tagged into this domain
    ("What ... has written") each render inside their own outer
    `.card-glass` panel wrapping a bounded-height, scrollable stack of
    nested cards (`.card-scroll-box`/`.card-glass-nested`, `myfunk.css`) —
    "a card within a card" — rather than a grid that grows the page as
-   more of either pile up. `testimonial-card.php`/`whisper-teaser-card.php`
+   more of either pile up. `testimonial-card.php`/`field-note-teaser-card.php`
    both take an optional `$nested` param that swaps their normal
    `.col-sm` grid wrapper (used by `card-list.php`'s own testimonials/
-   whispers pages) for this plain full-width nested-card form; `$card_class`
+   field notes pages) for this plain full-width nested-card form; `$card_class`
    is ignored when nested, since the point of `.card-glass-nested` is
    contrast against the panel holding it, not per-domain theming.
 4. **`templates/simple-content.php`** — plain prose, no collection data:
    terms, privacy, mission, coaching.
 5. **`templates/card-list.php`** — one reusable "list of short cards"
-   shape, reused for a domain's testimonials, whisper teasers, and events
+   shape, reused for a domain's testimonials, field note teasers, and events
    (workshops and retreats together — one collection, one nav item, one
    listing page; see the Content model section above). The caller
    pre-renders each item with the matching card
-   partial (`templates/partials/{coach,testimonial,whisper-teaser,event}-
+   partial (`templates/partials/{coach,testimonial,field-note-teaser,event}-
    card.php`, all using `.card-glass` plus each accepting the optional
    `$card_class`/`$button_class` per-domain overrides) and hands this
    template the finished HTML fragments — it doesn't know which
-   collection it's listing. **Every card partial's card-body is a flex
+   collection it's listing. An optional `$intro` (one line of plain text
+   under the title, above the cards) is set only for the field notes
+   listing — the same sentence for every domain, a string in
+   `gen-site.php`'s `field-notes.html` `write_page()` call. **Every card partial's card-body is a flex
    column (`d-flex flex-column`) with its button(s) pinned to the bottom
    via `mt-auto`** — a standing rule, not just the event card's own
    Register/Learn More buttons — so buttons line up across a row of cards
    regardless of how much text precedes them (same trick `hub.php`'s
    domain cards use for their Explore button). When the button is a
    direct flex child rather than sitting in its own wrapping row div
-   (`whisper-teaser-card.php`, `resources-card.php`), it also needs
+   (`field-note-teaser-card.php`, `resources-card.php`), it also needs
    `align-self-start` or flex's default cross-axis stretch spreads it to
    the card's full width. A wrapping div (`coach-card.php`'s Book/Full
    profile row, the event card's Register/Learn More row) can add `pt-3`
@@ -518,10 +521,10 @@ content.
    but that only belongs on the wrapping div; putting `pt-3` directly on
    a bare `<a class="btn">` pads the button's own interior instead of the
    space above it. Any new card partial needs this same treatment.
-6. **`templates/whisper-article.php`** — one whisper's full page, generated
+6. **`templates/field-note-article.php`** — one field note's full page, generated
    once per domain it's tagged into.
 7. **`templates/event-article.php`** — one event's full page, linked from
-   its teaser's "Learn More" button. Unlike a whisper, an event lives in
+   its teaser's "Learn More" button. Unlike a field note, an event lives in
    exactly one domain, so this is always a single generated page
    (`event-<slug>.html`), never one per tagged domain. Shows the same
    type/date/format/location meta line and linked coach attribution as
@@ -570,7 +573,7 @@ Four functions, all wired into `gen-site.php`:
 
 - **`validate_content_references()`** runs on the loaded collections
   *before* any HTML is written: a testimonial's `coach` must resolve to a
-  real coach card in that domain, a whisper's `domains` must all be real
+  real coach card in that domain, a field note's `domains` must all be real
   domain slugs, no coach photo may be reused across domains, and (for
   `content/coach-landing/`) a landing page's `coach_id` must be a real
   coach and its `photo` must differ from every one of that coach's
@@ -604,7 +607,7 @@ undetected until traced by hand.
 
 - `CONTENT-GUIDE.md` — the content-authoring reference (field-by-field, with
   copy-pasteable templates), for anyone writing a coach card, testimonial,
-  whisper, or event listing. Replaced `page-variables`, which documented
+  field note, or event listing. Replaced `page-variables`, which documented
   the old engine's tokens and no longer applied to anything. Keep it in
   sync with the Content model section above — it's the friendlier version
   of the same fields.

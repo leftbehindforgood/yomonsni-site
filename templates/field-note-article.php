@@ -1,5 +1,5 @@
 <?php
-// Page shape 6: one whisper's full page. Generated once per domain it's
+// Page shape 6: one field note's full page. Generated once per domain it's
 // tagged into (restructure plan §4.2) — same content, independent page
 // instances, none linking to the others. Expects: $entry, $coaches,
 // $domain_slug. Like an event's full page, the body can embed a

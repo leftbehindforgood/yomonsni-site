@@ -54,7 +54,7 @@ function parse_entry_file($path) {
 
 // Render an entry's Markdown body to HTML. Memoized per-entry via a static
 // cache keyed on path, since the same entry sometimes gets rendered more
-// than once (e.g. a whisper appearing on several domains' pages).
+// than once (e.g. a field note appearing on several domains' pages).
 function entry_html($entry) {
     static $md = null;
     static $cache = array();
@@ -67,8 +67,8 @@ function entry_html($entry) {
 }
 
 // Front-matter values are plain strings; a handful of fields (like a
-// whisper's "domains") are comma-separated lists. This splits and trims one.
-// $delimiter defaults to a comma (used by e.g. a whisper's "domains").
+// field note's "domains") are comma-separated lists. This splits and trims one.
+// $delimiter defaults to a comma (used by e.g. a field note's "domains").
 // Pass '|' for a list whose individual items might contain commas of
 // their own (e.g. resources.entry's "pointers": each one is a full
 // sentence, which commas show up in constantly).
@@ -101,7 +101,7 @@ function load_collection($dir) {
 }
 
 // $field is 'domain' for a single-domain record (coach, testimonial,
-// event) or 'domains' for a whisper's comma-separated list.
+// event) or 'domains' for a field note's comma-separated list.
 function filter_by_domain($entries, $domain_slug, $field = 'domain') {
     $out = array();
     foreach ($entries as $e) {
@@ -131,7 +131,7 @@ function entries_for_coach($entries, $coach_id, $domain_slug) {
 // Resolve a coach_id to a display name. A coach's name is the same across
 // every domain they work in (restructure plan §3), so prefer their card in
 // $domain_slug but fall back to any of their cards if they don't have one
-// there (e.g. a whisper credited to a coach in a domain they don't formally
+// there (e.g. a field note credited to a coach in a domain they don't formally
 // coach in), and finally the bare id if no card matches at all.
 function resolve_coach_name($coaches, $coach_id, $domain_slug) {
     $any = null;
@@ -146,7 +146,7 @@ function resolve_coach_name($coaches, $coach_id, $domain_slug) {
 // First name only, e.g. "Sam" from "Sam Rivera" — used by a resource's
 // "Recommended by ..." tag (resource-card.php), which reads more
 // personal with just a first name than the full name links used
-// elsewhere (testimonials, events, whispers).
+// elsewhere (testimonials, events, field notes).
 function first_name($full_name) {
     $parts = preg_split('/\s+/', trim($full_name));
     return $parts[0];
@@ -154,7 +154,7 @@ function first_name($full_name) {
 
 // Whether $coach_id has an actual coach card in $domain_slug — i.e.
 // whether there's a profile page to link to there. Used by events, which
-// (unlike a whisper) always live in exactly one domain, so "does this
+// (unlike a field note) always live in exactly one domain, so "does this
 // coach have a page in *this* domain" is a plain yes/no.
 function coach_has_profile($coaches, $coach_id, $domain_slug) {
     foreach ($coaches as $c) {
@@ -163,7 +163,7 @@ function coach_has_profile($coaches, $coach_id, $domain_slug) {
     return false;
 }
 
-// Coach attribution for an event — unlike a testimonial or whisper, an
+// Coach attribution for an event — unlike a testimonial or field note, an
 // event can name more than one coach. Renders each name linked to that
 // coach's profile page within $domain_slug when they have one there
 // (a bare same-directory filename, same as coach-card.php's own link —

@@ -1,16 +1,16 @@
 <?php
 // Page shape 3: one coach's profile within one domain. Same layout for
 // every domain — only the entry's own data (photo, bio, booking links,
-// location, photo_side) and that domain's testimonials/whispers for this
+// location, photo_side) and that domain's testimonials/field notes for this
 // coach differ. Expects: $entry, $testimonials (already filtered to this
-// coach + domain), $coach_whispers (likewise — this coach's whispers
+// coach + domain), $coach_field_notes (likewise — this coach's field notes
 // tagged into this domain), $coaches (global, unfiltered — passed
-// through to testimonial-card.php's/whisper-teaser-card.php's own
+// through to testimonial-card.php's/field-note-teaser-card.php's own
 // coach-link resolution), $domain_slug, $prefix, $card_class/
 // $button_class (optional, this domain's per-domain styling — see
 // gen-site.php's $domain_design).
 //
-// Testimonials and whispers each render inside their own outer
+// Testimonials and field notes each render inside their own outer
 // .card-glass panel with a bounded-height, scrollable stack of nested
 // cards (.card-scroll-box/.card-glass-nested, myfunk.css) rather than a
 // grid that grows the page — "a card within a card" — so a coach with a
@@ -103,15 +103,15 @@ $card_extra   = (isset($card_class) && $card_class !== '') ? " $card_class" : ''
     </div>
 <?php endif; ?>
 
-<?php if (!empty($coach_whispers)): ?>
+<?php if (!empty($coach_field_notes)): ?>
     <div class="row mt-4">
       <div class="col-12">
         <div class="card card-glass<?php echo $card_extra; ?>">
           <div class="card-body">
             <h2>What <?php echo htmlspecialchars($name); ?> has written</h2>
-            <div class="card-scroll-box whisper-scroll-box">
-<?php foreach ($coach_whispers as $w): ?>
-<?php echo render_template(__DIR__ . '/partials/whisper-teaser-card.php', array('entry' => $w, 'coaches' => $coaches, 'domain_slug' => $domain_slug, 'nested' => true)); ?>
+            <div class="card-scroll-box field-note-scroll-box">
+<?php foreach ($coach_field_notes as $w): ?>
+<?php echo render_template(__DIR__ . '/partials/field-note-teaser-card.php', array('entry' => $w, 'coaches' => $coaches, 'domain_slug' => $domain_slug, 'nested' => true)); ?>
 <?php endforeach; ?>
             </div>
           </div>

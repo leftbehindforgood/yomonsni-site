@@ -466,7 +466,7 @@ footer {
      bottom corners poke out past the card's rounded top. */
   overflow: hidden;
   /* Set here (inherited by every descendant) rather than listed out by
-     child selector — new card content (whisper teasers, event listings,
+     child selector — new card content (field note teasers, event listings,
      coach cards) shouldn't need a matching selector added by hand every
      time just to not render Bootstrap's default dark card text. */
   color: #f5f5f5;
@@ -497,7 +497,7 @@ footer {
 }
 
 /* A card nested inside another .card-glass panel — currently a coach's
-   testimonials/whispers box on their own profile page (coach-profile.php)
+   testimonials/field notes box on their own profile page (coach-profile.php)
    — "a card within a card". A lighter overlay than the outer card's own
    translucent dark, rather than reusing .card-glass itself, so the
    nested cards read as distinct from the panel holding them instead of
@@ -513,7 +513,7 @@ footer {
 /* Bounded-height, scrollable stack of .card-glass-nested cards — shows
    roughly the target number of cards before the rest need a scroll,
    rather than growing a coach's profile page indefinitely as more
-   testimonials/whispers pile up. The two max-heights are tuned to each
+   testimonials/field notes pile up. The two max-heights are tuned to each
    card type's typical size, not a hard guarantee (card height still
    varies with content length). */
 .card-scroll-box {
@@ -529,8 +529,8 @@ footer {
   max-height: 24rem; /* roughly three testimonial cards */
 }
 
-.whisper-scroll-box {
-  max-height: 30rem; /* roughly five whisper teaser cards */
+.field-note-scroll-box {
+  max-height: 30rem; /* roughly five field note teaser cards */
 }
 
 /* The second, deeper hook question on each domain card — visually a
