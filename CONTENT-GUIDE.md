@@ -70,6 +70,26 @@ in `.entry`, delete the instructional block at the top so the file starts
 with `+++`, and fill in the fields — the reference below explains what
 each one does.
 
+## The search-result blurb: `description`
+
+Every page that comes from a file of yours — a coach card, a coach
+landing page, a field note, an event, a domain's overview or resources
+page, and the sitewide pages — accepts one more optional field:
+
+```
+description: One or two plain sentences, up to about 160 characters.
+```
+
+This is the text a search engine shows under the page's title in its
+results, and what shows up when someone shares the link. It never
+appears on the page itself. If you skip it, the site uses your `summary`
+(coach card, event) or `teaser` (field note, resources page) instead, and
+failing that the opening words of your body text, cut off at about 160
+characters. That fallback is often fine, but a description written on
+purpose — saying plainly what the page is and who it's for — reads
+better than a sentence chopped mid-thought. On a coach landing page the
+same rule applies as for its bio: never name or hint at a domain.
+
 ## Field reference, by content type
 
 ### Coach card — `content/coaches/<your-name>--<domain>.entry`

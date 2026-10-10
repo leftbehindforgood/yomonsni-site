@@ -228,6 +228,7 @@ function hub_nav_for($current_slug, $hub_entry, $mission_entry, $coaching_entry,
 write_page("{$writeprefix}index.html", array(
     'prefix'          => './',
     'title'           => field($hub_entry, 'title', 'Yomonsni'),
+    'description'     => meta_description($hub_entry),
     // The hero photo lives on the body (fixed/cover, from myfunk.css's
     // body{} rule), not the masthead — so it renders behind the whole
     // page, not just the header. templates/hub.php's masthead keeps only
@@ -262,6 +263,7 @@ foreach (array('mission', 'coaching', 'legal/terms', 'legal/privacy') as $path) 
     write_page("{$writeprefix}{$slug}.html", array(
         'prefix'          => './',
         'title'           => field($entry, 'title', ucfirst($slug)),
+        'description'     => meta_description($entry),
         'bgimage'         => isset($root_page_bgimages[$slug]) ? $root_page_bgimages[$slug] : '',
         'nav_html'        => hub_nav_for($slug, $hub_entry, $mission_entry, $coaching_entry, $templates),
         'footer_html'     => footer_html_for('./', $footer_entry, $templates),
@@ -286,6 +288,7 @@ foreach ($coach_landing as $cl) {
     write_page("{$writeprefix}coach-{$coach_id}.html", array(
         'prefix'          => './',
         'title'           => field($cl, 'name', $coach_id),
+        'description'     => meta_description($cl),
         'bgimage'         => field($cl, 'bgimage'),
         'nav_html'        => hub_nav_for("coach-{$coach_id}", $hub_entry, $mission_entry, $coaching_entry, $templates),
         'footer_html'     => footer_html_for('./', $footer_entry, $templates, false),
@@ -298,6 +301,7 @@ foreach ($coach_landing as $cl) {
 // 6. Each domain: overview, resources, coach profiles, testimonials,
 //    field notes (+ individual field note pages), events if any.
 // ---------------------------------------------------------------------
+$site_name = field($hub_entry, 'title', 'Yomonsni');
 foreach ($domain_slugs as $slug) {
     $prefix = '../';
     $title  = $domain_titles[$slug];
@@ -328,6 +332,7 @@ foreach ($domain_slugs as $slug) {
     $button_class = domain_design($domain_design, $slug, 'button_class', '');
     write_page("{$writeprefix}{$slug}/index.html", $common + array(
         'title' => $title, 'bgimage' => $bgimage,
+        'description' => meta_description($domain_entries[$slug]),
         'content_template' => 'domain-overview.php',
         'entry' => $domain_entries[$slug], 'domain_slug' => $slug, 'domain_title' => $title,
         'coaches' => $d_coaches, 'all_coaches' => $coaches, 'resources_entry' => $resources_entry,
@@ -338,6 +343,7 @@ foreach ($domain_slugs as $slug) {
     // -- resources.html --
     write_page("{$writeprefix}{$slug}/resources.html", $common + array(
         'title' => field($resources_entry, 'title', "$title resources"), 'bgimage' => $bgimage,
+        'description' => meta_description($resources_entry, array('teaser')),
         'content_template' => 'resources-page.php', 'entry' => $resources_entry,
         'resource_items' => $d_resource_items, 'coaches' => $coaches, 'domain_slug' => $slug,
         'card_class' => $card_class, 'button_class' => $button_class,
@@ -357,6 +363,7 @@ foreach ($domain_slugs as $slug) {
         }));
         write_page("{$writeprefix}{$slug}/coach-{$coach_id}.html", $common + array(
             'title' => field($coach, 'name', $coach_id) . " — $title", 'bgimage' => $bgimage,
+            'description' => meta_description($coach, array('summary')),
             'content_template' => 'coach-profile.php', 'entry' => $coach, 'testimonials' => $coach_testimonials,
             'coach_field_notes' => $coach_field_notes, 'coaches' => $coaches, 'domain_slug' => $slug,
             'card_class' => $card_class, 'button_class' => $button_class,
@@ -370,6 +377,7 @@ foreach ($domain_slugs as $slug) {
     }
     write_page("{$writeprefix}{$slug}/testimonials.html", $common + array(
         'title' => "$title testimonials", 'bgimage' => $bgimage,
+        'description' => "What clients have said about working with {$site_name}'s $title coaches.",
         'content_template' => 'card-list.php', 'cards' => $testimonial_cards,
         'empty_message' => 'No testimonials published for this domain yet.',
     ), $templates);
@@ -390,12 +398,14 @@ foreach ($domain_slugs as $slug) {
         ));
         write_page("{$writeprefix}{$slug}/field-note-{$w['slug']}.html", $common + array(
             'title' => field($w, 'title'), 'bgimage' => $bgimage,
+            'description' => meta_description($w, array('teaser')),
             'content_template' => 'field-note-article.php', 'entry' => $w,
             'coaches' => $coaches, 'domain_slug' => $slug,
         ), $templates);
     }
     write_page("{$writeprefix}{$slug}/field-notes.html", $common + array(
         'title' => "$title Field Notes", 'bgimage' => $bgimage,
+        'description' => "$title field notes from {$site_name}, drawn from our coaches' observations and experimentations in life.",
         'content_template' => 'card-list.php', 'cards' => $field_note_cards,
         'intro' => "Drawn from our coaches' observations and experimentations in life.",
         'empty_message' => 'No field notes published for this domain yet.',
@@ -412,12 +422,14 @@ foreach ($domain_slugs as $slug) {
             ));
             write_page("{$writeprefix}{$slug}/event-{$e['slug']}.html", $common + array(
                 'title' => field($e, 'title') . " — $title", 'bgimage' => $bgimage,
+                'description' => meta_description($e, array('summary')),
                 'content_template' => 'event-article.php', 'entry' => $e,
                 'coaches' => $coaches, 'domain_slug' => $slug, 'button_class' => $button_class,
             ), $templates);
         }
         write_page("{$writeprefix}{$slug}/events.html", $common + array(
             'title' => "$title events", 'bgimage' => $bgimage,
+            'description' => "Upcoming $title workshops and retreats from {$site_name}.",
             'content_template' => 'card-list.php', 'cards' => $cards, 'empty_message' => '',
         ), $templates);
     }
@@ -434,6 +446,14 @@ foreach ($sitemap_urls as $rel) {
 }
 $sitemap .= "</urlset>\n";
 file_put_contents("{$writeprefix}sitemap.xml", $sitemap);
+
+// robots.txt — everything is crawlable (including css/js/img, which a
+// search engine needs in order to render a page the way a visitor sees
+// it), plus a pointer at the sitemap. Deliberately has no Disallow lines
+// for coach pages: robots.txt is itself a public file, so listing
+// coach-<id>.html paths in it would publish exactly the per-coach
+// manifest sitemap.xml is careful to leave out (see write_page() above).
+file_put_contents("{$writeprefix}robots.txt", "User-agent: *\nAllow: /\n\nSitemap: https://{$site_domain}/sitemap.xml\n");
 
 // ---------------------------------------------------------------------
 // 8. Non-templated asset directories, copied verbatim.

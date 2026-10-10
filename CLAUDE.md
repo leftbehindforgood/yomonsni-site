@@ -96,6 +96,16 @@ Parsedown supports.
   $default)` reads a front-matter field; `field_bool($entry, 'key')` reads
   a yes/no field (`yes`/`true`/`1`, any case, are true).
 
+- `meta_description($entry, $fallback_fields)` builds a page's `<meta
+  name="description">`: the entry's own optional `description` field
+  (accepted on every entry type, never rendered on the page), else the
+  listed fallback fields (`summary` for coaches/events, `teaser` for
+  field notes/resources pages), else the opening of the body — flattened
+  to plain text and cut at a word boundary to ~160 characters. The three
+  listing pages with no entry of their own (testimonials, field notes,
+  events) get a fixed sentence set in their `write_page()` call.
+  `validate_output()` fails the build on any page with an empty one.
+
 ## Collections vs. one-off pages
 
 Most content is **collections of records, filtered by domain and joined
@@ -589,6 +599,11 @@ Four functions, all wired into `gen-site.php`:
   `var/link-cache.json` for a week so routine local generation doesn't
   hammer third-party sites on every run. A dead external link is a
   warning, not an error; everything else here is a hard error.
+- **`robots.txt`** is written by `gen-site.php` next to `sitemap.xml`:
+  allow everything, plus a `Sitemap:` line. It must never gain a
+  `Disallow` line naming a coach page — `robots.txt` is public, so
+  that would publish the same per-coach manifest the sitemap leaves out.
+  Keeping a page out of search results is a `noindex` meta tag's job.
 - **`validate_sitemap()`** fails the build if any `coach-*.html` URL —
   whether a domain's own coach profile or a root-level coach landing page
   — ever ends up in `sitemap.xml` (see "The coach-privacy design" above).

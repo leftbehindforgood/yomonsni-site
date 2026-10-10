@@ -66,6 +66,40 @@ function entry_html($entry) {
     return $cache[$key];
 }
 
+// The text for a page's <meta name="description"> — what a search engine
+// shows under the page's title in its results. An entry's own
+// `description` field always wins; otherwise each of $fallback_fields is
+// tried in order (e.g. a coach's `summary`, a field note's `teaser`), and
+// failing all of those, the opening of the body itself. Whatever is
+// picked gets flattened to plain text (Markdown rendered then stripped,
+// so a leading raw <img> or a link's URL never ends up in the result) and
+// cut at a word boundary to $max characters — roughly what a search
+// result has room to show before truncating it on its own.
+function meta_description($entry, $fallback_fields = array(), $max = 160) {
+    static $md = null;
+    if ($md === null) $md = new Parsedown();
+    $text = '';
+    foreach (array_merge(array('description'), $fallback_fields) as $key) {
+        $text = plain_text($md->text(field($entry, $key)));
+        if ($text !== '') break;
+    }
+    if ($text === '') $text = plain_text(entry_html($entry));
+    return truncate_words($text, $max);
+}
+
+function plain_text($html) {
+    $text = html_entity_decode(strip_tags($html), ENT_QUOTES | ENT_HTML5, 'UTF-8');
+    return trim(preg_replace('/\s+/u', ' ', $text));
+}
+
+function truncate_words($text, $max) {
+    if (mb_strlen($text) <= $max) return $text;
+    $cut = mb_substr($text, 0, $max - 1);
+    $space = mb_strrpos($cut, ' ');
+    if ($space !== false) $cut = mb_substr($cut, 0, $space);
+    return rtrim($cut, " ,;:—-") . '…';
+}
+
 // Front-matter values are plain strings; a handful of fields (like a
 // field note's "domains") are comma-separated lists. This splits and trims one.
 // $delimiter defaults to a comma (used by e.g. a field note's "domains").

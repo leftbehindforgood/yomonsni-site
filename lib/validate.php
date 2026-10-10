@@ -142,6 +142,12 @@ function validate_output($writeprefix, $domain_slugs, $site_domain) {
 
     foreach ($files as $file) {
         $html = file_get_contents($file);
+
+        // Every page needs a non-empty meta description (the blurb a
+        // search engine shows under the title) — see meta_description().
+        if (!preg_match('#<meta name="description" content="([^"]*)">#', $html, $dm) || trim($dm[1]) === '') {
+            $problems[] = array('level' => 'error', 'message' => "$file: empty or missing meta description");
+        }
         $page_domain = null; // which domain directory this page lives in, if any
         foreach ($domain_slugs as $slug) {
             if (strpos($file, "$writeprefix/$slug/") === 0) { $page_domain = $slug; break; }
