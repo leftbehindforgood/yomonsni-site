@@ -3,7 +3,9 @@
 // Expects: $prefix, $title, $description, $bgimage, $nav_html,
 // $content_html, $footer_html. $description is the page's search-result
 // blurb (see meta_description() in lib/entry.php) — every page must have
-// one; validate_output() fails the build on an empty one.
+// one; validate_output() fails the build on an empty one. $canonical
+// (optional, a full https:// URL) is set only on a page that is a copy of
+// another — a domain's copy of a field note, pointing at the central one.
 // $bgimage is optional — when it's empty, no inline style is emitted at
 // all, and content/css/myfunk.css's own plain `body { background-color:
 // #161616; }` applies. There is deliberately no made-up fallback filename
@@ -34,6 +36,10 @@ if (isset($bgimage) && $bgimage !== '') {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
   <meta name="description" content="<?php echo htmlspecialchars(isset($description) ? $description : ''); ?>">
+
+<?php if (!empty($canonical)): ?>
+  <link rel="canonical" href="<?php echo htmlspecialchars($canonical); ?>">
+<?php endif; ?>
 
   <title><?php echo htmlspecialchars($title); ?></title>
 

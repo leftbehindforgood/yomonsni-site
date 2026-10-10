@@ -647,6 +647,19 @@ footer {
   background-color: #171e25 !important;
 }
 
+.btn-followership {
+  background-color: #2d2648; /* dark indigo */
+  border-color: #2d2648;
+}
+.btn-followership:hover,
+.btn-followership:focus {
+  background-color: #221d37;
+  border-color: #221d37;
+}
+.btn-followership:active {
+  background-color: #191528 !important;
+}
+
 .btn-change {
   background-color: #4a3418; /* dark amber/bronze */
   border-color: #4a3418;

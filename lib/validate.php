@@ -137,6 +137,7 @@ function validate_output($writeprefix, $domain_slugs, $site_domain) {
     foreach ($domain_slugs as $slug) {
         $files = array_merge($files, glob("$writeprefix/$slug/*.html"));
     }
+    $files = array_merge($files, glob("$writeprefix/field-notes/*.html"));
 
     $external_urls = array();
 
@@ -147,6 +148,20 @@ function validate_output($writeprefix, $domain_slugs, $site_domain) {
         // search engine shows under the title) — see meta_description().
         if (!preg_match('#<meta name="description" content="([^"]*)">#', $html, $dm) || trim($dm[1]) === '') {
             $problems[] = array('level' => 'error', 'message' => "$file: empty or missing meta description");
+        }
+
+        // A rel=canonical is the one href that must be an absolute URL on
+        // our own domain, so it's checked here on its own terms (it has
+        // to name a page that was actually generated) and then taken out
+        // of the way of the relative-links-only check below.
+        if (preg_match_all('#<link rel="canonical" href="([^"]*)">#', $html, $cm)) {
+            foreach ($cm[1] as $canonical) {
+                $base = "https://$site_domain/";
+                if (strpos($canonical, $base) !== 0 || !is_file("$writeprefix/" . substr($canonical, strlen($base)))) {
+                    $problems[] = array('level' => 'error', 'message' => "$file: canonical URL \"$canonical\" does not name a generated page");
+                }
+            }
+            $html = preg_replace('#<link rel="canonical" href="[^"]*">#', '', $html);
         }
         $page_domain = null; // which domain directory this page lives in, if any
         foreach ($domain_slugs as $slug) {
@@ -321,6 +336,94 @@ function validate_coach_landing_pages($writeprefix) {
                 }
             }
         }
+    }
+    return $problems;
+}
+
+// Every entry that produces a page of its own (and so a meta
+// description): the sitewide pages, each domain's overview and resources
+// page, and the four collections that get per-entry pages. Loaded fresh
+// by glob rather than handed in, so suggest-descriptions.php can use it
+// without running the generator.
+function description_entries($readprefix) {
+    $paths = array_merge(
+        glob("{$readprefix}*.entry"),
+        glob("{$readprefix}legal/*.entry"),
+        glob("{$readprefix}*/index.entry"),
+        glob("{$readprefix}*/resources.entry"),
+        glob("{$readprefix}coaches/*.entry"),
+        glob("{$readprefix}coach-landing/*.entry"),
+        glob("{$readprefix}field-notes/*.entry"),
+        glob("{$readprefix}events/*.entry")
+    );
+    $entries = array();
+    foreach (array_unique($paths) as $path) {
+        if ($path === "{$readprefix}footer.entry") continue; // not a page
+        $entries[] = parse_entry_file($path);
+    }
+    return $entries;
+}
+
+// A short hash per sentence of an entry's body, so two versions of a
+// body can be compared for how much actually changed without keeping
+// the old text around. Case and punctuation are ignored, so a typo fix
+// changes one sentence's hash and a reflow changes none.
+function body_sentence_hashes($entry) {
+    $hashes = array();
+    foreach (preg_split('/(?<=[.!?])\s+|\n\s*\n/u', plain_text(entry_html($entry))) as $sentence) {
+        $norm = preg_replace('/[^\p{L}\p{N}]+/u', ' ', mb_strtolower($sentence));
+        if (trim($norm) !== '') $hashes[] = substr(md5(trim($norm)), 0, 8);
+    }
+    return array_values(array_unique($hashes));
+}
+
+// Sort $entries into those with no hand-written `description` (running
+// on meta_description()'s automatic fallback) and those whose body has
+// changed a lot since their description was last written or accepted.
+// $state_file (description-baselines.json, committed) records, per
+// entry, a hash of the description and the body's sentence hashes as of
+// the last time the description changed; "stale" means under 70% of the
+// larger sentence set is still shared and the description hasn't been
+// touched. $accept re-baselines everything as current. Returns
+// ['missing' => [paths], 'stale' => [path => percent changed]].
+function description_status($entries, $state_file, $accept = false) {
+    $old = file_exists($state_file) ? json_decode(file_get_contents($state_file), true) : array();
+    if (!is_array($old)) $old = array();
+    $state = array();
+    $missing = array();
+    $stale = array();
+    foreach ($entries as $e) {
+        $path = $e['path'];
+        $description = field($e, 'description');
+        if ($description === '') { $missing[] = $path; continue; }
+        $hashes = body_sentence_hashes($e);
+        $prev = isset($old[$path]) ? $old[$path] : null;
+        if ($accept || $prev === null || $prev['description'] !== md5($description)) {
+            $state[$path] = array('description' => md5($description), 'sentences' => $hashes);
+            continue;
+        }
+        $state[$path] = $prev;
+        $larger = max(count($hashes), count($prev['sentences']), 1);
+        $shared = count(array_intersect($hashes, $prev['sentences']));
+        if ($shared / $larger < 0.7) $stale[$path] = (int) round(100 * (1 - $shared / $larger));
+    }
+    ksort($state);
+    $json = json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES) . "\n";
+    if (!file_exists($state_file) || file_get_contents($state_file) !== $json) file_put_contents($state_file, $json);
+    return array('missing' => $missing, 'stale' => $stale);
+}
+
+// description_status() as generator warnings (never errors).
+function check_descriptions($entries, $state_file) {
+    $status = description_status($entries, $state_file);
+    $problems = array();
+    foreach ($status['stale'] as $path => $pct) {
+        $problems[] = array('level' => 'warning', 'message' =>
+            "$path: about $pct% of the body has changed since its description was written — review it (php suggest-descriptions.php)");
+    }
+    if (!empty($status['missing'])) {
+        $problems[] = array('level' => 'warning', 'message' =>
+            count($status['missing']) . " page(s) have no hand-written description and are using the automatic fallback — list them with: php suggest-descriptions.php");
     }
     return $problems;
 }

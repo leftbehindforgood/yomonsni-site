@@ -30,6 +30,7 @@ format:
 location:
 booking_link:
 summary:
+description:
 +++
 
 The full description, shown only on the event's own page. To embed a

@@ -17,9 +17,10 @@ $noworkdir   = array("css", "js", "scss", "vendor", "img", "doc");
 $site_domain = "yomonsni.com";
 $templates   = __DIR__ . '/templates/';
 
-// The six coaching domains. Order here is nav/hub display order.
+// The seven coaching domains. Order here is nav/hub display order.
 $domain_titles = array(
     "leadership"  => "Leadership",
+    "followership" => "Followership",
     "creativity"  => "Creativity",
     "change"      => "Change & Transitions",
     "performance" => "Performance",
@@ -48,6 +49,10 @@ $domain_design = array(
     "leadership" => array(
         'bg'           => 'yo-IMG_00053-5DSR-raw16-shaped-flattened-kaleidoscope.jpg',
         'button_class' => 'btn-leadership', // dark slate blue-grey
+    ),
+    "followership" => array(
+        'bg'           => 'yo-IMG_18604-5D-raw16-rawtherapee-shaped.jpg', // stand-in — not yet picked by hand like the others
+        'button_class' => 'btn-followership', // dark indigo
     ),
     "change" => array(
         'bg'           => 'yo-IMG_08577-5DSR-raw16-rawtherapee-shaped.jpg',
@@ -78,6 +83,7 @@ function domain_design($domain_design, $slug, $key, $default) {
 // portrait swatch) but the same one-hue-per-domain idea.
 $coach_placeholder_colors = array(
     "leadership"  => "#3b506b", // slate blue
+    "followership" => "#4a3f6b", // indigo
     "creativity"  => "#596b3b", // olive green
     "change"      => "#6b5a3b", // amber/bronze
     "performance" => "#6b453c", // crimson/burgundy
@@ -146,6 +152,10 @@ $events       = load_collection("{$readprefix}events");
 $resource_items = load_collection("{$readprefix}resource-items");
 $coach_landing = load_collection("{$readprefix}coach-landing");
 $footer_entry = parse_entry_file("{$readprefix}footer.entry");
+// Landing copy for the central field-notes section (working/field-notes/)
+// — sits beside the collection folder of the same name, not inside it,
+// since load_collection() would otherwise load it as a field note.
+$field_notes_entry = parse_entry_file("{$readprefix}field-notes.entry");
 
 // ---------------------------------------------------------------------
 // 2a. Force a placeholder photo for any coach card that doesn't have a
@@ -215,9 +225,11 @@ foreach ($domain_slugs as $slug) {
 // same reasoning domain-nav.php never links a domain to itself.
 $mission_entry = parse_entry_file("{$readprefix}mission.entry");
 $coaching_entry = parse_entry_file("{$readprefix}coaching.entry");
-function hub_nav_for($current_slug, $hub_entry, $mission_entry, $coaching_entry, $templates) {
+function hub_nav_for($current_slug, $hub_entry, $mission_entry, $coaching_entry, $templates, $prefix = './') {
+    global $field_notes_entry;
     return render_template($templates . 'partials/hub-nav.php', array(
-        'prefix'         => './',
+        'prefix'         => $prefix,
+        'field_notes_title' => field($field_notes_entry, 'title', 'Field Notes'),
         'current_slug'   => $current_slug,
         'site_title'     => field($hub_entry, 'title', 'Yomonsni'),
         'mission_title'  => field($mission_entry, 'title', 'Mission'),
@@ -255,6 +267,7 @@ $root_page_bgimages = array(
     'coaching' => 'yo-IMG_52696-5DII-raw16-rawtherapee-shaped.jpg',
     'privacy'  => 'yo-IMG_19690-5DSR-raw32-rawtherapee-shaped.jpg',
     'terms'    => 'yo-IMG_32782-5DII-raw32-rawtherapee-shaped-layered.jpg',
+    'field-notes' => 'yo-IMG_00024-5D3-raw-shaped-flattened.jpg', // stand-in — not yet picked by hand like the others
 );
 $already_parsed = array('mission' => $mission_entry, 'coaching' => $coaching_entry);
 foreach (array('mission', 'coaching', 'legal/terms', 'legal/privacy') as $path) {
@@ -298,10 +311,62 @@ foreach ($coach_landing as $cl) {
 }
 
 // ---------------------------------------------------------------------
+// 5a. The central field-notes section (field-notes/): one listing of every
+// field note, newest first, under landing copy from content/
+// field-notes.entry, plus one page per note. This is each note's one
+// canonical home — the per-domain copies written in section 6 point here
+// with rel=canonical. It is also the one place a note's `domains` are
+// shown to a visitor: as buttons at the foot of the note, through to each
+// tagged domain's overview page, so a reader who came for the writing has
+// a way on to the coaching. The byline here is plain text, never a link —
+// a coach's profile is always a specific domain's page.
+// ---------------------------------------------------------------------
+$site_name = field($hub_entry, 'title', 'Yomonsni');
+$fn_title  = field($field_notes_entry, 'title', 'Field Notes');
+$fn_bg     = $root_page_bgimages['field-notes'];
+$fn_footer = footer_html_for('../', $footer_entry, $templates);
+$central_cards = array();
+foreach ($field_notes as $w) {
+    $applies_to = array();
+    foreach ($domain_slugs as $d) { // site display order, not the order typed in the entry
+        if (in_array($d, entry_list(field($w, 'domains')), true)) {
+            $applies_to[$d] = array(
+                'title'        => $domain_titles[$d],
+                'button_class' => domain_design($domain_design, $d, 'button_class', ''),
+            );
+        }
+    }
+    $central_cards[] = render_template($templates . 'partials/field-note-teaser-card.php', array(
+        'entry' => $w, 'coaches' => $coaches, 'domain_slug' => '',
+        'href' => "{$w['slug']}.html", 'show_date' => true, 'col_class' => 'col-12 col-md-6 col-lg-4',
+    ));
+    write_page("{$writeprefix}field-notes/{$w['slug']}.html", array(
+        'prefix'          => '../',
+        'title'           => field($w, 'title') . " — $fn_title | $site_name",
+        'description'     => meta_description($w, array('teaser')),
+        'bgimage'         => $fn_bg,
+        'nav_html'        => hub_nav_for('field-note', $hub_entry, $mission_entry, $coaching_entry, $templates, '../'),
+        'footer_html'     => $fn_footer,
+        'content_template' => 'field-note-article.php',
+        'entry' => $w, 'coaches' => $coaches, 'domain_slug' => '', 'applies_to' => $applies_to,
+    ), $templates);
+}
+write_page("{$writeprefix}field-notes/index.html", array(
+    'prefix'          => '../',
+    'title'           => $fn_title,
+    'description'     => meta_description($field_notes_entry),
+    'bgimage'         => $fn_bg,
+    'nav_html'        => hub_nav_for('field-notes', $hub_entry, $mission_entry, $coaching_entry, $templates, '../'),
+    'footer_html'     => $fn_footer,
+    'content_template' => 'card-list.php',
+    'cards' => $central_cards, 'intro_html' => entry_html($field_notes_entry),
+    'empty_message' => 'No field notes published yet.',
+), $templates);
+
+// ---------------------------------------------------------------------
 // 6. Each domain: overview, resources, coach profiles, testimonials,
 //    field notes (+ individual field note pages), events if any.
 // ---------------------------------------------------------------------
-$site_name = field($hub_entry, 'title', 'Yomonsni');
 foreach ($domain_slugs as $slug) {
     $prefix = '../';
     $title  = $domain_titles[$slug];
@@ -399,9 +464,14 @@ foreach ($domain_slugs as $slug) {
         write_page("{$writeprefix}{$slug}/field-note-{$w['slug']}.html", $common + array(
             'title' => field($w, 'title'), 'bgimage' => $bgimage,
             'description' => meta_description($w, array('teaser')),
+            // This domain's copy of the note exists so a reader stays
+            // inside the domain's own nav; the one a search engine should
+            // index is the central copy (section 5a), which is also why
+            // this one stays out of sitemap.xml.
+            'canonical' => "https://{$site_domain}/field-notes/{$w['slug']}.html",
             'content_template' => 'field-note-article.php', 'entry' => $w,
             'coaches' => $coaches, 'domain_slug' => $slug,
-        ), $templates);
+        ), $templates, false);
     }
     write_page("{$writeprefix}{$slug}/field-notes.html", $common + array(
         'title' => "$title Field Notes", 'bgimage' => $bgimage,
@@ -469,6 +539,12 @@ foreach ($noworkdir as $which) {
 $output_problems = validate_output($writeprefix, $domain_slugs, $site_domain);
 $output_problems = array_merge($output_problems, validate_sitemap($writeprefix));
 $output_problems = array_merge($output_problems, validate_coach_landing_pages($writeprefix));
+
+// A hand-written `description` can go stale when its page's body is
+// rewritten — warn (never an error) when that looks to have happened, and
+// when entries are still running on the automatic fallback. See
+// check_descriptions() and suggest-descriptions.php.
+$output_problems = array_merge($output_problems, check_descriptions(description_entries($readprefix), __DIR__ . '/description-baselines.json'));
 $hard_errors = print_problems($output_problems);
 
 // ---------------------------------------------------------------------

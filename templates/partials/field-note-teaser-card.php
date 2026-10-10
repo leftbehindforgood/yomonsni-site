@@ -6,7 +6,10 @@
 // Expects: $entry, $coaches (global, unfiltered), $domain_slug,
 // $card_class/$button_class (optional — see gen-site.php's
 // $domain_design; $card_class ignored when $nested is true), $nested
-// (optional, default false).
+// (optional, default false). The central field-notes listing also
+// passes $href (its own link target), $show_date, and $col_class (a
+// fixed three-across grid, since that listing only ever grows) with
+// $domain_slug = '' so the byline is plain text.
 //
 // $nested renders this as a plain full-width card with no .col-sm grid
 // wrapper and a lighter .card-glass-nested background instead of the
@@ -37,15 +40,15 @@ if ($nested) {
     $outer_open  = '<div class="card card-glass-nested">';
     $outer_close = '</div>';
 } else {
-    $outer_open  = '<div class="col-sm mb-4"><div class="card card-glass' . $extra . ' h-100">';
+    $outer_open  = '<div class="' . (isset($col_class) ? $col_class : 'col-sm') . ' mb-4"><div class="card card-glass' . $extra . ' h-100">';
     $outer_close = '</div></div>';
 }
 echo $outer_open;
 ?>
       <div class="card-body d-flex flex-column">
         <h5 class="card-title"><?php echo htmlspecialchars($title); ?></h5>
-        <h6 class="card-subtitle mb-2 text-muted">By <?php echo $author_html; ?></h6>
+        <h6 class="card-subtitle mb-2 text-muted">By <?php echo $author_html; ?><?php if (!empty($show_date)) echo ' &middot; ' . htmlspecialchars(field($entry, 'date')); ?></h6>
         <?php echo $md->text($teaser); ?>
-        <a class="btn btn-primary mt-auto align-self-start<?php echo $button_extra; ?>" href="field-note-<?php echo htmlspecialchars($entry['slug']); ?>.html">Read more</a>
+        <a class="btn btn-primary mt-auto align-self-start<?php echo $button_extra; ?>" href="<?php echo htmlspecialchars(isset($href) ? $href : "field-note-{$entry['slug']}.html"); ?>">Read more</a>
       </div>
 <?php echo $outer_close; ?>

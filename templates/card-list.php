@@ -6,7 +6,9 @@
 // Expects: $title, $cards (array of already-rendered HTML strings),
 // $empty_message (shown when $cards is empty), and an optional $intro —
 // one line of plain text shown under the title, above the cards (only
-// the field notes listing sets it).
+// the field notes listing sets it), or an optional $intro_html — a
+// rendered Markdown body in the same spot (the central field-notes
+// landing page, from content/field-notes.entry).
 //
 // Carries `.nav-clearance` (see myfunk.css) because this page shape has
 // no masthead/mastblank hero reserving room under the fixed #mainNav —
@@ -20,6 +22,11 @@
 <?php if (!empty($intro)): ?>
     <div class="row">
       <div class="col-12"><p><?php echo htmlspecialchars($intro); ?></p></div>
+    </div>
+<?php endif; ?>
+<?php if (!empty($intro_html)): ?>
+    <div class="row">
+      <div class="col-12 col-md-8"><?php echo $intro_html; ?></div>
     </div>
 <?php endif; ?>
 <?php if (empty($cards)): ?>

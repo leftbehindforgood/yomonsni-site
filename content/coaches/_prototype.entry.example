@@ -34,6 +34,7 @@ in_person_booking_link:
 in_person_fully_booked: no
 summary:
 photo_side: left
+description:
 +++
 
 Full bio for this domain, in Markdown. Only what's relevant to this one

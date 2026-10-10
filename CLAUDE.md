@@ -11,8 +11,8 @@ manager, linter, or test suite in this repo — there is nothing to `npm
 install`/`build`/`test` at the top level. The only "commands" are the PHP
 scripts described below.
 
-The site offers coaching across six independent focus areas ("domains"):
-**leadership**, **creativity**, **change** (life transitions),
+The site offers coaching across seven independent focus areas ("domains"):
+**leadership**, **followership**, **creativity**, **change** (life transitions),
 **performance**, **intimate** (sex/intimacy/relationships/kink), and
 **discovery** (self-discovery and growth). This is a rebuild — see "History
 and current status" below before assuming any given page's content is real
@@ -156,10 +156,14 @@ too** — see CONTENT-GUIDE.md's "Starting from a blank copy".
 - `content/field-notes/` — `title`, `coach`, `date`, `domains` (comma-
   separated — the one record type allowed to span multiple domains).
   `filter_by_domain($field_notes, $slug, 'domains')` handles the list form.
-  **The `domains` field is generation-time-only and must never be rendered
-  to a visitor** — it only decides which domain page(s) the piece gets
-  published under. A multi-tagged field note becomes an independent generated
-  page per tagged domain; none of those pages link to each other. `coach`
+  **The `domains` field is shown to a visitor in exactly one place: the
+  foot of the note's central copy** (`field-notes/<slug>.html` — see "The
+  central field-notes section" below), as buttons through to each tagged
+  domain's overview. It must never be rendered on a domain's own copy —
+  there it only decides which domain page(s) the piece gets published
+  under. A multi-tagged field note becomes an independent generated
+  page per tagged domain; none of those pages link to each other, and
+  each carries a `rel=canonical` pointing at the central copy. `coach`
   is rendered "By ..." and linked via `coach_links_html()` the same way an
   event's coaches are (plain text when the coach has no card in whichever
   domain the field note is currently rendering on). Like an event's body, a
@@ -249,6 +253,48 @@ too** — see CONTENT-GUIDE.md's "Starting from a blank copy".
   automated can check this part — same "read back what you wrote" caveat
   CONTENT-GUIDE.md gives for coach bios/testimonials/field notes).
 
+### The central field-notes section (`field-notes/`)
+
+A root-level section, deliberately the site's one regularly-updated
+front door: `field-notes/index.html` lists every field note, newest
+first, under landing copy from `content/field-notes.entry` (a file
+*beside* the collection folder, not in it — `load_collection()` would
+load it as a note), and `field-notes/<slug>.html` is each note's
+canonical page. It reuses `card-list.php` (with `$intro_html`) and
+`field-note-article.php` (with `$applies_to`) rather than adding page
+shapes, and uses the hub nav with a `../` prefix. Rules specific to it:
+
+- A central note ends with "Coaching where this applies:" and one
+  button per tagged domain, each in that domain's own `button_class`,
+  linking to that domain's overview. This is the intended funnel:
+  field notes bring readers in, the buttons hand them to a domain.
+- The byline is plain text there, never a link — a coach profile is
+  always one specific domain's page.
+- The per-domain copies still exist (so a reader stays inside a domain's
+  nav) but are out of `sitemap.xml` and canonical to the central copy.
+  `validate_output()` checks every canonical names a generated page; it
+  is the one `href` allowed to be an absolute URL.
+- The hub nav's "Field Notes" item (label from `field-notes.entry`'s
+  `title`) is omitted on coach landing pages: a path from a coach's own
+  page into notes whose feet name domains would undo that page's point,
+  and `validate_coach_landing_pages()` would fail the build anyway.
+- Its background photo is `$root_page_bgimages['field-notes']`.
+
+### Hand-written descriptions going stale
+
+`description-baselines.json` (repo root, committed, rewritten by
+`gen-site.php`) records for each entry with a hand-written `description`
+a hash of that description and a short hash per sentence of the body as
+of when the description last changed. `check_descriptions()`
+(`lib/validate.php`) warns — never errors — when under 70% of those
+sentences survive and the description is untouched, and prints one
+summary warning counting entries with no description at all.
+`suggest-descriptions.php` lists both groups; `--write` drafts a
+description for each by running the local `claude -p` CLI and writes it
+into the entry's front matter for review in `git diff` (nothing is
+committed; no API key in the repo); `--accept` re-baselines when a
+stale-flagged description is still fine.
+
 Per-domain static content (not a collection): `content/<domain>/index.entry`
 (the domain's own overview/outline copy, plus `hook`/`hook2` — two "mom
 test" style questions shown on that domain's card on the hub page, the
@@ -292,7 +338,7 @@ across domains. This is enforced architecturally, not just by convention:
 - **No domain's nav links to another domain.** `templates/partials/
   domain-nav.php` only links within its own domain plus a single "← Home"
   link back to the root hub — never to a sibling domain. `templates/
-  partials/hub-nav.php` (root only) is the one place all six domains are
+  partials/hub-nav.php` (root only) is the one place all seven domains are
   listed together (as a card grid on the hub page's body — the hub *nav*
   itself doesn't list them at all, just a Mission/Coaching link pair; see
   "Visual design" below).
@@ -433,7 +479,7 @@ shell.php` wraps every page (doctype/head/nav/footer, plus the
 `toggle-expand.js` include); each shape below supplies just its own inner
 content.
 
-1. **`templates/hub.php`** — root landing page. One-off; links to all six
+1. **`templates/hub.php`** — root landing page. One-off; links to all seven
    domains via a card carrying no label/title, just `hook`/`hook2` fields
    pulled from each domain's own `index.entry` — two "mom test" style
    questions (simple, personal, no jargon), the second smaller and quieter
@@ -626,7 +672,7 @@ undetected until traced by hand.
   the old engine's tokens and no longer applied to anything. Keep it in
   sync with the Content model section above — it's the friendlier version
   of the same fields.
-- `content/` — the live source of truth: the six domains' own directories,
+- `content/` — the live source of truth: the seven domains' own directories,
   the five collection directories, `legal/`, the sitewide
   `index.entry`/`mission.entry`/`coaching.entry`/`footer.entry`, and the
   non-templated asset directories (`css/`, `js/` — just `toggle-expand.js`
@@ -708,9 +754,15 @@ engine, now fully replaced). Current state:
 
 ## Known gaps / open decisions
 
-- Content for five of the six domains — see "History and current status"
-  above for exactly what each domain has vs. still needs. Creativity is
-  the reference pattern to extend, not a one-off.
+- **Followership** (added as the seventh domain) has draft overview and
+  resources copy written by Claude, no coaches, and stand-in choices for
+  its background photo and button color (`$domain_design`) — none of it
+  picked by the user yet. The central field-notes section's background
+  photo is a stand-in in the same way. With seven hub cards in a
+  three-across grid, the last row holds a single card.
+- `content/field-notes/surrender-everything.entry` names `coach: kirsten`,
+  which matches no `coach_id` (Kirsten's card uses `jane`), so its byline
+  renders as the bare id. A field note's `coach` is not validated.
 - `push-site.php` depends entirely on the operator's local `aws` CLI
   credentials — none are configured in this repo, which is correct. Those
   credentials now need `cloudfront:CreateInvalidation` on distribution

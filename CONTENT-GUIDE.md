@@ -261,10 +261,12 @@ The full piece, in Markdown.
 ```
 
 - `domains` — one or more, comma-separated. This is the one content type
-  allowed to appear under more than one domain. **This field is never
-  shown to a reader** — it only decides which domain page(s) the piece
-  gets published to. Writing something for more than one domain is fine;
-  see the rule at the top of this guide for what "fine" doesn't cover.
+  allowed to appear under more than one domain. It decides which domain
+  page(s) the piece gets published to, **and it is shown to readers**: on
+  the central Field Notes section, each note ends with a button through
+  to every domain listed here ("Coaching where this applies"). So tag a
+  note only into domains you are happy to have your name beside; see the
+  rule at the top of this guide.
 - `coach` — the `coach_id` who wrote it. Shown as "By ...", linking to
   that coach's profile page in whichever domain the field note is currently
   showing on, when they have a card there (plain text if they don't —
@@ -305,7 +307,7 @@ The full description, shown only on the event's own page — as long and
 as detailed as you want, it never appears anywhere else.
 ```
 
-- `domain` — exactly one of the six domain slugs.
+- `domain` — exactly one of the seven domain slugs.
 - `coaches` — optional. A comma-separated list of `coach_id`s running it
   (`sam` or `sam, priya`) — not every event is tied to a named coach at
   all (some are run by the practice generally), but an event can have
@@ -388,7 +390,7 @@ url: https://example.com/the-practice-of-practice
 A sentence or two on what it is and why you recommend it.
 ```
 
-- `domain` — exactly one of the six domain slugs.
+- `domain` — exactly one of the seven domain slugs.
 - `type` — `book`, `video`, `paper`, `article`, or `podcast`. Picks the
   button's label (e.g. `video` shows "Watch Video") — anything else
   still works, it just gets a generic "View Resource" button.
@@ -462,6 +464,15 @@ content/resource-items/ entries, not part of this body.
   until a visitor clicks it. Optional — if you skip it, the card just
   won't have a toggle at all, only the pointers and the button through to
   the full page.
+
+### The Field Notes landing page — `content/field-notes.entry`
+
+The site has one central Field Notes section listing every note, newest
+first. The text above that list is this file: a `title` (also the label
+in the top navigation), an optional `description`, and a Markdown body.
+Rewrite the body whenever you like — it is meant to change over time.
+Note that this file sits *next to* the `field-notes/` folder, not inside
+it; anything inside the folder is treated as a field note.
 
 ### Sitewide pages
 

@@ -23,8 +23,9 @@
 // each root page needs its own nav render for this (not one shared
 // `$hub_nav_html` reused everywhere), gen-site.php calls
 // `hub_nav_for()` once per page instead.
-// Expects: $prefix ("./" here), $current_slug, $site_title,
-// $mission_title, $coaching_title.
+// Expects: $prefix ("./", or "../" from the central field-notes/
+// section), $current_slug, $site_title, $mission_title,
+// $coaching_title, $field_notes_title.
 ?>
   <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
     <div class="container-fluid">
@@ -43,6 +44,14 @@
 <?php if ($current_slug !== 'coaching'): ?>
           <li class="nav-item">
             <a class="nav-link" href="<?php echo asset_url($prefix, 'coaching.html'); ?>"><?php echo htmlspecialchars($coaching_title); ?></a>
+          </li>
+<?php endif; ?>
+<?php // Never on a coach landing page (coach-<id>): a field note's foot
+      // links to the domains it applies to, so a path from a coach's own
+      // page into the notes would lead on to that coach's domains.
+      if ($current_slug !== 'field-notes' && strpos($current_slug, 'coach-') !== 0): ?>
+          <li class="nav-item">
+            <a class="nav-link" href="<?php echo asset_url($prefix, 'field-notes/index.html'); ?>"><?php echo htmlspecialchars($field_notes_title); ?></a>
           </li>
 <?php endif; ?>
         </ul>
