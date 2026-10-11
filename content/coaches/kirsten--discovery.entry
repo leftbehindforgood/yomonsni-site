@@ -1,9 +1,23 @@
 +++
 name: Kirsten
 coach_id: kirsten
-domain: followership
-photo: 
-booking_link: 
+domain: discovery
+order: 2
+photo:
+# booking_link: leave blank if you're not taking clients here yet — an
+# empty booking_link shows "Fully Booked" on its own, *whether or not*
+# fully_booked below is set to "no". fully_booked is for going full
+# *temporarily* without clearing out a booking_link you'll reuse later.
+booking_link:
+fully_booked: no
+location:
+in_person_booking_link:
+in_person_fully_booked: no
+summary:
+photo_side: left
+description:
 +++
 
-Kirsten has studiously avoided being in charge. 
+Having spent most of the last year working through a process of experimentation, exploration, meditation, journalling, and guided questioning, Kirsten now has a much better idea of who she intends to be.
+
+She is now eagerly looking forward to being able to help you on a similar path to finding yourself. 
