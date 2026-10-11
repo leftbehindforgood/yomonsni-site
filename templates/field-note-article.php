@@ -14,6 +14,13 @@
 // into, rendered as buttons through to each one's overview page. A
 // domain's own copy never gets $applies_to — it would be a cross-domain
 // link, which validate_output() rejects.
+//
+// $booking_coach (optional — the author's coach card, see
+// coach_booking_card() in lib/entry.php) puts that coach's booking
+// details after the body: location if they take in-person clients, and
+// the same booking buttons as their profile page. Left out when the
+// author has no card to take them from. $button_class (optional) is the
+// domain's own, on a domain's copy.
 $title  = field($entry, 'title');
 $date   = field($entry, 'date');
 $author_html = coach_links_html($coaches, array(field($entry, 'coach')), $domain_slug);
@@ -28,6 +35,13 @@ $author_html = coach_links_html($coaches, array(field($entry, 'coach')), $domain
         <p class="text-muted"><?php echo $author_html; ?> &middot; <?php echo htmlspecialchars($date); ?></p>
         <?php echo entry_html($entry); ?>
         <div class="clearfix"></div>
+<?php if (!empty($booking_coach)): ?>
+        <hr>
+        <p class="mb-2">Coaching with <?php echo $author_html; ?><?php if (field($booking_coach, 'location') !== ''): ?> <span class="coach-location">&middot; <?php echo htmlspecialchars(field($booking_coach, 'location')); ?></span><?php endif; ?></p>
+        <div class="d-flex flex-wrap align-items-center">
+<?php echo render_template(__DIR__ . '/partials/coach-booking-buttons.php', array('entry' => $booking_coach, 'button_class' => isset($button_class) ? $button_class : '')); ?>
+        </div>
+<?php endif; ?>
 <?php if (!empty($applies_to)): ?>
         <hr>
         <p>Coaching where this applies:</p>

@@ -47,13 +47,6 @@ if ($photo_side === 'right') {
     $photo_order = 'order-md-first';
 }
 
-$booking = field($entry, 'booking_link');
-$can_book_online = $booking !== '' && !field_bool($entry, 'fully_booked');
-
-$in_person_booking = field($entry, 'in_person_booking_link');
-$can_book_in_person = $offers_in_person && $in_person_booking !== '' && !field_bool($entry, 'in_person_fully_booked');
-
-$button_extra = (isset($button_class) && $button_class !== '') ? " $button_class" : '';
 $card_extra   = (isset($card_class) && $card_class !== '') ? " $card_class" : '';
 ?>
   <div class="container-fluid p-3 tw nav-clearance">
@@ -65,18 +58,7 @@ $card_extra   = (isset($card_class) && $card_class !== '') ? " $card_class" : ''
 <?php endif; ?>
         <?php echo entry_html($entry); ?>
         <div class="d-flex flex-wrap align-items-center mt-3">
-<?php if ($can_book_online): ?>
-          <a class="btn btn-primary mr-3 mb-2<?php echo $button_extra; ?>" href="<?php echo htmlspecialchars($booking); ?>" rel="noopener" target="_blank">Book Online Coaching</a>
-<?php else: ?>
-          <span class="btn btn-unavailable mr-3 mb-2" aria-disabled="true">Online Coaching Fully Booked</span>
-<?php endif; ?>
-<?php if ($offers_in_person): ?>
-<?php if ($can_book_in_person): ?>
-          <a class="btn btn-primary mr-3 mb-2<?php echo $button_extra; ?>" href="<?php echo htmlspecialchars($in_person_booking); ?>" rel="noopener" target="_blank">Book In Person Coaching</a>
-<?php else: ?>
-          <span class="btn btn-unavailable mr-3 mb-2" aria-disabled="true">In Person Coaching Fully Booked</span>
-<?php endif; ?>
-<?php endif; ?>
+<?php echo render_template(__DIR__ . '/partials/coach-booking-buttons.php', array('entry' => $entry, 'button_class' => isset($button_class) ? $button_class : '')); ?>
         </div>
       </div>
 <?php if ($photo !== ''): ?>

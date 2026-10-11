@@ -1,16 +1,18 @@
 <?php
 // Sitewide generic footer: the ethical code / mission statement content
-// (content/footer.entry) plus links to the top-level legal pages. Same on
+// (content/footer.entry) plus links to the top-level legal pages and the
+// "Join the Collective" page (label from content/collective.entry's title). Same on
 // every page, hub or domain — this is the one place cross-site links are
 // fine, since it never mentions a coach or names which domains exist.
 // No background tint here, deliberately — the page's own fixed photo
 // (whichever one that page uses) should read as one plain, continuous
 // image straight through the footer too, not fade behind a third,
 // differently-tinted overlay.
-// Expects: $prefix, $footer_body_html, $show_legal_links (optional,
+// Expects: $prefix, $footer_body_html, $collective_label,
+// $show_legal_links (optional,
 // default true — set false only for a page whose sole permitted outbound
 // links are Home/Mission/Coaching, e.g. templates/coach-landing.php;
-// Terms/Privacy don't belong on that allowlist).
+// Terms/Privacy/Collective don't belong on that allowlist).
 $show_legal_links = isset($show_legal_links) ? $show_legal_links : true;
 ?>
   <footer class="py-5">
@@ -27,6 +29,9 @@ $show_legal_links = isset($show_legal_links) ? $show_legal_links : true;
         </div>
         <div class="col-6 col-sm">
           <p class="mb-0"><a href="<?php echo asset_url($prefix, 'privacy.html'); ?>">Privacy</a></p>
+        </div>
+        <div class="col-12 col-sm">
+          <p class="mb-0"><a href="<?php echo asset_url($prefix, 'collective.html'); ?>"><?php echo htmlspecialchars($collective_label); ?></a></p>
         </div>
       </div>
 <?php endif; ?>

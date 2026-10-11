@@ -87,6 +87,15 @@ function meta_description($entry, $fallback_fields = array(), $max = 160) {
     return truncate_words($text, $max);
 }
 
+// The first $max sentences of $text (Markdown or plain), joined back with
+// single spaces. A sentence ends at . ! or ? (optionally followed by a
+// closing quote/bracket) before whitespace — so an abbreviation like
+// "e.g." ends one early, which only ever makes the result shorter.
+function first_sentences($text, $max) {
+    $sentences = preg_split('/(?<=[.!?]|[.!?][”"’\')])\s+/u', trim($text));
+    return implode(' ', array_slice($sentences, 0, $max));
+}
+
 function plain_text($html) {
     $text = html_entity_decode(strip_tags($html), ENT_QUOTES | ENT_HTML5, 'UTF-8');
     return trim(preg_replace('/\s+/u', ' ', $text));
@@ -195,6 +204,32 @@ function coach_has_profile($coaches, $coach_id, $domain_slug) {
         if (field($c, 'coach_id') === $coach_id && field($c, 'domain') === $domain_slug) return true;
     }
     return false;
+}
+
+// The coach card whose booking details (booking links, location, fully-
+// booked flags) apply across all of $domain_slugs, or null. For one
+// domain that's just the coach's card there, if any. For several (a field
+// note's central copy, tagged into more than one domain) it's only
+// returned when every card the coach has in those domains agrees on all
+// of those details — otherwise there is no single answer to show, and
+// picking one domain's would be wrong for the rest.
+function coach_booking_card($coaches, $coach_id, $domain_slugs) {
+    $found = null;
+    $found_sig = null;
+    foreach ($coaches as $c) {
+        if (field($c, 'coach_id') !== $coach_id || !in_array(field($c, 'domain'), $domain_slugs, true)) continue;
+        $sig = array(
+            field($c, 'booking_link'), field_bool($c, 'fully_booked'), field($c, 'location'),
+            field($c, 'in_person_booking_link'), field_bool($c, 'in_person_fully_booked'),
+        );
+        if ($found === null) {
+            $found = $c;
+            $found_sig = $sig;
+        } elseif ($sig !== $found_sig) {
+            return null;
+        }
+    }
+    return $found;
 }
 
 // Coach attribution for an event — unlike a testimonial or field note, an

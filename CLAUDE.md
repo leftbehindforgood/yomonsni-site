@@ -172,6 +172,18 @@ too** — see CONTENT-GUIDE.md's "Starting from a blank copy".
   events entry below. A `teaser` that relies on the "first paragraph"
   fallback (`field-note-teaser-card.php`) breaks if the body opens with an
   image tag — write an explicit `teaser` whenever a field note embeds one.
+  That fallback is capped at the paragraph's first three sentences
+  (`first_sentences()`, `lib/entry.php`); an explicit `teaser` is never
+  cut. **Every field note page ends its body with the author's booking
+  details** ("Coaching with ...", location if set, and the same buttons
+  as their profile, via `templates/partials/coach-booking-buttons.php` —
+  shared with `coach-profile.php`). `coach_booking_card()` picks the
+  card: on a domain's copy, the author's card in that domain (nothing
+  shown if they have none there); on the central copy, the author's
+  cards across the note's tagged domains, shown only when they all
+  agree on links/location/fully-booked — when they differ nothing is
+  shown, since one domain's booking link there would be wrong for the
+  others and the domain buttons below already lead on.
 - `content/events/` — workshops and retreats together in one flat folder
   (originally two separate collections/nav items; merged since a visitor
   browsing "what's coming up" doesn't care which bucket a given date came
@@ -318,7 +330,12 @@ used to work). Sitewide:
 both the nav label and the page's own heading, so the two can't drift
 apart), `content/footer.entry` (the generic ethical code/mission statement
 shown in the footer on every page), `content/legal/terms.entry`,
-`content/legal/privacy.entry`.
+`content/legal/privacy.entry`, and `content/collective.entry` (the "Join
+the Collective" page, `collective.html`, a `simple-content.php` page
+linked from the footer beside Terms/Privacy with its `title` as the link
+label — **placeholder copy and a stand-in background photo for now**; the
+link is dropped along with Terms/Privacy on coach landing pages). Footer
+text is the page's white at 70% opacity (`footer` in myfunk.css).
 
 ## The coach-privacy design (read this before touching coach content)
 

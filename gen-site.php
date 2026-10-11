@@ -152,6 +152,9 @@ $events       = load_collection("{$readprefix}events");
 $resource_items = load_collection("{$readprefix}resource-items");
 $coach_landing = load_collection("{$readprefix}coach-landing");
 $footer_entry = parse_entry_file("{$readprefix}footer.entry");
+// The "Join the Collective" page (collective.html), linked from the footer
+// beside Terms/Privacy; its `title` is also that link's label.
+$collective_entry = parse_entry_file("{$readprefix}collective.entry");
 // Landing copy for the central field-notes section (working/field-notes/)
 // — sits beside the collection folder of the same name, not inside it,
 // since load_collection() would otherwise load it as a field note.
@@ -178,8 +181,10 @@ if ($hard_errors > 0) {
 }
 
 function footer_html_for($prefix, $footer_entry, $templates, $show_legal_links = true) {
+    global $collective_entry;
     return render_template($templates . 'partials/site-footer.php', array(
         'prefix'           => $prefix,
+        'collective_label' => field($collective_entry, 'title', 'Join the Collective'),
         'footer_body_html' => entry_html($footer_entry),
         'show_legal_links' => $show_legal_links,
     ));
@@ -267,10 +272,12 @@ $root_page_bgimages = array(
     'coaching' => 'yo-IMG_52696-5DII-raw16-rawtherapee-shaped.jpg',
     'privacy'  => 'yo-IMG_19690-5DSR-raw32-rawtherapee-shaped.jpg',
     'terms'    => 'yo-IMG_32782-5DII-raw32-rawtherapee-shaped-layered.jpg',
+    'collective' => 'yo-IMG_57108-5DII-raw32-rawtherapee-shaped.jpg', // stand-in (mission's photo) — not yet picked by hand
     'field-notes' => 'yo-IMG_00024-5D3-raw-shaped-flattened.jpg', // stand-in — not yet picked by hand like the others
 );
 $already_parsed = array('mission' => $mission_entry, 'coaching' => $coaching_entry);
-foreach (array('mission', 'coaching', 'legal/terms', 'legal/privacy') as $path) {
+$already_parsed['collective'] = $collective_entry;
+foreach (array('mission', 'coaching', 'legal/terms', 'legal/privacy', 'collective') as $path) {
     $slug = basename($path);
     $entry = isset($already_parsed[$path]) ? $already_parsed[$path] : parse_entry_file("{$readprefix}{$path}.entry");
     write_page("{$writeprefix}{$slug}.html", array(
@@ -349,6 +356,7 @@ foreach ($field_notes as $w) {
         'footer_html'     => $fn_footer,
         'content_template' => 'field-note-article.php',
         'entry' => $w, 'coaches' => $coaches, 'domain_slug' => '', 'applies_to' => $applies_to,
+        'booking_coach' => coach_booking_card($coaches, field($w, 'coach'), array_keys($applies_to)),
     ), $templates);
 }
 write_page("{$writeprefix}field-notes/index.html", array(
@@ -470,7 +478,8 @@ foreach ($domain_slugs as $slug) {
             // this one stays out of sitemap.xml.
             'canonical' => "https://{$site_domain}/field-notes/{$w['slug']}.html",
             'content_template' => 'field-note-article.php', 'entry' => $w,
-            'coaches' => $coaches, 'domain_slug' => $slug,
+            'coaches' => $coaches, 'domain_slug' => $slug, 'button_class' => $button_class,
+            'booking_coach' => coach_booking_card($coaches, field($w, 'coach'), array($slug)),
         ), $templates, false);
     }
     write_page("{$writeprefix}{$slug}/field-notes.html", $common + array(

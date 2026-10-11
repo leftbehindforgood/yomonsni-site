@@ -271,9 +271,12 @@ The full piece, in Markdown.
   that coach's profile page in whichever domain the field note is currently
   showing on, when they have a card there (plain text if they don't —
   e.g. a field note tagged into a domain its author doesn't formally coach
-  in).
+  in). The coach's booking buttons (and location, if they take in-person
+  clients) are added after the piece automatically, taken from their
+  coach card in that domain — nothing to write here for that.
 - `teaser` — optional. If you skip it, the listing page uses the first
-  paragraph of your piece instead — but if your piece opens with an
+  paragraph of your piece instead, cut to its first three sentences at
+  most — but if your piece opens with an
   embedded photo (see below), always write an explicit teaser instead,
   since the fallback would grab the raw image tag as your "first
   paragraph" and show nothing else.
@@ -491,3 +494,6 @@ just a `title` and a Markdown body, same shape as everything else:
   the body.
 - `content/legal/terms.entry`, `content/legal/privacy.entry` — the
   top-level Terms and Privacy pages.
+- `content/collective.entry` — the "Join the Collective" page, linked
+  from the footer beside Terms and Privacy. Its `title` is also the
+  footer link's text.

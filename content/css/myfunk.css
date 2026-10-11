@@ -392,10 +392,10 @@ a:focus, a:hover {
 
 footer {
   padding: 5rem 0;
-  /* Same nearly-white, subtle-rose color as .masthead h1/p — the footer
-     sits over the same kind of dark/photo background and needs the same
-     treatment for its default (unstyled) text to be legible. */
-  color: #fbf3f4;
+  /* The page's own white (.tw) faded by 30%, so the footer reads as
+     quieter than the content above it. Opacity on the text color only —
+     nothing is painted over the background photo. */
+  color: rgba(255, 255, 255, 0.7);
 }
 
 /* pulled from business casual */

@@ -22,9 +22,10 @@
 $title  = field($entry, 'title');
 $teaser = field($entry, 'teaser');
 if ($teaser === '') {
-    // No explicit teaser field: fall back to the first paragraph of the body.
+    // No explicit teaser field: fall back to the first paragraph of the
+    // body, cut to its first three sentences at most.
     $parts  = preg_split('/\n\s*\n/', trim($entry['body_md']), 2);
-    $teaser = $parts[0];
+    $teaser = first_sentences($parts[0], 3);
 }
 $coach_id = field($entry, 'coach');
 // Same coach_links_html() helper testimonial-card.php/event-card.php use
