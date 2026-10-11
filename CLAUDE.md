@@ -645,7 +645,9 @@ screenshotted the way leadership/creativity/intimate have.
 Four functions, all wired into `gen-site.php`:
 
 - **`validate_content_references()`** runs on the loaded collections
-  *before* any HTML is written: a testimonial's `coach` must resolve to a
+  *before* any HTML is written: a coach card's `domain` must be a real
+  domain slug (a typo there otherwise drops the coach from every page
+  with no error), a testimonial's `coach` must resolve to a
   real coach card in that domain, a field note's `domains` must all be real
   domain slugs, no coach photo may be reused across domains, and (for
   `content/coach-landing/`) a landing page's `coach_id` must be a real

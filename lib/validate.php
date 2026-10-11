@@ -18,6 +18,13 @@ function validate_content_references($domain_slugs, $coaches, $testimonials, $fi
     $coach_keys = array(); // "domain|coach_id" => true
     $coach_photos_by_id = array(); // coach_id => [photo, photo, ...] across all that coach's domain cards
     foreach ($coaches as $c) {
+        // A card whose domain matches nothing is filtered out of every
+        // page — the coach just silently vanishes from the site.
+        $domain = field($c, 'domain');
+        if (!in_array($domain, $domain_slugs, true)) {
+            $problems[] = array('level' => 'error', 'message' =>
+                "{$c['path']}: domain \"$domain\" is not a known domain slug");
+        }
         $coach_keys[field($c, 'domain') . '|' . field($c, 'coach_id')] = true;
         $coach_photos_by_id[field($c, 'coach_id')][] = field($c, 'photo');
     }
