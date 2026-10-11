@@ -777,9 +777,9 @@ engine, now fully replaced). Current state:
   picked by the user yet. The central field-notes section's background
   photo is a stand-in in the same way. With seven hub cards in a
   three-across grid, the last row holds a single card.
-- `content/field-notes/surrender-everything.entry` names `coach: kirsten`,
-  which matches no `coach_id` (Kirsten's card uses `jane`), so its byline
-  renders as the bare id. A field note's `coach` is not validated.
+- A field note's `coach` is not validated — an id matching no card
+  renders as the bare id with no booking block. (Kirsten's `coach_id` is
+  `jane`, not `kirsten`.)
 - `push-site.php` depends entirely on the operator's local `aws` CLI
   credentials — none are configured in this repo, which is correct. Those
   credentials now need `cloudfront:CreateInvalidation` on distribution
