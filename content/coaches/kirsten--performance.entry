@@ -1,9 +1,17 @@
 +++
 name: Kirsten
 coach_id: kirsten
-domain: followership
-photo: 
-booking_link: 
+domain: performance
+order: 1
+photo:
+booking_link:
+fully_booked: no
+location:
+in_person_booking_link:
+in_person_fully_booked: no
+summary:
+photo_side: left
+description:
 +++
 
-Kirsten has studiously avoided being in charge. 
+Kirsten has a long history of pushing her body, sometimes to the point of breaking, through crossfit and endurance running. While never able to attain elite status in a competitive field, she has consistently outworked many who started with greater physical advantages of height or strength. As long as her body has been able to function, she has never quit.

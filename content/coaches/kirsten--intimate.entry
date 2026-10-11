@@ -1,10 +1,17 @@
 +++
 name: Kirsten
 coach_id: kirsten
-domain: intimate
-photo: c
-booking_link: 
-fully_booked: yes
+domain: initmate
+order: 1
+photo:
+booking_link:
+fully_booked: no
+location:
+in_person_booking_link:
+in_person_fully_booked: no
+summary:
+photo_side: left
+description:
 +++
 
 Kirsten, while still relatively new to coaching, has spent years working to discover,
