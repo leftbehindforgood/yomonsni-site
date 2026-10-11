@@ -1,14 +1,14 @@
 +++
 name: Kirsten
 coach_id: kirsten
-domain: initmate
+domain: intimate
 order: 1
 photo:
 booking_link:
-fully_booked: no
+fully_booked: yes
 location:
 in_person_booking_link:
-in_person_fully_booked: no
+in_person_fully_booked: yes
 summary:
 photo_side: left
 description:
