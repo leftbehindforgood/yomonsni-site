@@ -776,7 +776,8 @@ engine, now fully replaced). Current state:
   its background photo and button color (`$domain_design`) — none of it
   picked by the user yet. The central field-notes section's background
   photo is a stand-in in the same way. With seven hub cards in a
-  three-across grid, the last row holds a single card.
+  three-across grid, the last row holds a single card, centered
+  (`justify-content-center` on the hub's card row).
 - A field note's `coach` is not validated — an id matching no card
   renders as the bare id with no booking block. (Kirsten's `coach_id` is
   `jane`, not `kirsten`.)

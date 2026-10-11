@@ -27,7 +27,7 @@ $site_name = field($entry, 'title');
   </header>
 
   <div class="container-fluid p-3 tw">
-    <div class="row">
+    <div class="row justify-content-center">
 <?php foreach ($domains as $slug => $title):
         $d = $domain_entries[$slug];
         $hook = field($d, 'hook');
