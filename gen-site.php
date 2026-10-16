@@ -159,6 +159,20 @@ $collective_entry = parse_entry_file("{$readprefix}collective.entry");
 // — sits beside the collection folder of the same name, not inside it,
 // since load_collection() would otherwise load it as a field note.
 $field_notes_entry = parse_entry_file("{$readprefix}field-notes.entry");
+$hub_entry      = parse_entry_file("{$readprefix}index.entry");
+$mission_entry  = parse_entry_file("{$readprefix}mission.entry");
+$coaching_entry = parse_entry_file("{$readprefix}coaching.entry");
+// Every root-level page's own entry, keyed by path under content/ — each
+// picks its background photo with its own `bgimage` field.
+$root_entries = array(
+    'index'         => $hub_entry,
+    'mission'       => $mission_entry,
+    'coaching'      => $coaching_entry,
+    'legal/terms'   => parse_entry_file("{$readprefix}legal/terms.entry"),
+    'legal/privacy' => parse_entry_file("{$readprefix}legal/privacy.entry"),
+    'collective'    => $collective_entry,
+    'field-notes'   => $field_notes_entry,
+);
 
 // ---------------------------------------------------------------------
 // 2a. Force a placeholder photo for any coach card that doesn't have a
@@ -174,6 +188,7 @@ unset($c);
 // or coach id should fail loudly, not silently drop content (plan §9).
 // ---------------------------------------------------------------------
 $problems = validate_content_references($domain_slugs, $coaches, $testimonials, $field_notes, $events, $resource_items, $coach_landing);
+$problems = array_merge($problems, validate_bgimages(array_merge(array_values($root_entries), $coach_landing), "{$readprefix}img/"));
 $hard_errors = print_problems($problems);
 if ($hard_errors > 0) {
     fwrite(STDERR, "\nAborting: fix the content errors above before generating.\n");
@@ -215,7 +230,6 @@ $sitemap_urls = array();
 // ---------------------------------------------------------------------
 // 3. The hub (root landing page).
 // ---------------------------------------------------------------------
-$hub_entry = parse_entry_file("{$readprefix}index.entry");
 $domain_entries = array();
 foreach ($domain_slugs as $slug) {
     $domain_entries[$slug] = parse_entry_file("{$readprefix}{$slug}/index.entry");
@@ -228,8 +242,6 @@ foreach ($domain_slugs as $slug) {
 // render gets told which page it's for ($current_slug) so that page can
 // omit its own nav-item (no point linking somewhere you already are),
 // same reasoning domain-nav.php never links a domain to itself.
-$mission_entry = parse_entry_file("{$readprefix}mission.entry");
-$coaching_entry = parse_entry_file("{$readprefix}coaching.entry");
 function hub_nav_for($current_slug, $hub_entry, $mission_entry, $coaching_entry, $templates, $prefix = './') {
     global $field_notes_entry;
     return render_template($templates . 'partials/hub-nav.php', array(
@@ -251,7 +263,8 @@ write_page("{$writeprefix}index.html", array(
     // page, not just the header. templates/hub.php's masthead keeps only
     // its own gradient (no image) so the body's photo shows through there
     // too, continuously, instead of the masthead hiding it in that area.
-    'bgimage'         => 'yo-IMG_56547-5DII-raw16-rawtherapee-shaped.jpg',
+    // Picked in content/index.entry's own `bgimage` field.
+    'bgimage'         => field($hub_entry, 'bgimage'),
     'nav_html'        => hub_nav_for('hub', $hub_entry, $mission_entry, $coaching_entry, $templates),
     'footer_html'     => footer_html_for('./', $footer_entry, $templates),
     'content_template' => 'hub.php',
@@ -264,27 +277,15 @@ write_page("{$writeprefix}index.html", array(
 // 4. Sitewide pages: mission, what-coaching-is, and legal (also
 // root-level, sharing the hub's nav/footer).
 // ---------------------------------------------------------------------
-// Background photos for these, picked per page same as $domain_design —
-// still empty by default (see CLAUDE.md's "Known gaps"), filled in one
-// page at a time rather than all at once.
-$root_page_bgimages = array(
-    'mission'  => 'yo-IMG_57108-5DII-raw32-rawtherapee-shaped.jpg',
-    'coaching' => 'yo-IMG_52696-5DII-raw16-rawtherapee-shaped.jpg',
-    'privacy'  => 'yo-IMG_19690-5DSR-raw32-rawtherapee-shaped.jpg',
-    'terms'    => 'yo-IMG_32782-5DII-raw32-rawtherapee-shaped-layered.jpg',
-    'collective' => 'yo-IMG_57108-5DII-raw32-rawtherapee-shaped.jpg', // stand-in (mission's photo) — not yet picked by hand
-    'field-notes' => 'yo-IMG_00024-5D3-raw-shaped-flattened.jpg', // stand-in — not yet picked by hand like the others
-);
-$already_parsed = array('mission' => $mission_entry, 'coaching' => $coaching_entry);
-$already_parsed['collective'] = $collective_entry;
+// Each page's background photo is its own entry's `bgimage` field.
 foreach (array('mission', 'coaching', 'legal/terms', 'legal/privacy', 'collective') as $path) {
     $slug = basename($path);
-    $entry = isset($already_parsed[$path]) ? $already_parsed[$path] : parse_entry_file("{$readprefix}{$path}.entry");
+    $entry = $root_entries[$path];
     write_page("{$writeprefix}{$slug}.html", array(
         'prefix'          => './',
         'title'           => field($entry, 'title', ucfirst($slug)),
         'description'     => meta_description($entry),
-        'bgimage'         => isset($root_page_bgimages[$slug]) ? $root_page_bgimages[$slug] : '',
+        'bgimage'         => field($entry, 'bgimage'),
         'nav_html'        => hub_nav_for($slug, $hub_entry, $mission_entry, $coaching_entry, $templates),
         'footer_html'     => footer_html_for('./', $footer_entry, $templates),
         'content_template' => 'simple-content.php',
@@ -330,7 +331,7 @@ foreach ($coach_landing as $cl) {
 // ---------------------------------------------------------------------
 $site_name = field($hub_entry, 'title', 'Yomonsni');
 $fn_title  = field($field_notes_entry, 'title', 'Field Notes');
-$fn_bg     = $root_page_bgimages['field-notes'];
+$fn_bg     = field($field_notes_entry, 'bgimage');
 $fn_footer = footer_html_for('../', $footer_entry, $templates);
 $central_cards = array();
 foreach ($field_notes as $w) {

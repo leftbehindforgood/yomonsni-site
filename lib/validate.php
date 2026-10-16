@@ -136,6 +136,22 @@ function validate_content_references($domain_slugs, $coaches, $testimonials, $fi
     return $problems;
 }
 
+// A front-matter `bgimage` (root-level pages, coach landing pages) names a
+// file under content/img/. It only ever ends up in an inline CSS
+// background-image, which validate_output() doesn't check — so a typo'd
+// filename would otherwise just render a page with no photo, silently.
+function validate_bgimages($entries, $imgdir) {
+    $problems = array();
+    foreach ($entries as $e) {
+        $bg = field($e, 'bgimage');
+        if ($bg !== '' && !is_file($imgdir . $bg)) {
+            $problems[] = array('level' => 'error', 'message' =>
+                "{$e['path']}: bgimage \"$bg\" not found in $imgdir");
+        }
+    }
+    return $problems;
+}
+
 function validate_output($writeprefix, $domain_slugs, $site_domain) {
     $problems = array();
     $writeprefix = rtrim($writeprefix, '/');

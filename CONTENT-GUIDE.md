@@ -473,7 +473,9 @@ content/resource-items/ entries, not part of this body.
 The site has one central Field Notes section listing every note, newest
 first. The text above that list is this file: a `title` (also the label
 in the top navigation), an optional `subtitle` (a tagline shown just
-under the title), an optional `description`, and a Markdown body.
+under the title), an optional `bgimage` (this section's background photo,
+used on the list and on every note's central page — see "Sitewide pages"
+below), an optional `description`, and a Markdown body.
 Rewrite the body whenever you like — it is meant to change over time.
 Note that this file sits *next to* the `field-notes/` folder, not inside
 it; anything inside the folder is treated as a field note.
@@ -481,7 +483,13 @@ it; anything inside the folder is treated as a field note.
 ### Sitewide pages
 
 Also usually only edited by whoever maintains the site structure. All take
-just a `title` and a Markdown body, same shape as everything else:
+a `title` and a Markdown body, same shape as everything else. All of them
+except `footer.entry` also take an optional `bgimage`: a filename under
+`content/img/` for that page's background photo (for example
+`bgimage: yo-IMG_57108-5DII-raw32-rawtherapee-shaped.jpg`). Change it
+there; there's no need to touch `gen-site.php`. If the file doesn't exist,
+generation stops with an error naming the entry. Leave the field out for
+a plain dark background.
 
 - `content/index.entry` — the hub's own intro copy (the text under the
   "YOMONSNI" heading).

@@ -291,7 +291,7 @@ shapes, and uses the hub nav with a `../` prefix. Rules specific to it:
   `title`) is omitted on coach landing pages: a path from a coach's own
   page into notes whose feet name domains would undo that page's point,
   and `validate_coach_landing_pages()` would fail the build anyway.
-- Its background photo is `$root_page_bgimages['field-notes']`.
+- Its background photo is `field-notes.entry`'s own `bgimage` field.
 
 ### Hand-written descriptions going stale
 
@@ -643,7 +643,7 @@ screenshotted the way leadership/creativity/intimate have.
 
 ## Guardrails and the validator (`lib/validate.php`)
 
-Four functions, all wired into `gen-site.php`:
+Five functions, all wired into `gen-site.php`:
 
 - **`validate_content_references()`** runs on the loaded collections
   *before* any HTML is written: a coach card's `domain` must be a real
@@ -676,10 +676,15 @@ Four functions, all wired into `gen-site.php`:
 - **`validate_coach_landing_pages()`** scans just the generated
   `coach-*.html` files at the site root and fails the build if any of
   them links anywhere other than Home, Mission, or Coaching.
+- **`validate_bgimages()`** runs alongside
+  `validate_content_references()`, before anything is written: a
+  front-matter `bgimage` (root-level pages, coach landing pages) must
+  name a real file in `content/img/`.
 
-All four were verified against deliberately-broken fixtures during
-development — they're not just written, they fire. Note: none of them
-check inline CSS `background-image: url(...)` references (only
+All five were verified against deliberately-broken fixtures during
+development — they're not just written, they fire. Note: apart from
+`validate_bgimages()`'s check of front-matter `bgimage` fields, none of
+them check inline CSS `background-image: url(...)` references (only
 `<img>`/`href`), which is exactly how a previous `shell.php` bug — a body
 background falling back to a `default-bg.jpg` that didn't exist — went
 undetected until traced by hand.
@@ -759,13 +764,14 @@ engine, now fully replaced). Current state:
   (One coach card, Jane's intimate one, is deliberately `fully_booked`
   with a real-shaped placeholder link still attached, to demonstrate that
   field.)
-- All four root-level pages now have their own background photo, set via
-  `gen-site.php`'s `$root_page_bgimages` — the same per-page-lookup
-  pattern as `$domain_design`, just keyed by page slug instead of domain:
-  `mission.html` (`yo-IMG_57108-5DII-raw32-rawtherapee-shaped.jpg`),
-  `coaching.html` (`yo-IMG_52696-5DII-raw16-rawtherapee-shaped.jpg`),
-  `privacy.html` (`yo-IMG_19690-5DSR-raw32-rawtherapee-shaped.jpg`), and
-  `terms.html` (`yo-IMG_32782-5DII-raw32-rawtherapee-shaped-layered.jpg`).
+- Every root-level page (hub, mission, coaching, terms, privacy,
+  collective, the field-notes landing page) picks its own background
+  photo with a `bgimage` front-matter field in its own `.entry` file —
+  the same field a coach landing page uses — rather than in
+  `gen-site.php` (it used to be a `$root_page_bgimages` array there).
+  `gen-site.php` collects these entries in `$root_entries`, and
+  `validate_bgimages()` fails the build if a `bgimage` names a file
+  missing from `content/img/`.
   `privacy.html`/`terms.html` also both now carry a real (not
   placeholder) policy, deliberately written in a more formal/legalese
   register than the rest of the site's voice — see their own `.entry`
