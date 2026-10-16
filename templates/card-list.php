@@ -8,7 +8,9 @@
 // one line of plain text shown under the title, above the cards (only
 // the field notes listing sets it), or an optional $intro_html — a
 // rendered Markdown body in the same spot (the central field-notes
-// landing page, from content/field-notes.entry).
+// landing page, from content/field-notes.entry), and an optional
+// $subtitle — a tagline shown directly under the title (also only the
+// central field-notes page, from that entry's `subtitle` field).
 //
 // Carries `.nav-clearance` (see myfunk.css) because this page shape has
 // no masthead/mastblank hero reserving room under the fixed #mainNav —
@@ -19,6 +21,11 @@
     <div class="row">
       <div class="col-12"><h1><?php echo htmlspecialchars($title); ?></h1></div>
     </div>
+<?php if (!empty($subtitle)): ?>
+    <div class="row">
+      <div class="col-12"><p class="lead"><?php echo htmlspecialchars($subtitle); ?></p></div>
+    </div>
+<?php endif; ?>
 <?php if (!empty($intro)): ?>
     <div class="row">
       <div class="col-12"><p><?php echo htmlspecialchars($intro); ?></p></div>

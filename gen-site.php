@@ -368,6 +368,7 @@ write_page("{$writeprefix}field-notes/index.html", array(
     'footer_html'     => $fn_footer,
     'content_template' => 'card-list.php',
     'cards' => $central_cards, 'intro_html' => entry_html($field_notes_entry),
+    'subtitle' => field($field_notes_entry, 'subtitle'),
     'empty_message' => 'No field notes published yet.',
 ), $templates);
 

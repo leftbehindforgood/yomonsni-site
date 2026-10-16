@@ -269,7 +269,8 @@ too** — see CONTENT-GUIDE.md's "Starting from a blank copy".
 
 A root-level section, deliberately the site's one regularly-updated
 front door: `field-notes/index.html` lists every field note, newest
-first, under landing copy from `content/field-notes.entry` (a file
+first, under landing copy from `content/field-notes.entry` (optional
+`subtitle` shown under the title via `card-list.php`'s `$subtitle`; a file
 *beside* the collection folder, not in it — `load_collection()` would
 load it as a note), and `field-notes/<slug>.html` is each note's
 canonical page. It reuses `card-list.php` (with `$intro_html`) and

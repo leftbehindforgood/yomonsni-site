@@ -472,7 +472,8 @@ content/resource-items/ entries, not part of this body.
 
 The site has one central Field Notes section listing every note, newest
 first. The text above that list is this file: a `title` (also the label
-in the top navigation), an optional `description`, and a Markdown body.
+in the top navigation), an optional `subtitle` (a tagline shown just
+under the title), an optional `description`, and a Markdown body.
 Rewrite the body whenever you like — it is meant to change over time.
 Note that this file sits *next to* the `field-notes/` folder, not inside
 it; anything inside the folder is treated as a field note.
